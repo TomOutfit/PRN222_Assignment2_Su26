@@ -1,0 +1,222 @@
+@page
+@model NguyenBinhAnRazorPages.Pages.StatisticsModel
+@{
+    ViewData["Title"] = "Statistics Report";
+}
+@attribute [AdminOnly]
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <h2>Statistics Report</h2>
+            
+            <!-- Date Range Filter -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>Filter by Date Range</h5>
+                </div>
+                <div class="card-body">
+                    <form method="get" class="row g-3">
+                        <div class="col-md-4">
+                            <label for="startDate" class="form-label">Start Date</label>
+                            <input type="date" class="form-control" id="startDate" name="startDate" value="@Model.StartDate?.ToString("yyyy-MM-dd")" />
+                        </div>
+                        <div class="col-md-4">
+                            <label for="endDate" class="form-label">End Date</label>
+                            <input type="date" class="form-control" id="endDate" name="endDate" value="@Model.EndDate?.ToString("yyyy-MM-dd")" />
+                        </div>
+                        <div class="col-md-4 d-flex align-items-end">
+                            <button type="submit" class="btn btn-primary me-2">Generate Report</button>
+                            <button type="button" class="btn btn-outline-secondary" id="btnClear">Clear</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Summary Cards -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="card bg-primary text-white">
+                        <div class="card-body">
+                            <h5 class="card-title">Total News Articles</h5>
+                            <h2>@Model.TotalNewsArticles</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-success text-white">
+                        <div class="card-body">
+                            <h5 class="card-title">Active News</h5>
+                            <h2>@Model.ActiveNewsArticles</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-info text-white">
+                        <div class="card-body">
+                            <h5 class="card-title">Total Categories</h5>
+                            <h2>@Model.TotalCategories</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-warning text-white">
+                        <div class="card-body">
+                            <h5 class="card-title">Total Accounts</h5>
+                            <h2>@Model.TotalAccounts</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- News Statistics Table -->
+            <div class="card">
+                <div class="card-header">
+                    <h5>News Articles Statistics (Sorted by Created Date - Descending)</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>News ID</th>
+                                    <th>Title</th>
+                                    <th>Category</th>
+                                    <th>Creator</th>
+                                    <th>Created Date</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var news in Model.NewsStatistics)
+                                {
+                                    <tr>
+                                        <td>@news.NewsArticleId</td>
+                                        <td>@news.NewsTitle</td>
+                                        <td>@news.Category?.CategoryName</td>
+                                        <td>@news.Creator?.AccountName</td>
+                                        <td>@news.CreatedDate?.ToString("dd/MM/yyyy HH:mm")</td>
+                                        <td>
+                                            @if (news.NewsStatus == true)
+                                            {
+                                                <span class="badge bg-success">Active</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-secondary">Inactive</span>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    @if (!Model.NewsStatistics.Any())
+                    {
+                        <div class="alert alert-info text-center">
+                            <h4>No news articles found</h4>
+                            <p>Try adjusting the date range filter.</p>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div class="row mt-4">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>News by Category</h5>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="categoryChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>News by Creator</h5>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="creatorChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Clear button functionality
+            $('#btnClear').click(function() {
+                $('#startDate').val('');
+                $('#endDate').val('');
+                window.location.href = '/Statistics';
+            });
+
+            // Category Chart
+            const categoryCtx = document.getElementById('categoryChart').getContext('2d');
+            new Chart(categoryCtx, {
+                type: 'pie',
+                data: {
+                    labels: @Html.Raw(Model.CategoryLabels),
+                    datasets: [{
+                        data: @Html.Raw(Model.CategoryData),
+                        backgroundColor: [
+                            '#FF6384',
+                            '#36A2EB',
+                            '#FFCE56',
+                            '#4BC0C0',
+                            '#9966FF',
+                            '#FF9F40'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+
+            // Creator Chart
+            const creatorCtx = document.getElementById('creatorChart').getContext('2d');
+            new Chart(creatorCtx, {
+                type: 'bar',
+                data: {
+                    labels: @Html.Raw(Model.CreatorLabels),
+                    datasets: [{
+                        label: 'News Articles',
+                        data: @Html.Raw(Model.CreatorData),
+                        backgroundColor: '#36A2EB'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+}

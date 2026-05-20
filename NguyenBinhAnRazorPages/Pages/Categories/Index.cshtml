@@ -1,0 +1,275 @@
+@page
+@model NguyenBinhAnRazorPages.Pages.Categories.IndexModel
+@{
+    ViewData["Title"] = "Category Management";
+}
+@attribute [StaffOnly]
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <h2>Category Management</h2>
+            
+            <!-- Search and Create -->
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <form method="get" class="d-flex">
+                        <input type="text" name="searchTerm" class="form-control me-2" placeholder="Search categories..." value="@Model.SearchTerm" />
+                        <button type="submit" class="btn btn-outline-primary">Search</button>
+                    </form>
+                </div>
+                <div class="col-md-6 text-end">
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createCategoryModal">
+                        <i class="bi bi-plus"></i> Create Category
+                    </button>
+                </div>
+            </div>
+
+            <!-- Categories Table -->
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Parent Category</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var category in Model.Categories)
+                        {
+                            <tr>
+                                <td>@category.CategoryId</td>
+                                <td>@category.CategoryName</td>
+                                <td>@category.CategoryDesciption</td>
+                                <td>
+                                    @if (category.ParentCategory != null)
+                                    {
+                                        @category.ParentCategory.CategoryName
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">None</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (category.IsActive == true)
+                                    {
+                                        <span class="badge bg-success">Active</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary">Inactive</span>
+                                    }
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-sm btn-info btn-edit" 
+                                            data-id="@category.CategoryId"
+                                            data-name="@category.CategoryName"
+                                            data-description="@category.CategoryDesciption"
+                                            data-parent="@category.ParentCategoryId"
+                                            data-status="@category.IsActive">
+                                        <i class="bi bi-pencil"></i> Edit
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-danger btn-delete" 
+                                            data-id="@category.CategoryId" 
+                                            data-name="@category.CategoryName">
+                                        <i class="bi bi-trash"></i> Delete
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Create Category Modal -->
+<div class="modal fade" id="createCategoryModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create Category</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="createForm">
+                    <div class="mb-3">
+                        <label for="createName" class="form-label">Category Name</label>
+                        <input type="text" class="form-control" id="createName" name="CategoryName" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="createDescription" class="form-label">Description</label>
+                        <textarea class="form-control" id="createDescription" name="CategoryDesciption" rows="3" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="createParent" class="form-label">Parent Category</label>
+                        <select class="form-control" id="createParent" name="ParentCategoryId">
+                            <option value="">None (Root Category)</option>
+                            @foreach (var category in Model.ParentCategories)
+                            {
+                                <option value="@category.CategoryId">@category.CategoryName</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="createStatus" class="form-label">Status</label>
+                        <select class="form-control" id="createStatus" name="IsActive">
+                            <option value="true">Active</option>
+                            <option value="false">Inactive</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="btnCreate">Create</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Category Modal -->
+<div class="modal fade" id="editCategoryModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Category</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editForm">
+                    <input type="hidden" id="editId" name="CategoryId" />
+                    <div class="mb-3">
+                        <label for="editName" class="form-label">Category Name</label>
+                        <input type="text" class="form-control" id="editName" name="CategoryName" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="editDescription" class="form-label">Description</label>
+                        <textarea class="form-control" id="editDescription" name="CategoryDesciption" rows="3" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editParent" class="form-label">Parent Category</label>
+                        <select class="form-control" id="editParent" name="ParentCategoryId">
+                            <option value="">None (Root Category)</option>
+                            @foreach (var category in Model.ParentCategories)
+                            {
+                                <option value="@category.CategoryId">@category.CategoryName</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editStatus" class="form-label">Status</label>
+                        <select class="form-control" id="editStatus" name="IsActive">
+                            <option value="true">Active</option>
+                            <option value="false">Inactive</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="btnUpdate">Update</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirm Delete</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete the category: <strong id="deleteTitle"></strong>?</p>
+                <p class="text-warning">
+                    <small>Note: You can only delete categories that are not associated with any news articles.</small>
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" id="btnConfirmDelete">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Handle create button
+            $('#btnCreate').click(function() {
+                const formData = $('#createForm').serialize();
+                $.post('/Categories/Create', formData, function(response) {
+                    if (response.success) {
+                        $('#createCategoryModal').modal('hide');
+                        location.reload();
+                    } else {
+                        alert('Error creating category: ' + response.message);
+                    }
+                });
+            });
+            
+            // Handle edit button clicks
+            $('.btn-edit').click(function() {
+                const id = $(this).data('id');
+                const name = $(this).data('name');
+                const description = $(this).data('description');
+                const parent = $(this).data('parent');
+                const status = $(this).data('status');
+                
+                $('#editId').val(id);
+                $('#editName').val(name);
+                $('#editDescription').val(description);
+                $('#editParent').val(parent || '');
+                $('#editStatus').val(status);
+                
+                $('#editCategoryModal').modal('show');
+            });
+            
+            // Handle update button
+            $('#btnUpdate').click(function() {
+                const formData = $('#editForm').serialize();
+                $.post('/Categories/Update', formData, function(response) {
+                    if (response.success) {
+                        $('#editCategoryModal').modal('hide');
+                        location.reload();
+                    } else {
+                        alert('Error updating category: ' + response.message);
+                    }
+                });
+            });
+            
+            // Handle delete button clicks
+            $('.btn-delete').click(function() {
+                const id = $(this).data('id');
+                const name = $(this).data('name');
+                $('#deleteTitle').text(name);
+                $('#deleteModal').modal('show');
+                $('#btnConfirmDelete').data('id', id);
+            });
+            
+            // Handle confirm delete
+            $('#btnConfirmDelete').click(function() {
+                const id = $(this).data('id');
+                $.post('/Categories/Delete', { id: id }, function(response) {
+                    if (response.success) {
+                        $('#deleteModal').modal('hide');
+                        location.reload();
+                    } else {
+                        alert('Error deleting category: ' + response.message);
+                    }
+                });
+            });
+        });
+    </script>
+}
