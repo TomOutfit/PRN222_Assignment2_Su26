@@ -25,6 +25,9 @@ namespace NguyenBinhAnRazorPages.Pages
         [Required(ErrorMessage = "Password is required.")]
         public string Password { get; set; } = string.Empty;
 
+        [BindProperty]
+        public bool RememberMe { get; set; }
+
         public string? ErrorMessage { get; set; }
 
         public void OnGet()
