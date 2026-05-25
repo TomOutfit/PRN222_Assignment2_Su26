@@ -10,6 +10,17 @@ namespace NguyenBinhAn_A02_Business.Repositories
         {
         }
 
+        public async Task<IEnumerable<NewsArticle>> GetAllNewsAsync()
+        {
+            return await _context.NewsArticles
+                .Include(n => n.Category)
+                .Include(n => n.Creator)
+                .Include(n => n.NewsTags)
+                    .ThenInclude(nt => nt.Tag)
+                .OrderByDescending(n => n.CreatedDate)
+                .ToListAsync();
+        }
+
         public async Task<IEnumerable<NewsArticle>> GetActiveNewsAsync()
         {
             return await _context.NewsArticles

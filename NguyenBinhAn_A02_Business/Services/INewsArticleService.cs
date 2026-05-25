@@ -5,6 +5,7 @@ namespace NguyenBinhAn_A02_Business.Services
 {
     public interface INewsArticleService
     {
+        Task<IEnumerable<NewsArticle>> GetAllNewsAsync();
         Task<IEnumerable<NewsArticle>> GetAllActiveNewsAsync();
         Task<NewsArticle?> GetNewsByIdAsync(string newsArticleId);
         Task<NewsArticle> CreateNewsAsync(NewsArticle newsArticle, List<int> tagIds);

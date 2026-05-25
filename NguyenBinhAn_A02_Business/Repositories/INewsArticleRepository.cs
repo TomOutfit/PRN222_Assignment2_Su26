@@ -4,6 +4,7 @@ namespace NguyenBinhAn_A02_Business.Repositories
 {
     public interface INewsArticleRepository : IGenericRepository<NewsArticle>
     {
+        Task<IEnumerable<NewsArticle>> GetAllNewsAsync();
         Task<IEnumerable<NewsArticle>> GetActiveNewsAsync();
         Task<IEnumerable<NewsArticle>> GetNewsByCategoryAsync(short categoryId);
         Task<IEnumerable<NewsArticle>> GetNewsByCreatorAsync(short creatorId);

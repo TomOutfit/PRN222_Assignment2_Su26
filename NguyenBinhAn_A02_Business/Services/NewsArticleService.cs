@@ -14,6 +14,11 @@ namespace NguyenBinhAn_A02_Business.Services
             _tagRepository = tagRepository;
         }
 
+        public async Task<IEnumerable<NewsArticle>> GetAllNewsAsync()
+        {
+            return await _newsArticleRepository.GetAllNewsAsync();
+        }
+
         public async Task<IEnumerable<NewsArticle>> GetAllActiveNewsAsync()
         {
             return await _newsArticleRepository.GetActiveNewsAsync();
