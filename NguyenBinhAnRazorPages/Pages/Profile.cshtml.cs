@@ -100,7 +100,7 @@ namespace NguyenBinhAnRazorPages.Pages
             }
         }
 
-        public IActionResult OnPostLogout()
+        public IActionResult OnGetLogout()
         {
             HttpContext.Session.Clear();
             return RedirectToPage("/Login");

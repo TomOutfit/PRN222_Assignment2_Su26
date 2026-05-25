@@ -52,12 +52,6 @@ namespace NguyenBinhAnRazorPages.Pages
                 }
             }
         }
-
-        public IActionResult Logout()
-        {
-            HttpContext.Session.Clear();
-            return RedirectToPage("/Login");
-        }
     }
 
     [AttributeUsage(AttributeTargets.Class)]

@@ -39,8 +39,8 @@ namespace NguyenBinhAnRazorPages.Pages
             StartDate = startDate;
             EndDate = endDate;
 
-            // Load summary statistics
-            var allNews = await _newsService.GetAllActiveNewsAsync();
+            // Load ALL news for summary (both active and inactive for admin view)
+            var allNews = await _newsService.GetAllNewsAsync();
             TotalNewsArticles = allNews.Count();
             ActiveNewsArticles = allNews.Count(n => n.NewsStatus == true);
             
@@ -50,21 +50,15 @@ namespace NguyenBinhAnRazorPages.Pages
             var allAccounts = await _accountService.GetAllAccountsAsync();
             TotalAccounts = allAccounts.Count();
 
-            // Load news statistics for the date range
+            // Load news statistics - if date range specified, filter by it, otherwise show all
             if (startDate.HasValue && endDate.HasValue)
             {
                 NewsStatistics = await _newsService.GetNewsStatisticsAsync(startDate.Value, endDate.Value);
             }
             else
             {
-                // Default to last 30 days if no date range specified
-                var defaultStart = DateTime.Now.AddDays(-30);
-                var defaultEnd = DateTime.Now;
-                NewsStatistics = await _newsService.GetNewsStatisticsAsync(defaultStart, defaultEnd);
-                
-                // Update display dates
-                StartDate = defaultStart;
-                EndDate = defaultEnd;
+                // Show all news when no date filter
+                NewsStatistics = allNews;
             }
 
             // Generate chart data
@@ -90,7 +84,7 @@ namespace NguyenBinhAnRazorPages.Pages
                 .GroupBy(n => n.Creator!.AccountName)
                 .Select(g => new { Creator = g.Key, Count = g.Count() })
                 .OrderByDescending(g => g.Count)
-                .Take(10) // Top 10 creators
+                .Take(10)
                 .ToList();
 
             CreatorLabels = JsonSerializer.Serialize(creatorStats.Select(c => c.Creator));

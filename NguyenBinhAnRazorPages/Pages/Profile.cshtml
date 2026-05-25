@@ -119,9 +119,7 @@
             // Handle logout button
             $('#btnLogout').click(function() {
                 if (confirm('Are you sure you want to logout?')) {
-                    $.post('/Profile/Logout', function() {
-                        window.location.href = '/Login';
-                    });
+                    window.location.href = '/Profile?handler=Logout';
                 }
             });
             

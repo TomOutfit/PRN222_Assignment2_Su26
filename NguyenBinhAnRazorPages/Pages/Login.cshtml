@@ -6,52 +6,47 @@
 }
 
 <style>
-    .login-container {
+    .login-wrapper {
+        display: flex;
         min-height: 100vh;
+    }
+
+    .login-left {
+        flex: 1;
         display: flex;
         align-items: center;
         justify-content: center;
-        background: linear-gradient(135deg, #FF9A9E 0%, #FECFEF 50%, #FAD0C4 100%);
-        padding: 20px;
+        padding: 40px;
     }
 
     .login-card {
         background: white;
         border-radius: 24px;
         box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
-        overflow: hidden;
+        padding: 48px;
         max-width: 420px;
         width: 100%;
-    }
-
-    .login-header {
-        text-align: center;
-        padding: 40px 40px 20px;
     }
 
     .logo-container {
         width: 80px;
         height: 80px;
-        background: white;
+        background: linear-gradient(135deg, #FF9A9E 0%, #FECFEF 100%);
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        margin: 0 auto 24px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        margin-bottom: 24px;
     }
 
     .logo-text {
         font-size: 32px;
         font-weight: 700;
-        background: linear-gradient(135deg, #FF9A9E 0%, #FECFEF 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
+        color: white;
     }
 
     .login-title {
-        font-size: 24px;
+        font-size: 28px;
         font-weight: 700;
         color: #333;
         margin-bottom: 8px;
@@ -60,10 +55,7 @@
     .login-subtitle {
         font-size: 14px;
         color: #888;
-    }
-
-    .login-body {
-        padding: 20px 40px 40px;
+        margin-bottom: 32px;
     }
 
     .form-group {
@@ -181,19 +173,82 @@
         margin-top: 6px;
         display: block;
     }
+
+    .login-right {
+        flex: 1;
+        background: linear-gradient(135deg, #FF9A9E 0%, #FECFEF 50%, #fad0c4 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .login-right::before {
+        content: '';
+        position: absolute;
+        width: 400px;
+        height: 400px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        top: -100px;
+        right: -100px;
+    }
+
+    .login-right::after {
+        content: '';
+        position: absolute;
+        width: 300px;
+        height: 300px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        bottom: -50px;
+        left: -50px;
+    }
+
+    .welcome-content {
+        text-align: center;
+        color: white;
+        z-index: 1;
+        padding: 40px;
+    }
+
+    .welcome-content h2 {
+        font-size: 36px;
+        font-weight: 700;
+        margin-bottom: 16px;
+    }
+
+    .welcome-content p {
+        font-size: 18px;
+        opacity: 0.9;
+    }
+
+    @@media (max-width: 768px) {
+        .login-wrapper {
+            flex-direction: column;
+        }
+        
+        .login-right {
+            display: none;
+        }
+        
+        .login-left {
+            padding: 20px;
+        }
+    }
 </style>
 
-<div class="login-container">
-    <div class="login-card">
-        <div class="login-header">
+<div class="login-wrapper">
+    <div class="login-left">
+        <div class="login-card">
             <div class="logo-container">
                 <span class="logo-text">HR</span>
             </div>
+            
             <h1 class="login-title">Welcome Back</h1>
             <p class="login-subtitle">Sign in to access your account</p>
-        </div>
-        
-        <div class="login-body">
+            
             <form method="post">
                 <div asp-validation-summary="ModelOnly" class="validation-summary"></div>
                 
@@ -228,6 +283,13 @@
                     </ul>
                 </div>
             }
+        </div>
+    </div>
+    
+    <div class="login-right">
+        <div class="welcome-content">
+            <h2>FUNews Management</h2>
+            <p>Your portal to manage news content</p>
         </div>
     </div>
 </div>
