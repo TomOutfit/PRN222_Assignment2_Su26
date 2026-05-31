@@ -1,0 +1,83 @@
+@page
+@model NguyenBinhAnRazorPages.Pages.News.HistoryModel
+@{
+    ViewData["Title"] = "News History";
+}
+@attribute [StaffOnly]
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <h2>My News History</h2>
+            <p class="text-muted">News articles created by you</p>
+            
+            <!-- Search -->
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <form method="get" class="d-flex">
+                        <input type="text" name="searchTerm" class="form-control me-2" placeholder="Search your news..." value="@Model.SearchTerm" />
+                        <button type="submit" class="btn btn-outline-primary">Search</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- News Table -->
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Title</th>
+                            <th>Headline</th>
+                            <th>Category</th>
+                            <th>Status</th>
+                            <th>Created Date</th>
+                            <th>Modified Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var news in Model.NewsArticles)
+                        {
+                            <tr>
+                                <td>@news.NewsArticleId</td>
+                                <td>@news.NewsTitle</td>
+                                <td>@news.Headline</td>
+                                <td>@news.Category?.CategoryName</td>
+                                <td>
+                                    @if (news.NewsStatus == true)
+                                    {
+                                        <span class="badge bg-success">Active</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary">Inactive</span>
+                                    }
+                                </td>
+                                <td>@news.CreatedDate?.ToString("dd/MM/yyyy HH:mm")</td>
+                                <td>@news.ModifiedDate?.ToString("dd/MM/yyyy HH:mm") ?? "N/A"</td>
+                                <td>
+                                    <a href="/News/View/@news.NewsArticleId" class="btn btn-sm btn-info">
+                                        <i class="bi bi-eye"></i> View
+                                    </a>
+                                    <a href="/News/Edit/@news.NewsArticleId" class="btn btn-sm btn-warning">
+                                        <i class="bi bi-pencil"></i> Edit
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            @if (!Model.NewsArticles.Any())
+            {
+                <div class="alert alert-info text-center">
+                    <h4>No news articles found</h4>
+                    <p>You haven't created any news articles yet.</p>
+                    <a href="/News" class="btn btn-primary">Create News</a>
+                </div>
+            }
+        </div>
+    </div>
+</div>

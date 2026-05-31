@@ -1,0 +1,37 @@
+﻿<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js"></script>
+
+<script>
+    // Custom validation methods
+    $.validator.addMethod("strongpassword", function(value, element) {
+        return this.optional(element) || value.length >= 6 && /\d/.test(value);
+    }, "Password must be at least 6 characters and contain at least one number.");
+    
+    $.validator.addMethod("emailunique", function(value, element) {
+        // This will be checked server-side
+        return true;
+    }, "Email already exists.");
+    
+    // Set default validation settings
+    $.validator.setDefaults({
+        errorClass: "text-danger",
+        errorElement: "span",
+        highlight: function(element) {
+            $(element).addClass("is-invalid").removeClass("is-valid");
+        },
+        unhighlight: function(element) {
+            $(element).removeClass("is-invalid").addClass("is-valid");
+        },
+        errorPlacement: function(error, element) {
+            error.insertAfter(element);
+        }
+    });
+    
+    // Form validation initialization
+    $(document).ready(function() {
+        // Add validation to forms dynamically
+        $('form[data-val="true"]').each(function() {
+            $(this).validate();
+        });
+    });
+</script>

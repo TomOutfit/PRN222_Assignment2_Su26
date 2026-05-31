@@ -1,0 +1,25 @@
+@page
+@model NguyenBinhAnRazorPages.Pages.AccessDeniedModel
+@{
+    ViewData["Title"] = "Access Denied";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header text-center">
+                    <h3>Access Denied</h3>
+                </div>
+                <div class="card-body text-center">
+                    <div class="alert alert-danger">
+                        <h4>403 - Access Denied</h4>
+                        <p>You don't have permission to access this page.</p>
+                    </div>
+                    <a href="/Index" class="btn btn-primary">Back to Home</a>
+                    <a href="/Login" class="btn btn-secondary ml-2">Login</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

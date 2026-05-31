@@ -1,0 +1,114 @@
+﻿@page
+@model NguyenBinhAnRazorPages.Pages.IndexModel
+@{
+    ViewData["Title"] = "News Management System";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <h2 class="mb-4">FUNews Management System</h2>
+            
+            @if (Model.IsAuthenticated)
+            {
+                <div class="alert alert-info">
+                    <strong>Welcome, @Model.UserName!</strong> 
+                    @if (Model.IsAdmin)
+                    {
+                        <span>You are logged in as Administrator.</span>
+                    }
+                    else if (Model.IsStaff)
+                    {
+                        <span>You are logged in as Staff.</span>
+                    }
+                    else if (Model.IsLecturer)
+                    {
+                        <span>You are logged in as Lecturer.</span>
+                    }
+                </div>
+            }
+
+            <div class="row">
+                @if (Model.IsAdmin)
+                {
+                    <div class="col-md-4 mb-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Account Management</h5>
+                                <p class="card-text">Manage system accounts and roles.</p>
+                                <a href="/Accounts" class="btn btn-primary">Manage Accounts</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Statistics Report</h5>
+                                <p class="card-text">View news statistics and reports.</p>
+                                <a href="/Statistics" class="btn btn-primary">View Statistics</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                @if (Model.IsStaff || Model.IsAdmin)
+                {
+                    <div class="col-md-4 mb-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">News Management</h5>
+                                <p class="card-text">Create and manage news articles.</p>
+                                <a href="/News" class="btn btn-primary">Manage News</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Category Management</h5>
+                                <p class="card-text">Manage news categories.</p>
+                                <a href="/Categories" class="btn btn-primary">Manage Categories</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                <div class="col-md-4 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">View News</h5>
+                            <p class="card-text">Browse news articles.</p>
+                            <a href="/News/View" class="btn btn-primary">View News</a>
+                        </div>
+                    </div>
+                </div>
+
+                @if (Model.IsAuthenticated)
+                {
+                    <div class="col-md-4 mb-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Profile</h5>
+                                <p class="card-text">Manage your profile.</p>
+                                <a href="/Profile" class="btn btn-primary">My Profile</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                @if (Model.IsStaff)
+                {
+                    <div class="col-md-4 mb-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">News History</h5>
+                                <p class="card-text">View your created news.</p>
+                                <a href="/News/History" class="btn btn-primary">My News History</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

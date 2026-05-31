@@ -1,0 +1,90 @@
+@page
+@model NguyenBinhAnRazorPages.Pages.News.ViewModel
+@{
+    ViewData["Title"] = "View News";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <h2>News Articles</h2>
+            
+            <!-- Search and Filter -->
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <form method="get" class="d-flex">
+                        <input type="text" name="searchTerm" class="form-control me-2" placeholder="Search news..." value="@Model.SearchTerm" />
+                        <button type="submit" class="btn btn-outline-primary">Search</button>
+                    </form>
+                </div>
+                <div class="col-md-6">
+                    <form method="get" class="d-flex">
+                        <select name="categoryId" class="form-control me-2">
+                            <option value="">All Categories</option>
+                            @foreach (var category in Model.Categories)
+                            {
+                                <option value="@category.CategoryId" selected="@(Model.CategoryId == category.CategoryId)">@category.CategoryName</option>
+                            }
+                        </select>
+                        <button type="submit" class="btn btn-outline-secondary">Filter</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- News Cards -->
+            <div class="row">
+                @foreach (var news in Model.NewsArticles)
+                {
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">@news.NewsTitle</h5>
+                                <h6 class="card-subtitle mb-2 text-muted">@news.Headline</h6>
+                                <div class="mb-2">
+                                    <span class="badge bg-primary">@news.Category?.CategoryName</span>
+                                    @if (news.NewsStatus == true)
+                                    {
+                                        <span class="badge bg-success">Active</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary">Inactive</span>
+                                    }
+                                </div>
+                                <p class="card-text">
+                                    @(news.NewsContent?.Length > 200 ? news.NewsContent.Substring(0, 200) + "..." : news.NewsContent)
+                                </p>
+                                <div class="text-muted small mb-2">
+                                    <i class="bi bi-calendar"></i> @news.CreatedDate?.ToString("dd/MM/yyyy")
+                                    @if (!string.IsNullOrEmpty(news.NewsSource))
+                                    {
+                                        <span class="ms-3"><i class="bi bi-link"></i> @news.NewsSource</span>
+                                    }
+                                </div>
+                                <div class="mb-2">
+                                    @foreach (var newsTag in news.NewsTags.Take(3))
+                                    {
+                                        <span class="badge bg-light text-dark me-1">@newsTag.Tag?.TagName</span>
+                                    }
+                                    @if (news.NewsTags.Count > 3)
+                                    {
+                                        <span class="badge bg-light text-dark">+@(news.NewsTags.Count - 3) more</span>
+                                    }
+                                </div>
+                                <a href="/News/Detail/@news.NewsArticleId" class="btn btn-primary btn-sm">Read More</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            @if (!Model.NewsArticles.Any())
+            {
+                <div class="alert alert-info text-center">
+                    <h4>No news articles found</h4>
+                    <p>Try adjusting your search or filter criteria.</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>

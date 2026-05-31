@@ -1,0 +1,139 @@
+@page
+@model NguyenBinhAnRazorPages.Pages.ProfileModel
+@{
+    ViewData["Title"] = "My Profile";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <h2>My Profile</h2>
+            
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Profile Information</h5>
+                        </div>
+                        <div class="card-body">
+                            <form id="profileForm">
+                                <div class="mb-3">
+                                    <label for="accountName" class="form-label">Name</label>
+                                    <input type="text" class="form-control" id="accountName" name="AccountName" value="@Model.Account?.AccountName" required />
+                                </div>
+                                <div class="mb-3">
+                                    <label for="accountEmail" class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="accountEmail" name="AccountEmail" value="@Model.Account?.AccountEmail" readonly />
+                                    <small class="form-text text-muted">Email cannot be changed. Contact administrator for email changes.</small>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="currentPassword" class="form-label">Current Password</label>
+                                    <input type="password" class="form-control" id="currentPassword" name="CurrentPassword" />
+                                </div>
+                                <div class="mb-3">
+                                    <label for="newPassword" class="form-label">New Password</label>
+                                    <input type="password" class="form-control" id="newPassword" name="NewPassword" />
+                                    <small class="form-text text-muted">Leave blank to keep current password.</small>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="confirmPassword" class="form-label">Confirm New Password</label>
+                                    <input type="password" class="form-control" id="confirmPassword" name="ConfirmPassword" />
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Role</label>
+                                    <div>
+                                        @switch (Model.Account?.AccountRole)
+                                        {
+                                            case 0:
+                                                <span class="badge bg-danger">Administrator</span>
+                                                break;
+                                            case 1:
+                                                <span class="badge bg-primary">Staff</span>
+                                                break;
+                                            case 2:
+                                                <span class="badge bg-info">Lecturer</span>
+                                                break;
+                                            default:
+                                                <span class="badge bg-secondary">Unknown</span>
+                                                break;
+                                        }
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-primary" id="btnUpdateProfile">Update Profile</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Account Actions</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-grid gap-2">
+                                <a href="/Index" class="btn btn-outline-primary">Back to Dashboard</a>
+                                @if (Model.IsStaff)
+                                {
+                                    <a href="/News/History" class="btn btn-outline-info">My News History</a>
+                                }
+                                <button type="button" class="btn btn-outline-secondary" id="btnLogout">Logout</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    @if (Model.IsStaff)
+                    {
+                        <div class="card mt-3">
+                            <div class="card-header">
+                                <h5>Quick Stats</h5>
+                            </div>
+                            <div class="card-body">
+                                <p><strong>News Articles Created:</strong> @Model.NewsCount</p>
+                                <p><strong>Account Created:</strong> N/A</p>
+                                <p><strong>Last Login:</strong> @DateTime.Now.ToString("dd/MM/yyyy HH:mm")</p>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Handle update profile button
+            $('#btnUpdateProfile').click(function() {
+                const formData = $('#profileForm').serialize();
+                $.post('/Profile/Update', formData, function(response) {
+                    if (response.success) {
+                        alert('Profile updated successfully!');
+                        location.reload();
+                    } else {
+                        alert('Error updating profile: ' + response.message);
+                    }
+                });
+            });
+            
+            // Handle logout button
+            $('#btnLogout').click(function() {
+                if (confirm('Are you sure you want to logout?')) {
+                    window.location.href = '/Profile?handler=Logout';
+                }
+            });
+            
+            // Password confirmation validation
+            $('#newPassword, #confirmPassword').on('input', function() {
+                const newPassword = $('#newPassword').val();
+                const confirmPassword = $('#confirmPassword').val();
+                
+                if (newPassword !== confirmPassword && confirmPassword !== '') {
+                    $('#confirmPassword')[0].setCustomValidity('Passwords do not match');
+                } else {
+                    $('#confirmPassword')[0].setCustomValidity('');
+                }
+            });
+        });
+    </script>
+}
