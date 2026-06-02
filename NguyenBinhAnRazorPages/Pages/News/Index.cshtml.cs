@@ -27,23 +27,41 @@ namespace NguyenBinhAnRazorPages.Pages.News
         public IEnumerable<Tag> Tags { get; set; } = new List<Tag>();
         public string SearchTerm { get; set; } = string.Empty;
 
-        public async Task OnGetAsync(string searchTerm = "")
+        public int PageSize { get; set; } = 5;
+        public int CurrentPage { get; set; } = 1;
+        public int TotalPages { get; set; } = 1;
+        public int TotalRecords { get; set; } = 0;
+        public int StartRecord { get; set; } = 1;
+        public int EndRecord { get; set; } = 5;
+
+        public async Task OnGetAsync(string searchTerm = "", int page = 1)
         {
             SearchTerm = searchTerm ?? string.Empty;
-            
+            CurrentPage = page < 1 ? 1 : page;
+
             // Load categories and tags for dropdowns
             Categories = await _categoryService.GetActiveCategoriesAsync();
             Tags = await _tagService.GetAllTagsAsync();
 
             // Load news articles
+            IEnumerable<NewsArticle> allNews;
             if (!string.IsNullOrEmpty(SearchTerm))
             {
-                NewsArticles = await _newsService.SearchNewsAsync(SearchTerm);
+                allNews = (await _newsService.SearchNewsAsync(SearchTerm)).OrderByDescending(n => n.CreatedDate);
             }
             else
             {
-                NewsArticles = await _newsService.GetAllActiveNewsAsync();
+                allNews = (await _newsService.GetAllActiveNewsAsync()).OrderByDescending(n => n.CreatedDate);
             }
+
+            TotalRecords = allNews.Count();
+            TotalPages = (int)Math.Ceiling((double)TotalRecords / PageSize);
+            if (CurrentPage > TotalPages) CurrentPage = TotalPages > 0 ? TotalPages : 1;
+
+            StartRecord = TotalRecords > 0 ? (CurrentPage - 1) * PageSize + 1 : 0;
+            EndRecord = Math.Min(CurrentPage * PageSize, TotalRecords);
+
+            NewsArticles = allNews.Skip((CurrentPage - 1) * PageSize).Take(PageSize);
         }
 
         public async Task<JsonResult> OnGetEditAsync(string id)

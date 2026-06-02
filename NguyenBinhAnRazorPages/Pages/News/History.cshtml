@@ -21,11 +21,20 @@
                 </div>
             </div>
 
+            <!-- Pagination Info -->
+            @if (Model.TotalRecords > 0)
+            {
+                <div class="mb-2 text-muted">
+                    Showing @Model.StartRecord to @Model.EndRecord of @Model.TotalRecords entries
+                </div>
+            }
+
             <!-- News Table -->
             <div class="table-responsive">
                 <table class="table table-striped">
                     <thead>
                         <tr>
+                            <th>#</th>
                             <th>ID</th>
                             <th>Title</th>
                             <th>Headline</th>
@@ -37,9 +46,14 @@
                         </tr>
                     </thead>
                     <tbody>
+                        @{
+                            int rowIndex = Model.StartRecord;
+                        }
                         @foreach (var news in Model.NewsArticles)
                         {
                             <tr>
+                                <td>@rowIndex</td>
+                                @{ rowIndex++; }
                                 <td>@news.NewsArticleId</td>
                                 <td>@news.NewsTitle</td>
                                 <td>@news.Headline</td>
@@ -69,6 +83,43 @@
                     </tbody>
                 </table>
             </div>
+
+            <!-- Pagination Controls -->
+            @{
+                int currentGroupStart = ((Model.CurrentPage - 1) / Model.PageSize) * Model.PageSize + 1;
+                int currentGroupEnd = Math.Min(currentGroupStart + Model.PageSize - 1, Model.TotalPages);
+            }
+            @if (Model.TotalPages > 1)
+            {
+                <nav>
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item @(Model.CurrentPage == 1 ? "disabled" : "")">
+                            <a class="page-link" href="?searchTerm=@Model.SearchTerm&page=@(Model.CurrentPage - 1)">Previous</a>
+                        </li>
+                        @if (currentGroupStart > 1)
+                        {
+                            <li class="page-item">
+                                <a class="page-link" href="?searchTerm=@Model.SearchTerm&page=@(currentGroupStart - 1)">...</a>
+                            </li>
+                        }
+                        @for (int i = currentGroupStart; i <= currentGroupEnd; i++)
+                        {
+                            <li class="page-item @(Model.CurrentPage == i ? "active" : "")">
+                                <a class="page-link" href="?searchTerm=@Model.SearchTerm&page=@i">@i</a>
+                            </li>
+                        }
+                        @if (currentGroupEnd < Model.TotalPages)
+                        {
+                            <li class="page-item">
+                                <a class="page-link" href="?searchTerm=@Model.SearchTerm&page=@(currentGroupEnd + 1)">...</a>
+                            </li>
+                        }
+                        <li class="page-item @(Model.CurrentPage == Model.TotalPages ? "disabled" : "")">
+                            <a class="page-link" href="?searchTerm=@Model.SearchTerm&page=@(Model.CurrentPage + 1)">Next</a>
+                        </li>
+                    </ul>
+                </nav>
+            }
 
             @if (!Model.NewsArticles.Any())
             {
