@@ -30,6 +30,7 @@ namespace NguyenBinhAnRazorPages.Pages
                                pageRoute == "/AccessDenied" || 
                                pageRoute == "/Index" || 
                                pageRoute == "/News/View" || 
+                               pageRoute == "/News/Detail" || 
                                pageRoute == "/Error";
 
             if (!isPublicPage && !IsAuthenticated)

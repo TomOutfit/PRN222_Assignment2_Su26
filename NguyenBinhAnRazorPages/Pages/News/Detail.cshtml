@@ -1,0 +1,221 @@
+@page "{id}"
+@model NguyenBinhAnRazorPages.Pages.News.DetailModel
+@{
+    ViewData["Title"] = Model.NewsArticle.NewsTitle ?? "News Detail";
+    var backUrl = Model.IsAuthenticated && (Model.IsAdmin || Model.IsStaff) ? "/News/Index" : "/News/View";
+}
+
+<style>
+    .detail-card {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .detail-card::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #00ffff, #ff00ff, #00ff88);
+    }
+
+    .back-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: rgba(255, 255, 255, 0.6);
+        text-decoration: none;
+        font-family: 'Orbitron', sans-serif;
+        font-size: 14px;
+        font-weight: 600;
+        transition: all 0.3s;
+        margin-bottom: 24px;
+    }
+
+    .back-btn:hover {
+        color: #00ffff;
+        transform: translateX(-4px);
+    }
+
+    .detail-title {
+        font-family: 'Orbitron', sans-serif;
+        font-weight: 800;
+        font-size: 2.2rem;
+        color: #fff;
+        line-height: 1.3;
+        margin-bottom: 20px;
+        letter-spacing: 0.5px;
+        text-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
+    }
+
+    .detail-headline {
+        font-size: 1.2rem;
+        color: rgba(255, 255, 255, 0.7);
+        border-left: 3px solid #ff00ff;
+        padding-left: 16px;
+        margin-bottom: 30px;
+        line-height: 1.6;
+        font-style: italic;
+    }
+
+    .meta-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.4);
+    }
+
+    .meta-item i {
+        color: #00ffff;
+    }
+
+    .detail-content {
+        font-size: 1.1rem;
+        line-height: 1.8;
+        color: rgba(255, 255, 255, 0.85);
+        margin-bottom: 40px;
+        white-space: pre-wrap;
+    }
+
+    .tag-badge {
+        background: rgba(255, 255, 255, 0.04);
+        color: rgba(255, 255, 255, 0.5);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 50px;
+        padding: 4px 14px;
+        font-size: 13px;
+        transition: all 0.3s;
+        text-decoration: none;
+    }
+
+    .tag-badge:hover {
+        background: rgba(0, 255, 255, 0.1);
+        color: #00ffff;
+        border-color: rgba(0, 255, 255, 0.3);
+    }
+
+    .badge-cat-detail {
+        background: rgba(0, 255, 255, 0.1);
+        color: #00ffff;
+        border: 1px solid rgba(0, 255, 255, 0.25);
+        padding: 6px 16px;
+        border-radius: 50px;
+        font-size: 13px;
+        font-weight: 700;
+        font-family: 'Orbitron', sans-serif;
+    }
+    
+    .source-box {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 12px;
+        padding: 16px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 30px;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+</style>
+
+<div class="container py-5">
+    <a href="@backUrl" class="back-btn">
+        <i class="bi bi-arrow-left"></i> BACK TO ARTICLES
+    </a>
+
+    <div class="detail-card">
+        <!-- Top Meta Info -->
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-3 mb-4" style="border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 20px;">
+            <div class="d-flex align-items-center gap-3 flex-wrap">
+                <span class="badge-cat-detail">
+                    <i class="bi bi-folder2-open me-1"></i> @(Model.NewsArticle.Category?.CategoryName ?? "Uncategorized")
+                </span>
+                
+                @if (Model.NewsArticle.NewsStatus != true)
+                {
+                    <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-3 py-2 rounded-pill" style="font-size:12px; font-weight:700;">
+                        <i class="bi bi-eye-slash-fill me-1"></i> INACTIVE
+                    </span>
+                }
+            </div>
+            
+            <div class="d-flex align-items-center gap-4 flex-wrap">
+                <div class="meta-item">
+                    <i class="bi bi-calendar3"></i>
+                    <span>@Model.NewsArticle.CreatedDate?.ToString("dd MMM yyyy, HH:mm")</span>
+                </div>
+                
+                <div class="meta-item">
+                    <i class="bi bi-person"></i>
+                    <span>By: @(Model.NewsArticle.Creator?.AccountName ?? "System")</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- News Title -->
+        <h1 class="detail-title">@Model.NewsArticle.NewsTitle</h1>
+
+        <!-- Headline -->
+        <div class="detail-headline">
+            @Model.NewsArticle.Headline
+        </div>
+
+        <!-- Main Content -->
+        <div class="detail-content">
+            @Model.NewsArticle.NewsContent
+        </div>
+
+        <!-- Source Section -->
+        @if (!string.IsNullOrEmpty(Model.NewsArticle.NewsSource))
+        {
+            <div class="source-box">
+                <div class="d-flex align-items-center gap-2">
+                    <i class="bi bi-link-45deg text-info" style="font-size: 20px;"></i>
+                    <div>
+                        <div style="font-size: 12px; color: rgba(255,255,255,0.3); font-weight: 600;">SOURCE</div>
+                        <div style="font-weight: 500; font-size: 15px; color: rgba(255,255,255,0.8);">@Model.NewsArticle.NewsSource</div>
+                    </div>
+                </div>
+                <a href="@(Model.NewsArticle.NewsSource.StartsWith("http") ? Model.NewsArticle.NewsSource : "https://" + Model.NewsArticle.NewsSource)" 
+                   target="_blank" class="btn btn-outline-info btn-sm px-4" style="border-radius: 8px; font-weight: 600; font-family: 'Rajdhani', sans-serif;">
+                    Visit Source <i class="bi bi-box-arrow-up-right ms-1"></i>
+                </a>
+            </div>
+        }
+
+        <!-- Tags & Update Info Footer -->
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-3 pt-4" style="border-top: 1px solid rgba(255,255,255,0.06);">
+            <div class="d-flex align-items-center gap-2 flex-wrap">
+                @if (Model.NewsArticle.NewsTags.Any())
+                {
+                    <span style="font-size: 14px; color: rgba(255,255,255,0.35); font-weight: 600;" class="me-2">TAGS:</span>
+                    @foreach (var newsTag in Model.NewsArticle.NewsTags)
+                    {
+                        @if (newsTag.Tag != null)
+                        {
+                            <span class="tag-badge">#@newsTag.Tag.TagName</span>
+                        }
+                    }
+                }
+            </div>
+
+            @if (Model.NewsArticle.ModifiedDate.HasValue)
+            {
+                <div style="font-size: 13px; color: rgba(255,255,255,0.25);">
+                    <i class="bi bi-pencil-square me-1"></i> Last updated: @Model.NewsArticle.ModifiedDate.Value.ToString("dd MMM yyyy, HH:mm")
+                    @if (Model.NewsArticle.Updater != null)
+                    {
+                        <span> by @Model.NewsArticle.Updater.AccountName</span>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>
