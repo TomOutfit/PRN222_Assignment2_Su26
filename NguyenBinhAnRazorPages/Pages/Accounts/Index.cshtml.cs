@@ -27,6 +27,7 @@ namespace NguyenBinhAnRazorPages.Pages.Accounts
 
         public async Task OnGetAsync(string searchTerm = "", int page = 1)
         {
+            OnPageAuthorization();
             SearchTerm = searchTerm ?? string.Empty;
             CurrentPage = page < 1 ? 1 : page;
 

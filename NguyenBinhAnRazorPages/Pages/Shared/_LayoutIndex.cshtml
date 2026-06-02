@@ -2,7 +2,7 @@
     Modified Layout for Index page - Neon Cyberpunk Edition
 *@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="dark">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -702,34 +702,37 @@
                     FUN<span style="color:#00ffff">NEWS</span>
                 </a>
 
+                @{
+                    var currentPage = ViewContext.RouteData.Values["page"]?.ToString() ?? "";
+                }
                 <ul class="cyber-nav-links">
                     <li>
-                        <a asp-area="" asp-page="/Index" class="nav-cyber">
+                        <a asp-area="" asp-page="/Index" class="@(currentPage == "/Index" ? "nav-cyber" : "")">
                             <i class="bi bi-house-door"></i> Home
+                        </a>
+                    </li>
+                    <li>
+                        <a asp-area="" asp-page="/News/View" class="@(currentPage == "/News/View" ? "nav-cyber" : "")">
+                            <i class="bi bi-compass"></i> Browse
                         </a>
                     </li>
                     @if (Context.Session.GetString("UserEmail") != null)
                     {
-                        <li>
-                            <a asp-area="" asp-page="/News/View">
-                                <i class="bi bi-newspaper"></i> View News
-                            </a>
-                        </li>
                         var userRole = Context.Session.GetInt32("AccountRole");
                         @if (userRole == 1)
                         {
                             <li>
-                                <a asp-area="" asp-page="/News">
-                                    <i class="bi bi-pen"></i> News
+                                <a asp-area="" asp-page="/News/Index" class="@(currentPage.StartsWith("/News") && currentPage != "/News/View" && currentPage != "/News/History" ? "nav-cyber" : "")">
+                                    <i class="bi bi-pen"></i> Write
                                 </a>
                             </li>
                             <li>
-                                <a asp-area="" asp-page="/Categories">
+                                <a asp-area="" asp-page="/Categories/Index" class="@(currentPage.StartsWith("/Categories") ? "nav-cyber" : "")">
                                     <i class="bi bi-folder"></i> Categories
                                 </a>
                             </li>
                             <li>
-                                <a asp-area="" asp-page="/News/History">
+                                <a asp-area="" asp-page="/News/History" class="@(currentPage == "/News/History" ? "nav-cyber" : "")">
                                     <i class="bi bi-clock-history"></i> History
                                 </a>
                             </li>
@@ -737,13 +740,13 @@
                         @if (userRole == 0)
                         {
                             <li>
-                                <a asp-area="" asp-page="/Accounts">
+                                <a asp-area="" asp-page="/Accounts/Index" class="@(currentPage.StartsWith("/Accounts") ? "nav-cyber" : "")">
                                     <i class="bi bi-people"></i> Accounts
                                 </a>
                             </li>
                             <li>
-                                <a asp-area="" asp-page="/Statistics">
-                                    <i class="bi bi-bar-chart"></i> Statistics
+                                <a asp-area="" asp-page="/Statistics" class="@(currentPage == "/Statistics" ? "nav-cyber" : "")">
+                                    <i class="bi bi-bar-chart"></i> Reports
                                 </a>
                             </li>
                         }

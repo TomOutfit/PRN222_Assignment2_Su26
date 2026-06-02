@@ -5,59 +5,81 @@
 }
 @attribute [StaffOnly]
 
+<style>
+    body { font-family: 'Rajdhani', sans-serif; background: #050510; color: #e0e0ff; }
+</style>
+
 <form id="antiforgery-form" method="post">
     @Html.AntiForgeryToken()
 </form>
 
-<div class="container mt-4">
-    <div class="row">
-        <div class="col-12">
-            <h2>News Management</h2>
-            
-            <!-- Search and Filter -->
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <form method="get" class="d-flex">
-                        <input type="text" name="searchTerm" class="form-control me-2" placeholder="Search news..." value="@Model.SearchTerm" />
-                        <button type="submit" class="btn btn-outline-primary">Search</button>
-                    </form>
-                </div>
-                <div class="col-md-6 text-end">
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createNewsModal">
-                        <i class="bi bi-plus"></i> Create News
-                    </button>
-                </div>
-            </div>
+<div class="container-fluid py-4" style="position:relative; z-index:1;">
 
-            <!-- Pagination Info -->
-            @if (Model.TotalRecords > 0)
-            {
-                <div class="mb-2 text-muted">
-                    Showing @Model.StartRecord to @Model.EndRecord of @Model.TotalRecords entries
-                </div>
-            }
+    <!-- Page Header -->
+    <div class="d-flex align-items-center justify-content-between flex-wrap gap-3 mb-4">
+        <div>
+            <h2 style="font-family:'Orbitron',sans-serif; font-size:1.6rem; color:#fff; margin-bottom:4px;">
+                <i class="bi bi-file-earmark-post-fill me-2" style="color:#00ffff;"></i> News Management
+            </h2>
+            <p style="color:rgba(255,255,255,0.4); font-size:14px; margin:0;">Create, edit, and manage news articles</p>
+        </div>
+        <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#createNewsModal"
+                style="background:linear-gradient(135deg,#00ffff,#00aaff); border:none; color:#050510; font-weight:700; border-radius:8px; font-family:'Rajdhani',sans-serif; padding:10px 24px; letter-spacing:1px; font-size:14px;">
+            <i class="bi bi-plus-circle me-2"></i>Create News
+        </button>
+    </div>
 
-            @if (!Model.NewsArticles.Any())
-            {
-                <div class="alert alert-info text-center">
-                    <h4>No news articles found</h4>
-                    <p>Try adjusting your search term.</p>
+    <!-- Search -->
+    <div class="row mb-4">
+        <div class="col-md-5">
+            <form method="get" class="d-flex">
+                <div style="position:relative; flex:1;">
+                    <input type="text" name="searchTerm" class="form-control"
+                           style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#fff; padding:10px 16px 10px 40px; border-radius:8px 0 0 8px; font-family:'Rajdhani',sans-serif;"
+                           placeholder="Search news..." value="@Model.SearchTerm" />
+                    <i class="bi bi-search" style="position:absolute; left:14px; top:50%; transform:translateY(-50%); color:rgba(255,255,255,0.3);"></i>
                 </div>
-            }
-            else
-            {
-            <!-- News Table -->
-            <div class="table-responsive">                <table class="table table-striped">
+                <button type="submit" class="btn btn-primary"
+                        style="background:rgba(0,255,255,0.15); border:1px solid rgba(0,255,255,0.3); color:#00ffff; border-radius:0 8px 8px 0; font-family:'Rajdhani',sans-serif;">
+                    <i class="bi bi-search"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Info Bar -->
+    @if (Model.TotalRecords > 0)
+    {
+        <div style="background:rgba(0,255,255,0.05); border:1px solid rgba(0,255,255,0.1); border-radius:10px; padding:10px 16px; margin-bottom:16px; display:inline-flex; align-items:center; gap:8px;">
+            <i class="bi bi-info-circle" style="color:#00ffff;"></i>
+            <span style="color:rgba(255,255,255,0.5); font-size:13px;">Showing <strong style="color:#fff;">@Model.StartRecord–@Model.EndRecord</strong> of <strong style="color:#fff;">@Model.TotalRecords</strong> articles</span>
+        </div>
+    }
+
+    <!-- Table -->
+    @if (!Model.NewsArticles.Any())
+    {
+        <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:16px; padding:60px; text-align:center;">
+            <i class="bi bi-inbox" style="font-size:48px; color:rgba(255,255,255,0.15); display:block; margin-bottom:16px;"></i>
+            <h4 style="color:rgba(255,255,255,0.5); font-family:'Orbitron',sans-serif;">No Articles Found</h4>
+            <p style="color:rgba(255,255,255,0.3); font-size:14px;">Try adjusting your search term or create a new article.</p>
+        </div>
+    }
+    else
+    {
+        <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06); border-radius:16px; overflow:hidden;">
+            <div class="table-responsive">
+                <table class="table mb-0" style="color:#e0e0ff; font-family:'Rajdhani',sans-serif; --bs-table-bg: transparent;">
                     <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>ID</th>
-                            <th>Title</th>
-                            <th>Headline</th>
-                            <th>Category</th>
-                            <th>Status</th>
-                            <th>Created Date</th>
-                            <th>Actions</th>
+                        <tr style="background:rgba(0,255,255,0.04); border-bottom:1px solid rgba(0,255,255,0.1);">
+                            <th style="padding:14px 16px; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:rgba(0,255,255,0.6);">#</th>
+                            <th style="padding:14px 16px; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:rgba(0,255,255,0.6);">ID</th>
+                            <th style="padding:14px 16px; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:rgba(0,255,255,0.6);">Title</th>
+                            <th style="padding:14px 16px; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:rgba(0,255,255,0.6);">Headline</th>
+                            <th style="padding:14px 16px; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:rgba(0,255,255,0.6);">Category</th>
+                            <th style="padding:14px 16px; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:rgba(0,255,255,0.6);">Status</th>
+                            <th style="padding:14px 16px; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:rgba(0,255,255,0.6);">Created</th>
+                            <th style="padding:14px 16px; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:rgba(0,255,255,0.6);">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -66,32 +88,39 @@
                         }
                         @foreach (var news in Model.NewsArticles)
                         {
-                            <tr id="row-@news.NewsArticleId">
-                                <td>@rowIndex</td>
+                            <tr style="border-bottom:1px solid rgba(255,255,255,0.04); transition:background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.03)'" onmouseout="this.style.background='transparent'">
+                                <td style="padding:14px 16px; color:rgba(255,255,255,0.3); font-size:13px;">@rowIndex</td>
                                 @{ rowIndex++; }
-                                <td>@news.NewsArticleId</td>
-                                <td>@news.NewsTitle</td>
-                                <td>@news.Headline</td>
-                                <td>@news.Category?.CategoryName</td>
-                                <td>
+                                <td style="padding:14px 16px; color:rgba(0,255,255,0.5); font-size:13px; font-family:'Orbitron',sans-serif;">#@news.NewsArticleId</td>
+                                <td style="padding:14px 16px; font-size:14px; font-weight:600; color:#fff; max-width:200px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">@news.NewsTitle</td>
+                                <td style="padding:14px 16px; font-size:13px; color:rgba(255,255,255,0.5); max-width:200px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">@news.Headline</td>
+                                <td style="padding:14px 16px;">
+                                    <span style="background:rgba(255,102,0,0.1); color:#ff6600; border:1px solid rgba(255,102,0,0.2); padding:3px 10px; border-radius:50px; font-size:12px;">@news.Category?.CategoryName</span>
+                                </td>
+                                <td style="padding:14px 16px;">
                                     @if (news.NewsStatus == true)
                                     {
-                                        <span class="badge bg-success">Active</span>
+                                        <span style="background:rgba(0,255,136,0.1); color:#00ff88; border:1px solid rgba(0,255,136,0.2); padding:3px 10px; border-radius:50px; font-size:12px; font-weight:600;">
+                                            <i class="bi bi-check-circle-fill me-1"></i>Active
+                                        </span>
                                     }
                                     else
                                     {
-                                        <span class="badge bg-secondary">Inactive</span>
+                                        <span style="background:rgba(128,128,128,0.1); color:#888; border:1px solid rgba(128,128,128,0.2); padding:3px 10px; border-radius:50px; font-size:12px; font-weight:600;">
+                                            <i class="bi bi-x-circle me-1"></i>Inactive
+                                        </span>
                                     }
                                 </td>
-                                <td>@news.CreatedDate?.ToString("dd/MM/yyyy HH:mm")</td>
-                                <td>
-                                    <button type="button" class="btn btn-sm btn-info btn-edit"
+                                <td style="padding:14px 16px; color:rgba(255,255,255,0.4); font-size:13px;">@news.CreatedDate?.ToString("dd/MM/yyyy")</td>
+                                <td style="padding:14px 16px;">
+                                    <button type="button" class="btn btn-sm btn-edit"
+                                            style="background:rgba(0,255,255,0.08); border:1px solid rgba(0,255,255,0.2); color:#00ffff; border-radius:6px; font-size:12px; padding:5px 12px; margin-right:4px;"
                                             data-id="@news.NewsArticleId">
                                         <i class="bi bi-pencil"></i> Edit
                                     </button>
-                                    <button type="button" class="btn btn-sm btn-danger btn-delete"
-                                            data-id="@news.NewsArticleId"
-                                            data-title="@news.NewsTitle">
+                                    <button type="button" class="btn btn-sm btn-delete"
+                                            style="background:rgba(255,0,50,0.08); border:1px solid rgba(255,0,50,0.2); color:#ff0032; border-radius:6px; font-size:12px; padding:5px 12px;"
+                                            data-id="@news.NewsArticleId" data-title="@news.NewsTitle">
                                         <i class="bi bi-trash"></i> Delete
                                     </button>
                                 </td>
@@ -101,194 +130,244 @@
                 </table>
             </div>
 
-            int pageGroup = Model.PageSize;
-            int currentGroupStart = ((Model.CurrentPage - 1) / pageGroup) * pageGroup + 1;
-            int currentGroupEnd = Math.Min(currentGroupStart + pageGroup - 1, Model.TotalPages);
-            if (Model.TotalPages > 1)
-            {
-            <nav>
-                <ul class="pagination justify-content-center">
-                    <li class="page-item @(Model.CurrentPage == 1 ? "disabled" : "")">
-                        <a class="page-link" href="?searchTerm=@Model.SearchTerm&page=@(Model.CurrentPage - 1)">Previous</a>
-                    </li>
-                    @if (currentGroupStart > 1)
-                    {
-                        <li class="page-item">
-                            <a class="page-link" href="?searchTerm=@Model.SearchTerm&page=@(currentGroupStart - 1)">...</a>
-                        </li>
-                    }
-                    @for (int i = currentGroupStart; i <= currentGroupEnd; i++)
-                    {
-                        <li class="page-item @(Model.CurrentPage == i ? "active" : "")">
-                            <a class="page-link" href="?searchTerm=@Model.SearchTerm&page=@i">@i</a>
-                        </li>
-                    }
-                    @if (currentGroupEnd < Model.TotalPages)
-                    {
-                        <li class="page-item">
-                            <a class="page-link" href="?searchTerm=@Model.SearchTerm&page=@(currentGroupEnd + 1)">...</a>
-                        </li>
-                    }
-                    <li class="page-item @(Model.CurrentPage == Model.TotalPages ? "disabled" : "")">
-                        <a class="page-link" href="?searchTerm=@Model.SearchTerm&page=@(Model.CurrentPage + 1)">Next</a>
-                    </li>
-                </ul>
-            </nav>
+            <!-- Pagination -->
+            @{
+                int pageGroup = Model.PageSize;
+                int currentGroupStart = ((Model.CurrentPage - 1) / pageGroup) * pageGroup + 1;
+                int currentGroupEnd = Math.Min(currentGroupStart + pageGroup - 1, Model.TotalPages);
             }
+            @if (Model.TotalPages > 1)
+            {
+                <div style="padding:16px; border-top:1px solid rgba(255,255,255,0.05);">
+                    <nav>
+                        <ul class="pagination justify-content-center mb-0" style="gap:4px;">
+                            <li class="page-item @(Model.CurrentPage == 1 ? "disabled" : "")">
+                                <a class="page-link" href="?searchTerm=@Model.SearchTerm&page=@(Model.CurrentPage - 1)"
+                                   style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); color:rgba(255,255,255,0.5); border-radius:6px; font-family:'Rajdhani',sans-serif; font-size:13px;">Previous</a>
+                            </li>
+                            @if (currentGroupStart > 1)
+                            {
+                                <li class="page-item"><a class="page-link" href="?searchTerm=@Model.SearchTerm&page=@(currentGroupStart - 1)"
+                                   style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); color:rgba(255,255,255,0.5); border-radius:6px; font-family:'Rajdhani',sans-serif; font-size:13px;">...</a></li>
+                            }
+                            @for (int i = currentGroupStart; i <= currentGroupEnd; i++)
+                            {
+                                <li class="page-item @(Model.CurrentPage == i ? "active" : "")">
+                                    <a class="page-link" href="?searchTerm=@Model.SearchTerm&page=@i"
+                                       style="background:@(Model.CurrentPage == i ? "linear-gradient(135deg,#00ffff,#00aaff)" : "rgba(255,255,255,0.04)"); border:1px solid @(Model.CurrentPage == i ? "transparent" : "rgba(255,255,255,0.08)"); color:@(Model.CurrentPage == i ? "#050510" : "rgba(255,255,255,0.5)"); border-radius:6px; font-family:'Rajdhani',sans-serif; font-size:13px; font-weight:@(Model.CurrentPage == i ? "700" : "400");">@i</a>
+                                </li>
+                            }
+                            @if (currentGroupEnd < Model.TotalPages)
+                            {
+                                <li class="page-item"><a class="page-link" href="?searchTerm=@Model.SearchTerm&page=@(currentGroupEnd + 1)"
+                                   style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); color:rgba(255,255,255,0.5); border-radius:6px; font-family:'Rajdhani',sans-serif; font-size:13px;">...</a></li>
+                            }
+                            <li class="page-item @(Model.CurrentPage == Model.TotalPages ? "disabled" : "")">
+                                <a class="page-link" href="?searchTerm=@Model.SearchTerm&page=@(Model.CurrentPage + 1)"
+                                   style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); color:rgba(255,255,255,0.5); border-radius:6px; font-family:'Rajdhani',sans-serif; font-size:13px;">Next</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
             }
         </div>
-    </div>
+    }
 </div>
 
-<!-- Create News Modal -->
+<!-- Create Modal -->
 <div class="modal fade" id="createNewsModal" tabindex="-1">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Create News Article</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content" style="background:#0a0a1a; border:1px solid rgba(0,255,255,0.15); border-radius:16px;">
+            <div class="modal-header" style="border-bottom:1px solid rgba(0,255,255,0.1); padding:20px 24px;">
+                <h5 style="font-family:'Orbitron',sans-serif; color:#fff; font-size:16px; margin:0;">
+                    <i class="bi bi-plus-circle me-2" style="color:#00ffff;"></i>Create News Article
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" style="padding:24px;">
                 <form id="createForm">
-                    <div class="mb-3">
-                        <label for="createTitle" class="form-label">Title</label>
-                        <input type="text" class="form-control" id="createTitle" name="NewsTitle" required />
-                    </div>
-                    <div class="mb-3">
-                        <label for="createHeadline" class="form-label">Headline</label>
-                        <input type="text" class="form-control" id="createHeadline" name="Headline" required />
-                    </div>
-                    <div class="mb-3">
-                        <label for="createContent" class="form-label">Content</label>
-                        <textarea class="form-control" id="createContent" name="NewsContent" rows="5"></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label for="createSource" class="form-label">Source</label>
-                        <input type="text" class="form-control" id="createSource" name="NewsSource" />
-                    </div>
-                    <div class="mb-3">
-                        <label for="createCategory" class="form-label">Category</label>
-                        <select class="form-control" id="createCategory" name="CategoryId" required>
-                            <option value="">Select Category</option>
-                            @foreach (var category in Model.Categories)
-                            {
-                                <option value="@category.CategoryId">@category.CategoryName</option>
-                            }
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="createStatus" class="form-label">Status</label>
-                        <select class="form-control" id="createStatus" name="NewsStatus">
-                            <option value="true">Active</option>
-                            <option value="false">Inactive</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Tags</label>
-                        <div class="row">
-                            @foreach (var tag in Model.Tags)
-                            {
-                                <div class="col-md-4">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="TagIds" value="@tag.TagId" id="tag_@tag.TagId">
-                                        <label class="form-check-label" for="tag_@tag.TagId">@tag.TagName</label>
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <label class="form-label" style="color:rgba(255,255,255,0.5); font-size:12px; font-weight:600; letter-spacing:1px; text-transform:uppercase;">Title</label>
+                            <input type="text" class="form-control" id="createTitle" name="NewsTitle" required
+                                   style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); color:#fff; border-radius:8px; font-family:'Rajdhani',sans-serif; padding:10px 14px;" />
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label" style="color:rgba(255,255,255,0.5); font-size:12px; font-weight:600; letter-spacing:1px; text-transform:uppercase;">Headline</label>
+                            <input type="text" class="form-control" id="createHeadline" name="Headline" required
+                                   style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); color:#fff; border-radius:8px; font-family:'Rajdhani',sans-serif; padding:10px 14px;" />
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label" style="color:rgba(255,255,255,0.5); font-size:12px; font-weight:600; letter-spacing:1px; text-transform:uppercase;">Content</label>
+                            <textarea class="form-control" id="createContent" name="NewsContent" rows="4"
+                                      style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); color:#fff; border-radius:8px; font-family:'Rajdhani',sans-serif; padding:10px 14px;"></textarea>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" style="color:rgba(255,255,255,0.5); font-size:12px; font-weight:600; letter-spacing:1px; text-transform:uppercase;">Source</label>
+                            <input type="text" class="form-control" id="createSource" name="NewsSource"
+                                   style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); color:#fff; border-radius:8px; font-family:'Rajdhani',sans-serif; padding:10px 14px;" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" style="color:rgba(255,255,255,0.5); font-size:12px; font-weight:600; letter-spacing:1px; text-transform:uppercase;">Category</label>
+                            <select class="form-control" id="createCategory" name="CategoryId" required
+                                    style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); color:#fff; border-radius:8px; font-family:'Rajdhani',sans-serif; padding:10px 14px;">
+                                <option value="" style="color:#fff;">Select Category</option>
+                                @foreach (var category in Model.Categories)
+                                {
+                                    <option value="@category.CategoryId" style="color:#fff;">@category.CategoryName</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" style="color:rgba(255,255,255,0.5); font-size:12px; font-weight:600; letter-spacing:1px; text-transform:uppercase;">Status</label>
+                            <select class="form-control" id="createStatus" name="NewsStatus"
+                                    style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); color:#fff; border-radius:8px; font-family:'Rajdhani',sans-serif; padding:10px 14px;">
+                                <option value="true" style="color:#00ff88;">Active</option>
+                                <option value="false" style="color:#888;">Inactive</option>
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label" style="color:rgba(255,255,255,0.5); font-size:12px; font-weight:600; letter-spacing:1px; text-transform:uppercase; margin-bottom:8px;">Tags</label>
+                            <div class="row">
+                                @foreach (var tag in Model.Tags)
+                                {
+                                    <div class="col-md-4">
+                                        <div class="form-check" style="margin-bottom:8px;">
+                                            <input class="form-check-input" type="checkbox" name="TagIds" value="@tag.TagId" id="tag_@tag.TagId"
+                                                   style="accent-color:#00ffff;" />
+                                            <label class="form-check-label" for="tag_@tag.TagId" style="color:rgba(255,255,255,0.6); font-size:13px;">@tag.TagName</label>
+                                        </div>
                                     </div>
-                                </div>
-                            }
+                                }
+                            </div>
                         </div>
                     </div>
                 </form>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" id="btnCreate">Create</button>
+            <div class="modal-footer" style="border-top:1px solid rgba(0,255,255,0.1); padding:16px 24px; gap:8px;">
+                <button type="button" class="btn" data-bs-dismiss="modal"
+                        style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:rgba(255,255,255,0.5); border-radius:8px; font-family:'Rajdhani',sans-serif; padding:10px 20px;">
+                    Cancel
+                </button>
+                <button type="button" class="btn" id="btnCreate"
+                        style="background:linear-gradient(135deg,#00ffff,#00aaff); border:none; color:#050510; border-radius:8px; font-family:'Rajdhani',sans-serif; font-weight:700; padding:10px 24px; letter-spacing:1px;">
+                    <i class="bi bi-check-circle me-1"></i>Create
+                </button>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Edit News Modal -->
+<!-- Edit Modal -->
 <div class="modal fade" id="editNewsModal" tabindex="-1">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Edit News Article</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content" style="background:#0a0a1a; border:1px solid rgba(255,0,255,0.15); border-radius:16px;">
+            <div class="modal-header" style="border-bottom:1px solid rgba(255,0,255,0.1); padding:20px 24px;">
+                <h5 style="font-family:'Orbitron',sans-serif; color:#fff; font-size:16px; margin:0;">
+                    <i class="bi bi-pencil me-2" style="color:#ff00ff;"></i>Edit News Article
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" style="padding:24px;">
                 <form id="editForm">
                     <input type="hidden" id="editId" name="NewsArticleId" />
-                    <div class="mb-3">
-                        <label for="editTitle" class="form-label">Title</label>
-                        <input type="text" class="form-control" id="editTitle" name="NewsTitle" required />
-                    </div>
-                    <div class="mb-3">
-                        <label for="editHeadline" class="form-label">Headline</label>
-                        <input type="text" class="form-control" id="editHeadline" name="Headline" required />
-                    </div>
-                    <div class="mb-3">
-                        <label for="editContent" class="form-label">Content</label>
-                        <textarea class="form-control" id="editContent" name="NewsContent" rows="5"></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label for="editSource" class="form-label">Source</label>
-                        <input type="text" class="form-control" id="editSource" name="NewsSource" />
-                    </div>
-                    <div class="mb-3">
-                        <label for="editCategory" class="form-label">Category</label>
-                        <select class="form-control" id="editCategory" name="CategoryId" required>
-                            <option value="">Select Category</option>
-                            @foreach (var category in Model.Categories)
-                            {
-                                <option value="@category.CategoryId">@category.CategoryName</option>
-                            }
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="editStatus" class="form-label">Status</label>
-                        <select class="form-control" id="editStatus" name="NewsStatus">
-                            <option value="true">Active</option>
-                            <option value="false">Inactive</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Tags</label>
-                        <div class="row" id="editTags">
-                            @foreach (var tag in Model.Tags)
-                            {
-                                <div class="col-md-4">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="TagIds" value="@tag.TagId" id="edit_tag_@tag.TagId">
-                                        <label class="form-check-label" for="edit_tag_@tag.TagId">@tag.TagName</label>
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <label class="form-label" style="color:rgba(255,255,255,0.5); font-size:12px; font-weight:600; letter-spacing:1px; text-transform:uppercase;">Title</label>
+                            <input type="text" class="form-control" id="editTitle" name="NewsTitle" required
+                                   style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); color:#fff; border-radius:8px; font-family:'Rajdhani',sans-serif; padding:10px 14px;" />
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label" style="color:rgba(255,255,255,0.5); font-size:12px; font-weight:600; letter-spacing:1px; text-transform:uppercase;">Headline</label>
+                            <input type="text" class="form-control" id="editHeadline" name="Headline" required
+                                   style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); color:#fff; border-radius:8px; font-family:'Rajdhani',sans-serif; padding:10px 14px;" />
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label" style="color:rgba(255,255,255,0.5); font-size:12px; font-weight:600; letter-spacing:1px; text-transform:uppercase;">Content</label>
+                            <textarea class="form-control" id="editContent" name="NewsContent" rows="4"
+                                      style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); color:#fff; border-radius:8px; font-family:'Rajdhani',sans-serif; padding:10px 14px;"></textarea>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" style="color:rgba(255,255,255,0.5); font-size:12px; font-weight:600; letter-spacing:1px; text-transform:uppercase;">Source</label>
+                            <input type="text" class="form-control" id="editSource" name="NewsSource"
+                                   style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); color:#fff; border-radius:8px; font-family:'Rajdhani',sans-serif; padding:10px 14px;" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" style="color:rgba(255,255,255,0.5); font-size:12px; font-weight:600; letter-spacing:1px; text-transform:uppercase;">Category</label>
+                            <select class="form-control" id="editCategory" name="CategoryId" required
+                                    style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); color:#fff; border-radius:8px; font-family:'Rajdhani',sans-serif; padding:10px 14px;">
+                                <option value="" style="color:#fff;">Select Category</option>
+                                @foreach (var category in Model.Categories)
+                                {
+                                    <option value="@category.CategoryId" style="color:#fff;">@category.CategoryName</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" style="color:rgba(255,255,255,0.5); font-size:12px; font-weight:600; letter-spacing:1px; text-transform:uppercase;">Status</label>
+                            <select class="form-control" id="editStatus" name="NewsStatus"
+                                    style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); color:#fff; border-radius:8px; font-family:'Rajdhani',sans-serif; padding:10px 14px;">
+                                <option value="true" style="color:#00ff88;">Active</option>
+                                <option value="false" style="color:#888;">Inactive</option>
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label" style="color:rgba(255,255,255,0.5); font-size:12px; font-weight:600; letter-spacing:1px; text-transform:uppercase; margin-bottom:8px;">Tags</label>
+                            <div class="row">
+                                @foreach (var tag in Model.Tags)
+                                {
+                                    <div class="col-md-4">
+                                        <div class="form-check" style="margin-bottom:8px;">
+                                            <input class="form-check-input" type="checkbox" name="TagIds" value="@tag.TagId" id="edit_tag_@tag.TagId"
+                                                   style="accent-color:#ff00ff;" />
+                                            <label class="form-check-label" for="edit_tag_@tag.TagId" style="color:rgba(255,255,255,0.6); font-size:13px;">@tag.TagName</label>
+                                        </div>
                                     </div>
-                                </div>
-                            }
+                                }
+                            </div>
                         </div>
                     </div>
                 </form>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" id="btnUpdate">Update</button>
+            <div class="modal-footer" style="border-top:1px solid rgba(255,0,255,0.1); padding:16px 24px; gap:8px;">
+                <button type="button" class="btn" data-bs-dismiss="modal"
+                        style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:rgba(255,255,255,0.5); border-radius:8px; font-family:'Rajdhani',sans-serif; padding:10px 20px;">
+                    Cancel
+                </button>
+                <button type="button" class="btn" id="btnUpdate"
+                        style="background:linear-gradient(135deg,#ff00ff,#cc00cc); border:none; color:#fff; border-radius:8px; font-family:'Rajdhani',sans-serif; font-weight:700; padding:10px 24px; letter-spacing:1px;">
+                    <i class="bi bi-check-circle me-1"></i>Update
+                </button>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Delete Confirmation Modal -->
+<!-- Delete Modal -->
 <div class="modal fade" id="deleteModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Confirm Delete</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="background:#0a0a1a; border:1px solid rgba(255,0,50,0.2); border-radius:16px;">
+            <div class="modal-header" style="border-bottom:1px solid rgba(255,0,50,0.1); padding:20px 24px;">
+                <h5 style="font-family:'Orbitron',sans-serif; color:#fff; font-size:16px; margin:0;">
+                    <i class="bi bi-exclamation-triangle me-2" style="color:#ff0032;"></i>Confirm Delete
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
-            <div class="modal-body">
-                <p>Are you sure you want to delete the news article: <strong id="deleteTitle"></strong>?</p>
+            <div class="modal-body text-center" style="padding:32px 24px;">
+                <i class="bi bi-trash" style="font-size:48px; color:rgba(255,0,50,0.5); display:block; margin-bottom:16px;"></i>
+                <p style="color:rgba(255,255,255,0.7); font-size:15px; margin-bottom:4px;">Delete article:</p>
+                <p style="color:#ff0032; font-weight:700; font-size:16px;" id="deleteTitle"></p>
+                <p style="color:rgba(255,255,255,0.3); font-size:13px; margin-top:12px;">This action cannot be undone.</p>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-danger" id="btnConfirmDelete">Delete</button>
+            <div class="modal-footer" style="border-top:1px solid rgba(255,0,50,0.1); padding:16px 24px; gap:8px;">
+                <button type="button" class="btn" data-bs-dismiss="modal"
+                        style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:rgba(255,255,255,0.5); border-radius:8px; font-family:'Rajdhani',sans-serif; padding:10px 20px;">
+                    Cancel
+                </button>
+                <button type="button" class="btn" id="btnConfirmDelete"
+                        style="background:linear-gradient(135deg,#ff0032,#cc0028); border:none; color:#fff; border-radius:8px; font-family:'Rajdhani',sans-serif; font-weight:700; padding:10px 24px; letter-spacing:1px;">
+                    <i class="bi bi-trash me-1"></i>Delete
+                </button>
             </div>
         </div>
     </div>
@@ -298,35 +377,26 @@
     <script>
         let connection;
 
-        // Build a table row HTML from a news object
         function buildNewsRow(news) {
             const statusBadge = news.newsStatus
-                ? '<span class="badge bg-success">Active</span>'
-                : '<span class="badge bg-secondary">Inactive</span>';
-            const createdDate = news.createdDate
-                ? new Date(news.createdDate).toLocaleDateString('vi-VN')
-                : '';
-            return `<tr id="row-${news.newsArticleId}">
-                <td>${news.newsArticleId}</td>
-                <td>${news.newsTitle ?? ''}</td>
-                <td>${news.headline ?? ''}</td>
-                <td>${news.category?.categoryName ?? ''}</td>
-                <td>${statusBadge}</td>
-                <td>${createdDate}</td>
-                <td>
-                    <button type="button" class="btn btn-sm btn-info btn-edit" data-id="${news.newsArticleId}">
-                        <i class="bi bi-pencil"></i> Edit
-                    </button>
-                    <button type="button" class="btn btn-sm btn-danger btn-delete" data-id="${news.newsArticleId}" data-title="${news.newsTitle ?? ''}">
-                        <i class="bi bi-trash"></i> Delete
-                    </button>
-                </td>
-            </tr>`;
+                ? '<span style="background:rgba(0,255,136,0.1); color:#00ff88; border:1px solid rgba(0,255,136,0.2); padding:3px 10px; border-radius:50px; font-size:12px; font-weight:600;"><i class="bi bi-check-circle-fill me-1"></i>Active</span>'
+                : '<span style="background:rgba(128,128,128,0.1); color:#888; border:1px solid rgba(128,128,128,0.2); padding:3px 10px; border-radius:50px; font-size:12px; font-weight:600;"><i class="bi bi-x-circle me-1"></i>Inactive</span>';
+            const createdDate = news.createdDate ? new Date(news.createdDate).toLocaleDateString('vi-VN') : '';
+            return '<tr style="border-bottom:1px solid rgba(255,255,255,0.04);">' +
+                '<td style="padding:14px 16px; color:rgba(255,255,255,0.3); font-size:13px;"></td>' +
+                '<td style="padding:14px 16px; color:rgba(0,255,255,0.5); font-size:13px; font-family:\'Orbitron\',sans-serif;">#' + news.newsArticleId + '</td>' +
+                '<td style="padding:14px 16px; font-size:14px; font-weight:600; color:#fff;">' + (news.newsTitle || '') + '</td>' +
+                '<td style="padding:14px 16px; font-size:13px; color:rgba(255,255,255,0.5);">' + (news.headline || '') + '</td>' +
+                '<td style="padding:14px 16px;"><span style="background:rgba(255,102,0,0.1); color:#ff6600; border:1px solid rgba(255,102,0,0.2); padding:3px 10px; border-radius:50px; font-size:12px;">' + (news.category?.categoryName || '') + '</span></td>' +
+                '<td style="padding:14px 16px;">' + statusBadge + '</td>' +
+                '<td style="padding:14px 16px; color:rgba(255,255,255,0.4); font-size:13px;">' + createdDate + '</td>' +
+                '<td style="padding:14px 16px;">' +
+                '<button type="button" class="btn btn-sm btn-edit" style="background:rgba(0,255,255,0.08); border:1px solid rgba(0,255,255,0.2); color:#00ffff; border-radius:6px; font-size:12px; padding:5px 12px; margin-right:4px;" data-id="' + news.newsArticleId + '"><i class="bi bi-pencil"></i> Edit</button>' +
+                '<button type="button" class="btn btn-sm btn-delete" style="background:rgba(255,0,50,0.08); border:1px solid rgba(255,0,50,0.2); color:#ff0032; border-radius:6px; font-size:12px; padding:5px 12px;" data-id="' + news.newsArticleId + '" data-title="' + (news.newsTitle || '') + '"><i class="bi bi-trash"></i> Delete</button>' +
+                '</td></tr>';
         }
 
-        // Attach event handlers to edit/delete buttons (called after DOM changes)
         function attachRowHandlers() {
-            // Remove old handlers to avoid duplicates
             $(document).off('click', '.btn-edit').on('click', '.btn-edit', function () {
                 const newsId = $(this).data('id');
                 $.get('?handler=Edit&id=' + newsId, function (data) {
@@ -339,97 +409,60 @@
                         $('#editCategory').val(data.news.categoryId);
                         $('#editStatus').val(String(data.news.newsStatus));
                         $('#editTags input[type="checkbox"]').prop('checked', false);
-                        data.news.tags.forEach(tagId => {
-                            $('#edit_tag_' + tagId).prop('checked', true);
-                        });
+                        data.news.tags.forEach(tagId => { $('#edit_tag_' + tagId).prop('checked', true); });
                         $('#editNewsModal').modal('show');
-                    } else {
-                        alert('Error loading news data: ' + data.message);
-                    }
+                    } else { alert('Error: ' + data.message); }
                 });
             });
 
             $(document).off('click', '.btn-delete').on('click', '.btn-delete', function () {
-                const newsId = $(this).data('id');
-                const newsTitle = $(this).data('title');
-                $('#deleteTitle').text(newsTitle);
+                $('#deleteTitle').text($(this).data('title'));
                 $('#deleteModal').modal('show');
-                $('#btnConfirmDelete').data('id', newsId);
+                $('#btnConfirmDelete').data('id', $(this).data('id'));
             });
         }
 
         $(document).ready(function () {
-            // Initialize SignalR connection
             connection = new signalR.HubConnectionBuilder()
-                .withUrl('/newsHub')
-                .withAutomaticReconnect()
-                .build();
+                .withUrl('/newsHub').withAutomaticReconnect().build();
 
-            // Real-time: news created by another client
             connection.on('NewsCreated', function (news) {
-                const $tbody = $('table tbody');
-                $tbody.prepend(buildNewsRow(news));
+                $('table tbody').prepend(buildNewsRow(news));
                 attachRowHandlers();
             });
-
-            // Real-time: news updated by another client
             connection.on('NewsUpdated', function (news) {
-                const $row = $('#row-' + news.newsArticleId);
-                if ($row.length) {
-                    $row.replaceWith(buildNewsRow(news));
-                    attachRowHandlers();
-                }
+                $('#row-' + news.newsArticleId).replaceWith(buildNewsRow(news));
+                attachRowHandlers();
             });
-
-            // Real-time: news deleted by another client
-            connection.on('NewsDeleted', function (newsArticleId) {
-                $('#row-' + newsArticleId).remove();
-            });
+            connection.on('NewsDeleted', function (newsArticleId) { $('#row-' + newsArticleId).remove(); });
 
             connection.start().catch(err => console.error('SignalR error:', err.toString()));
-
             attachRowHandlers();
 
-            // Handle create
             $('#btnCreate').click(function () {
                 const token = $('input[name="__RequestVerificationToken"]').first().val();
                 const formData = $('#createForm').serialize() + '&__RequestVerificationToken=' + encodeURIComponent(token);
                 $.post('?handler=Create', formData, function (response) {
-                    if (response.success) {
-                        $('#createNewsModal').modal('hide');
-                        $('#createForm')[0].reset();
-                        // Row will be added via SignalR NewsCreated event
-                    } else {
-                        alert('Error: ' + response.message);
-                    }
+                    if (response.success) { $('#createNewsModal').modal('hide'); $('#createForm')[0].reset(); }
+                    else { alert('Error: ' + response.message); }
                 });
             });
 
-            // Handle update
             $('#btnUpdate').click(function () {
                 const token = $('input[name="__RequestVerificationToken"]').first().val();
                 const formData = $('#editForm').serialize() + '&__RequestVerificationToken=' + encodeURIComponent(token);
                 $.post('?handler=Update', formData, function (response) {
-                    if (response.success) {
-                        $('#editNewsModal').modal('hide');
-                        // Row will be updated via SignalR NewsUpdated event
-                    } else {
-                        alert('Error: ' + response.message);
-                    }
+                    if (response.success) { $('#editNewsModal').modal('hide'); }
+                    else { alert('Error: ' + response.message); }
                 });
             });
 
-            // Handle confirm delete
             $('#btnConfirmDelete').click(function () {
                 const newsId = $(this).data('id');
                 const token = $('input[name="__RequestVerificationToken"]').first().val();
                 $.post('?handler=Delete', { id: newsId, __RequestVerificationToken: token }, function (response) {
-                    if (response.success) {
-                        $('#deleteModal').modal('hide');
-                        // Row will be removed via SignalR NewsDeleted event
-                    } else {
-                        alert('Error: ' + response.message);
-                    }
+                    if (response.success) { $('#deleteModal').modal('hide'); }
+                    else { alert('Error: ' + response.message); }
                 });
             });
         });

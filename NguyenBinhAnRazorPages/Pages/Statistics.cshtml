@@ -5,144 +5,171 @@
 }
 @attribute [AdminOnly]
 
-<div class="container mt-4">
-    <div class="row">
-        <div class="col-12">
-            <h2>Statistics Report</h2>
-            
-            <!-- Date Range Filter -->
-            <div class="card mb-4">
-                <div class="card-header">
-                    <h5>Filter by Date Range</h5>
-                </div>
-                <div class="card-body">
-                    <form method="get" class="row g-3">
-                        <div class="col-md-4">
-                            <label for="startDate" class="form-label">Start Date</label>
-                            <input type="date" class="form-control" id="startDate" name="startDate" value="@Model.StartDate?.ToString("yyyy-MM-dd")" />
-                        </div>
-                        <div class="col-md-4">
-                            <label for="endDate" class="form-label">End Date</label>
-                            <input type="date" class="form-control" id="endDate" name="endDate" value="@Model.EndDate?.ToString("yyyy-MM-dd")" />
-                        </div>
-                        <div class="col-md-4 d-flex align-items-end">
-                            <button type="submit" class="btn btn-primary me-2">Generate Report</button>
-                            <button type="button" class="btn btn-outline-secondary" id="btnClear">Clear</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
+<style>
+    body { font-family: 'Rajdhani', sans-serif; background: #050510; color: #e0e0ff; }
+</style>
 
-            <!-- Summary Cards -->
-            <div class="row mb-4">
-                <div class="col-md-3">
-                    <div class="card bg-primary text-white">
-                        <div class="card-body">
-                            <h5 class="card-title">Total News Articles</h5>
-                            <h2>@Model.TotalNewsArticles</h2>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card bg-success text-white">
-                        <div class="card-body">
-                            <h5 class="card-title">Active News</h5>
-                            <h2>@Model.ActiveNewsArticles</h2>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card bg-info text-white">
-                        <div class="card-body">
-                            <h5 class="card-title">Total Categories</h5>
-                            <h2>@Model.TotalCategories</h2>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card bg-warning text-white">
-                        <div class="card-body">
-                            <h5 class="card-title">Total Accounts</h5>
-                            <h2>@Model.TotalAccounts</h2>
-                        </div>
-                    </div>
-                </div>
-            </div>
+<div class="container-fluid py-4" style="position:relative; z-index:1;">
 
-            <!-- News Statistics Table -->
-            <div class="card">
-                <div class="card-header">
-                    <h5>News Articles Statistics (Sorted by Created Date - Descending)</h5>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>News ID</th>
-                                    <th>Title</th>
-                                    <th>Category</th>
-                                    <th>Creator</th>
-                                    <th>Created Date</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var news in Model.NewsStatistics)
-                                {
-                                    <tr>
-                                        <td>@news.NewsArticleId</td>
-                                        <td>@news.NewsTitle</td>
-                                        <td>@news.Category?.CategoryName</td>
-                                        <td>@news.Creator?.AccountName</td>
-                                        <td>@news.CreatedDate?.ToString("dd/MM/yyyy HH:mm")</td>
-                                        <td>
-                                            @if (news.NewsStatus == true)
-                                            {
-                                                <span class="badge bg-success">Active</span>
-                                            }
-                                            else
-                                            {
-                                                <span class="badge bg-secondary">Inactive</span>
-                                            }
-                                        </td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
+    <!-- Page Header -->
+    <div class="d-flex align-items-center justify-content-between flex-wrap gap-3 mb-4">
+        <div>
+            <h2 style="font-family:'Orbitron',sans-serif; font-size:1.6rem; color:#fff; margin-bottom:4px;">
+                <i class="bi bi-bar-chart-fill me-2" style="color:#a78bfa;"></i> Statistics Report
+            </h2>
+            <p style="color:rgba(255,255,255,0.4); font-size:14px; margin:0;">System overview and analytics dashboard</p>
+        </div>
+    </div>
+
+    <!-- Date Filter -->
+    <div style="background:rgba(167,139,250,0.05); border:1px solid rgba(167,139,250,0.12); border-radius:16px; padding:20px 24px; margin-bottom:28px;">
+        <form method="get" class="row g-3 align-items-end mb-0">
+            <div class="col-md-4">
+                <label style="color:rgba(255,255,255,0.5); font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; display:block; margin-bottom:6px;">Start Date</label>
+                <input type="date" id="startDate" name="startDate" class="form-control"
+                       style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#fff; border-radius:8px; font-family:'Rajdhani',sans-serif; padding:10px 14px;"
+                       value="@Model.StartDate?.ToString("yyyy-MM-dd")" />
+            </div>
+            <div class="col-md-4">
+                <label style="color:rgba(255,255,255,0.5); font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; display:block; margin-bottom:6px;">End Date</label>
+                <input type="date" id="endDate" name="endDate" class="form-control"
+                       style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#fff; border-radius:8px; font-family:'Rajdhani',sans-serif; padding:10px 14px;"
+                       value="@Model.EndDate?.ToString("yyyy-MM-dd")" />
+            </div>
+            <div class="col-md-4" style="display:flex; gap:8px;">
+                <button type="submit" class="btn" style="background:linear-gradient(135deg,#a78bfa,#8b5cf6); border:none; color:#fff; border-radius:8px; font-family:'Rajdhani',sans-serif; font-weight:700; padding:10px 20px; letter-spacing:1px; flex:1;">
+                    <i class="bi bi-graph-up me-1"></i>Generate Report
+                </button>
+                <button type="button" id="btnClear" class="btn" style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:rgba(255,255,255,0.5); border-radius:8px; font-family:'Rajdhani',sans-serif; padding:10px 16px;">
+                    <i class="bi bi-x-circle"></i>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div style="background:rgba(0,255,255,0.05); border:1px solid rgba(0,255,255,0.12); border-top:3px solid #00ffff; border-radius:16px; padding:24px 20px;">
+                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
+                    <div style="width:44px; height:44px; background:rgba(0,255,255,0.1); border-radius:10px; display:flex; align-items:center; justify-content:center; color:#00ffff; font-size:20px;">
+                        <i class="bi bi-newspaper"></i>
                     </div>
-                    
-                    @if (!Model.NewsStatistics.Any())
+                </div>
+                <div style="font-family:'Orbitron',sans-serif; font-size:2.2rem; font-weight:800; color:#00ffff; line-height:1; margin-bottom:4px;">@Model.TotalNewsArticles</div>
+                <div style="color:rgba(255,255,255,0.4); font-size:12px; font-weight:600; letter-spacing:1px; text-transform:uppercase;">Total Articles</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div style="background:rgba(0,255,136,0.05); border:1px solid rgba(0,255,136,0.12); border-top:3px solid #00ff88; border-radius:16px; padding:24px 20px;">
+                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
+                    <div style="width:44px; height:44px; background:rgba(0,255,136,0.1); border-radius:10px; display:flex; align-items:center; justify-content:center; color:#00ff88; font-size:20px;">
+                        <i class="bi bi-check-circle-fill"></i>
+                    </div>
+                </div>
+                <div style="font-family:'Orbitron',sans-serif; font-size:2.2rem; font-weight:800; color:#00ff88; line-height:1; margin-bottom:4px;">@Model.ActiveNewsArticles</div>
+                <div style="color:rgba(255,255,255,0.4); font-size:12px; font-weight:600; letter-spacing:1px; text-transform:uppercase;">Active Articles</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div style="background:rgba(255,102,0,0.05); border:1px solid rgba(255,102,0,0.12); border-top:3px solid #ff6600; border-radius:16px; padding:24px 20px;">
+                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
+                    <div style="width:44px; height:44px; background:rgba(255,102,0,0.1); border-radius:10px; display:flex; align-items:center; justify-content:center; color:#ff6600; font-size:20px;">
+                        <i class="bi bi-folder-fill"></i>
+                    </div>
+                </div>
+                <div style="font-family:'Orbitron',sans-serif; font-size:2.2rem; font-weight:800; color:#ff6600; line-height:1; margin-bottom:4px;">@Model.TotalCategories</div>
+                <div style="color:rgba(255,255,255,0.4); font-size:12px; font-weight:600; letter-spacing:1px; text-transform:uppercase;">Categories</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div style="background:rgba(255,0,255,0.05); border:1px solid rgba(255,0,255,0.12); border-top:3px solid #ff00ff; border-radius:16px; padding:24px 20px;">
+                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
+                    <div style="width:44px; height:44px; background:rgba(255,0,255,0.1); border-radius:10px; display:flex; align-items:center; justify-content:center; color:#ff00ff; font-size:20px;">
+                        <i class="bi bi-people-fill"></i>
+                    </div>
+                </div>
+                <div style="font-family:'Orbitron',sans-serif; font-size:2.2rem; font-weight:800; color:#ff00ff; line-height:1; margin-bottom:4px;">@Model.TotalAccounts</div>
+                <div style="color:rgba(255,255,255,0.4); font-size:12px; font-weight:600; letter-spacing:1px; text-transform:uppercase;">Accounts</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- News Table -->
+    <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(167,139,250,0.12); border-radius:16px; overflow:hidden; margin-bottom:28px;">
+        <div style="background:rgba(167,139,250,0.05); border-bottom:1px solid rgba(167,139,250,0.1); padding:16px 24px;">
+            <h5 style="font-family:'Orbitron',sans-serif; color:#fff; font-size:14px; margin:0; letter-spacing:1px;">
+                <i class="bi bi-list-ul me-2" style="color:#a78bfa;"></i>News Articles (Sorted by Created Date)
+            </h5>
+        </div>
+        <div class="table-responsive">
+            <table class="table mb-0" style="color:#e0e0ff; font-family:'Rajdhani',sans-serif; --bs-table-bg: transparent;">
+                <thead>
+                    <tr style="background:rgba(167,139,250,0.03); border-bottom:1px solid rgba(167,139,250,0.08);">
+                        <th style="padding:12px 16px; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:rgba(167,139,250,0.6);">ID</th>
+                        <th style="padding:12px 16px; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:rgba(167,139,250,0.6);">Title</th>
+                        <th style="padding:12px 16px; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:rgba(167,139,250,0.6);">Category</th>
+                        <th style="padding:12px 16px; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:rgba(167,139,250,0.6);">Creator</th>
+                        <th style="padding:12px 16px; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:rgba(167,139,250,0.6);">Created</th>
+                        <th style="padding:12px 16px; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:rgba(167,139,250,0.6);">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var news in Model.NewsStatistics)
                     {
-                        <div class="alert alert-info text-center">
-                            <h4>No news articles found</h4>
-                            <p>Try adjusting the date range filter.</p>
-                        </div>
+                        <tr style="border-bottom:1px solid rgba(255,255,255,0.03);">
+                            <td style="padding:12px 16px; color:rgba(167,139,250,0.5); font-size:13px; font-family:'Orbitron',sans-serif;">#@news.NewsArticleId</td>
+                            <td style="padding:12px 16px; font-size:14px; font-weight:600; color:#fff; max-width:200px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">@news.NewsTitle</td>
+                            <td style="padding:12px 16px;"><span style="background:rgba(255,102,0,0.1); color:#ff6600; border:1px solid rgba(255,102,0,0.2); padding:3px 10px; border-radius:50px; font-size:12px;">@news.Category?.CategoryName</span></td>
+                            <td style="padding:12px 16px; color:rgba(255,255,255,0.5); font-size:13px;">@news.Creator?.AccountName</td>
+                            <td style="padding:12px 16px; color:rgba(255,255,255,0.4); font-size:13px;">@news.CreatedDate?.ToString("dd/MM/yyyy HH:mm")</td>
+                            <td style="padding:12px 16px;">
+                                @if (news.NewsStatus == true)
+                                {
+                                    <span style="background:rgba(0,255,136,0.1); color:#00ff88; border:1px solid rgba(0,255,136,0.2); padding:3px 10px; border-radius:50px; font-size:12px; font-weight:600;"><i class="bi bi-check-circle-fill me-1"></i>Active</span>
+                                }
+                                else
+                                {
+                                    <span style="background:rgba(128,128,128,0.1); color:#888; border:1px solid rgba(128,128,128,0.2); padding:3px 10px; border-radius:50px; font-size:12px; font-weight:600;"><i class="bi bi-x-circle me-1"></i>Inactive</span>
+                                }
+                            </td>
+                        </tr>
                     }
+                </tbody>
+            </table>
+        </div>
+        @if (!Model.NewsStatistics.Any())
+        {
+            <div style="padding:40px; text-align:center;">
+                <i class="bi bi-inbox" style="font-size:36px; color:rgba(255,255,255,0.15); display:block; margin-bottom:12px;"></i>
+                <p style="color:rgba(255,255,255,0.4); font-size:14px;">No articles found in selected date range.</p>
+            </div>
+        }
+    </div>
+
+    <!-- Charts -->
+    <div class="row g-3">
+        <div class="col-md-6">
+            <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(0,255,255,0.1); border-radius:16px; overflow:hidden;">
+                <div style="background:rgba(0,255,255,0.04); border-bottom:1px solid rgba(0,255,255,0.08); padding:14px 20px;">
+                    <h6 style="font-family:'Orbitron',sans-serif; color:#00ffff; font-size:12px; margin:0; letter-spacing:1px;">
+                        <i class="bi bi-pie-chart-fill me-2"></i>News by Category
+                    </h6>
+                </div>
+                <div style="padding:24px;">
+                    <canvas id="categoryChart" style="max-height:280px;"></canvas>
                 </div>
             </div>
-
-            <!-- Charts Section -->
-            <div class="row mt-4">
-                <div class="col-md-6">
-                    <div class="card">
-                        <div class="card-header">
-                            <h5>News by Category</h5>
-                        </div>
-                        <div class="card-body">
-                            <canvas id="categoryChart"></canvas>
-                        </div>
-                    </div>
+        </div>
+        <div class="col-md-6">
+            <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,0,255,0.1); border-radius:16px; overflow:hidden;">
+                <div style="background:rgba(255,0,255,0.04); border-bottom:1px solid rgba(255,0,255,0.08); padding:14px 20px;">
+                    <h6 style="font-family:'Orbitron',sans-serif; color:#ff00ff; font-size:12px; margin:0; letter-spacing:1px;">
+                        <i class="bi bi-bar-chart-fill me-2"></i>News by Creator
+                    </h6>
                 </div>
-                <div class="col-md-6">
-                    <div class="card">
-                        <div class="card-header">
-                            <h5>News by Creator</h5>
-                        </div>
-                        <div class="card-body">
-                            <canvas id="creatorChart"></canvas>
-                        </div>
-                    </div>
+                <div style="padding:24px;">
+                    <canvas id="creatorChart" style="max-height:280px;"></canvas>
                 </div>
             </div>
         </div>
@@ -153,83 +180,56 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         $(document).ready(function() {
-            // Clear button functionality
             $('#btnClear').click(function() {
                 $('#startDate').val('');
                 $('#endDate').val('');
                 window.location.href = '/Statistics';
             });
 
-            // Category Chart
-            const categoryCtx = document.getElementById('categoryChart').getContext('2d');
+            const cyberColors = ['#00ffff', '#ff00ff', '#00ff88', '#ff6600', '#ffc800', '#a78bfa', '#ff0032', '#22d3ee'];
+
             const categoryLabels = @Html.Raw(Model.CategoryLabels);
             const categoryData = @Html.Raw(Model.CategoryData);
-
-            if (categoryLabels.length > 0 && categoryData.length > 0) {
-                new Chart(categoryCtx, {
-                    type: 'pie',
+            if (categoryLabels.length > 0) {
+                new Chart(document.getElementById('categoryChart').getContext('2d'), {
+                    type: 'doughnut',
                     data: {
                         labels: categoryLabels,
-                        datasets: [{
-                            data: categoryData,
-                            backgroundColor: [
-                                '#FF6384',
-                                '#36A2EB',
-                                '#FFCE56',
-                                '#4BC0C0',
-                                '#9966FF',
-                                '#FF9F40'
-                            ]
-                        }]
+                        datasets: [{ data: categoryData, backgroundColor: cyberColors, borderColor: '#050510', borderWidth: 2 }]
                     },
                     options: {
                         responsive: true,
                         plugins: {
-                            legend: {
-                                position: 'bottom'
-                            }
+                            legend: { position: 'bottom', labels: { color: 'rgba(255,255,255,0.5)', font: { family: 'Rajdhani', size: 12 } } }
                         }
                     }
                 });
             } else {
-                document.getElementById('categoryChart').parentElement.innerHTML = '<p class="text-center text-muted">No category data available</p>';
+                document.getElementById('categoryChart').parentElement.innerHTML = '<p style="color:rgba(255,255,255,0.3); text-align:center; font-size:14px; padding:40px 0;">No data available</p>';
             }
 
-            // Creator Chart
-            const creatorCtx = document.getElementById('creatorChart').getContext('2d');
             const creatorLabels = @Html.Raw(Model.CreatorLabels);
             const creatorData = @Html.Raw(Model.CreatorData);
-
-            if (creatorLabels.length > 0 && creatorData.length > 0) {
-                new Chart(creatorCtx, {
+            if (creatorLabels.length > 0) {
+                new Chart(document.getElementById('creatorChart').getContext('2d'), {
                     type: 'bar',
                     data: {
                         labels: creatorLabels,
-                        datasets: [{
-                            label: 'News Articles',
-                            data: creatorData,
-                            backgroundColor: '#36A2EB'
-                        }]
+                        datasets: [{ label: 'Articles', data: creatorData, backgroundColor: cyberColors.slice(0, creatorLabels.length), borderRadius: 6 }]
                     },
                     options: {
                         responsive: true,
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                ticks: {
-                                    stepSize: 1
-                                }
-                            }
-                        },
                         plugins: {
-                            legend: {
-                                display: false
-                            }
+                            legend: { display: false }
+                        },
+                        scales: {
+                            y: { beginAtZero: true, ticks: { color: 'rgba(255,255,255,0.4)', font: { family: 'Rajdhani' } }, grid: { color: 'rgba(255,255,255,0.05)' } },
+                            x: { ticks: { color: 'rgba(255,255,255,0.4)', font: { family: 'Rajdhani' } }, grid: { display: false } }
                         }
                     }
                 });
             } else {
-                document.getElementById('creatorChart').parentElement.innerHTML = '<p class="text-center text-muted">No creator data available</p>';
+                document.getElementById('creatorChart').parentElement.innerHTML = '<p style="color:rgba(255,255,255,0.3); text-align:center; font-size:14px; padding:40px 0;">No data available</p>';
             }
         });
     </script>

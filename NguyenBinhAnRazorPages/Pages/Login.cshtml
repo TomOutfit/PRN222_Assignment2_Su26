@@ -1,444 +1,452 @@
 @page
 @model NguyenBinhAnRazorPages.Pages.LoginModel
 @{
-    ViewData["Title"] = "Login";
+    ViewData["Title"] = "Sign In";
     Layout = "_LayoutLogin";
 }
-
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
 <style>
-    .login-wrapper {
+    :root {
+        --cyan: #00ffff;
+        --mag: #ff00ff;
+        --dark: #050510;
+    }
+
+    body {
+        font-family: 'Rajdhani', sans-serif;
+        margin: 0;
+        background: var(--dark);
+        min-height: 100vh;
+        overflow: hidden;
+    }
+
+    .login-root {
         display: flex;
         min-height: 100vh;
     }
 
-    /* Left Side - Login Form */
-    .login-left {
+    /* ===== LEFT - FORM PANEL ===== */
+    .login-form-panel {
         flex: 1;
         display: flex;
         align-items: center;
         justify-content: center;
-        background: white;
+        background: rgba(5, 5, 16, 0.95);
+        position: relative;
+        z-index: 1;
         padding: 40px;
     }
 
-    .login-card {
-        max-width: 420px;
-        width: 100%;
+    .login-form-panel::before {
+        content: '';
+        position: absolute;
+        top: -200px; left: -100px;
+        width: 400px; height: 400px;
+        background: radial-gradient(circle, rgba(0,255,255,0.07), transparent);
+        border-radius: 50%;
+        pointer-events: none;
     }
 
-    .brand-logo {
+    .login-form-panel::after {
+        content: '';
+        position: absolute;
+        bottom: -100px; right: -50px;
+        width: 300px; height: 300px;
+        background: radial-gradient(circle, rgba(255,0,255,0.07), transparent);
+        border-radius: 50%;
+        pointer-events: none;
+    }
+
+    .login-box {
+        width: 100%;
+        max-width: 440px;
+    }
+
+    .login-brand {
         display: flex;
         align-items: center;
         gap: 12px;
-        margin-bottom: 32px;
+        margin-bottom: 40px;
+        text-decoration: none;
     }
 
-    .brand-icon {
-        width: 48px;
-        height: 48px;
-        background: linear-gradient(135deg, #1e3a5f 0%, #2d5a87 100%);
+    .login-brand-icon {
+        width: 44px; height: 44px;
+        background: linear-gradient(135deg, var(--cyan), var(--mag));
         border-radius: 10px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        display: flex; align-items: center; justify-content: center;
+        color: var(--dark);
+        font-size: 20px;
+        box-shadow: 0 0 20px rgba(0,255,255,0.3);
     }
 
-    .brand-icon svg {
-        width: 28px;
-        height: 28px;
-        fill: white;
-    }
-
-    .brand-name {
-        font-size: 24px;
+    .login-brand-text {
+        font-family: 'Orbitron', sans-serif;
         font-weight: 800;
-        color: #1e3a5f;
-        letter-spacing: -0.5px;
+        font-size: 22px;
+        color: #fff;
+        letter-spacing: 2px;
     }
 
-    .login-title {
+    .login-brand-text span { color: var(--cyan); }
+
+    .login-heading {
+        font-family: 'Orbitron', sans-serif;
         font-size: 28px;
         font-weight: 700;
-        color: #1e293b;
-        margin-bottom: 8px;
+        color: #fff;
+        margin-bottom: 6px;
+        letter-spacing: 1px;
     }
 
-    .login-subtitle {
+    .login-sub {
         font-size: 15px;
-        color: #64748b;
-        margin-bottom: 32px;
+        color: rgba(255,255,255,0.45);
+        margin-bottom: 36px;
+        font-weight: 400;
     }
 
-    .form-group {
+    .form-field {
         margin-bottom: 20px;
     }
 
-    .input-wrapper {
+    .form-label {
+        display: block;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.5);
+        margin-bottom: 8px;
+    }
+
+    .cyber-input {
+        width: 100%;
+        padding: 14px 16px 14px 48px;
+        background: rgba(255,255,255,0.04);
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 8px;
+        color: #fff;
+        font-size: 15px;
+        font-family: 'Rajdhani', sans-serif;
+        transition: all 0.3s;
+        box-sizing: border-box;
+    }
+
+    .cyber-input:focus {
+        outline: none;
+        border-color: var(--cyan);
+        background: rgba(0,255,255,0.04);
+        box-shadow: 0 0 0 3px rgba(0,255,255,0.1), 0 0 20px rgba(0,255,255,0.1);
+    }
+
+    .cyber-input::placeholder { color: rgba(255,255,255,0.2); }
+
+    .input-wrap {
         position: relative;
     }
 
-    .input-icon {
+    .input-wrap .input-icon {
         position: absolute;
         left: 16px;
         top: 50%;
         transform: translateY(-50%);
-        color: #94a3b8;
-        font-size: 18px;
+        color: rgba(0,255,255,0.5);
+        font-size: 16px;
+        transition: color 0.3s;
     }
 
-    .form-control {
-        width: 100%;
-        padding: 14px 16px 14px 48px;
-        border: 1.5px solid #e2e8f0;
-        border-radius: 10px;
-        font-size: 15px;
-        transition: all 0.3s ease;
-        background: #f8fafc;
-    }
-
-    .form-control:focus {
-        outline: none;
-        border-color: #2d5a87;
-        background: white;
-        box-shadow: 0 0 0 4px rgba(45, 90, 135, 0.1);
-    }
-
-    .form-control::placeholder {
-        color: #94a3b8;
-    }
+    .cyber-input:focus ~ .input-icon { color: var(--cyan); }
 
     .form-options {
         display: flex;
-        justify-content: space-between;
         align-items: center;
-        margin-bottom: 24px;
+        justify-content: space-between;
+        margin-bottom: 28px;
     }
 
-    .remember-me {
+    .cyber-check {
         display: flex;
         align-items: center;
         gap: 8px;
         cursor: pointer;
     }
 
-    .remember-me input[type="checkbox"] {
-        width: 18px;
-        height: 18px;
-        accent-color: #2d5a87;
-        cursor: pointer;
-        border-radius: 4px;
-    }
-
-    .remember-me label {
-        font-size: 14px;
-        color: #64748b;
+    .cyber-check input {
+        width: 16px; height: 16px;
+        accent-color: var(--cyan);
         cursor: pointer;
     }
 
-    .forgot-password {
+    .cyber-check label {
         font-size: 14px;
-        color: #f97316;
+        color: rgba(255,255,255,0.5);
+        cursor: pointer;
+    }
+
+    .forgot-link {
+        font-size: 13px;
+        color: var(--mag);
         text-decoration: none;
         font-weight: 500;
-        transition: color 0.3s ease;
+        transition: color 0.3s;
     }
 
-    .forgot-password:hover {
-        color: #ea580c;
-    }
+    .forgot-link:hover { color: #ff66ff; }
 
-    .btn-signin {
+    .btn-signin-cyber {
         width: 100%;
-        padding: 14px;
-        background: linear-gradient(135deg, #2d5a87 0%, #1e3a5f 100%);
+        padding: 15px;
+        background: linear-gradient(135deg, var(--cyan), #00aaff);
         border: none;
-        border-radius: 10px;
-        color: white;
-        font-size: 16px;
-        font-weight: 600;
+        border-radius: 8px;
+        color: var(--dark);
+        font-family: 'Orbitron', sans-serif;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
         cursor: pointer;
-        transition: all 0.3s ease;
-        margin-bottom: 24px;
+        transition: all 0.3s;
+        box-shadow: 0 0 20px rgba(0,255,255,0.2);
+        clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
     }
 
-    .btn-signin:hover {
+    .btn-signin-cyber:hover {
+        box-shadow: 0 0 40px rgba(0,255,255,0.5);
         transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(30, 58, 95, 0.3);
     }
 
-    .btn-signin:active {
-        transform: translateY(0);
-    }
-
-    .signup-link {
+    .guest-link {
         text-align: center;
+        margin-top: 20px;
         font-size: 14px;
-        color: #64748b;
+        color: rgba(255,255,255,0.35);
     }
 
-    .signup-link a {
-        color: #f97316;
+    .guest-link a {
+        color: var(--cyan);
         text-decoration: none;
         font-weight: 600;
+        transition: color 0.3s;
     }
 
-    .signup-link a:hover {
-        color: #ea580c;
-        text-decoration: underline;
-    }
+    .guest-link a:hover { color: #fff; }
 
     .validation-summary {
-        background: #fef2f2;
-        border: 1px solid #fecaca;
-        border-radius: 10px;
+        background: rgba(255,0,50,0.08);
+        border: 1px solid rgba(255,0,50,0.25);
+        border-radius: 8px;
         padding: 14px 16px;
         margin-bottom: 20px;
     }
 
-    .validation-summary ul {
-        margin: 0;
-        padding-left: 20px;
-    }
+    .validation-summary ul { margin: 0; padding-left: 20px; }
+    .validation-summary li { color: #ff6666; font-size: 14px; }
 
-    .validation-summary li {
-        color: #dc2626;
-        font-size: 14px;
-    }
+    .text-danger { color: #ff6666; font-size: 13px; margin-top: 6px; display: block; }
 
-    .text-danger {
-        color: #dc2626;
-        font-size: 13px;
-        margin-top: 6px;
-        display: block;
-    }
-
-    /* Right Side - Decorative */
-    .login-right {
+    /* ===== RIGHT - VISUAL PANEL ===== */
+    .login-visual-panel {
         flex: 1.2;
-        background: linear-gradient(135deg, #1e3a5f 0%, #0f1f35 100%);
+        background: var(--dark);
         display: flex;
-        flex-direction: column;
         align-items: center;
         justify-content: center;
         position: relative;
         overflow: hidden;
-        padding: 60px;
     }
 
-    .login-right::before {
-        content: '';
+    .visual-grid {
         position: absolute;
-        width: 600px;
-        height: 600px;
-        background: rgba(249, 115, 22, 0.08);
-        border-radius: 50%;
-        top: -200px;
-        right: -200px;
+        inset: 0;
+        background:
+            linear-gradient(transparent 49.5%, rgba(0,255,255,0.04) 50%, transparent 50.5%),
+            linear-gradient(90deg, transparent 49.5%, rgba(0,255,255,0.04) 50%, transparent 50.5%);
+        background-size: 50px 50px;
     }
 
-    .login-right::after {
-        content: '';
+    .visual-glow {
         position: absolute;
-        width: 400px;
-        height: 400px;
-        background: rgba(249, 115, 22, 0.05);
+        width: 600px; height: 600px;
         border-radius: 50%;
-        bottom: -100px;
-        left: -100px;
+        filter: blur(100px);
+        opacity: 0.2;
+        animation: visualPulse 8s ease-in-out infinite;
     }
 
-    .news-illustration {
+    .visual-glow-1 {
+        background: var(--cyan);
+        top: -200px; right: -200px;
+    }
+
+    .visual-glow-2 {
+        background: var(--mag);
+        bottom: -200px; left: -200px;
+        animation-delay: -4s;
+    }
+
+    @@keyframes visualPulse {
+        0%, 100% { opacity: 0.15; transform: scale(1); }
+        50%       { opacity: 0.25; transform: scale(1.1); }
+    }
+
+    .visual-content {
         position: relative;
         z-index: 1;
         text-align: center;
     }
 
-    .news-icon-large {
-        width: 180px;
-        height: 180px;
-        margin-bottom: 40px;
-        animation: float 6s ease-in-out infinite;
+    .visual-icon {
+        width: 140px; height: 140px;
+        margin: 0 auto 32px;
+        background: linear-gradient(135deg, rgba(0,255,255,0.1), rgba(255,0,255,0.1));
+        border: 1px solid rgba(0,255,255,0.2);
+        border-radius: 24px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 60px;
+        animation: iconFloat 6s ease-in-out infinite;
     }
 
-    @@keyframes float {
-        0%, 100% { transform: translateY(0px); }
-        50% { transform: translateY(-20px); }
+    @@keyframes iconFloat {
+        0%, 100% { transform: translateY(0) rotate(0deg); }
+        50%       { transform: translateY(-16px) rotate(3deg); }
     }
 
-    .news-title {
-        font-size: 72px;
+    .visual-title {
+        font-family: 'Orbitron', sans-serif;
+        font-size: 56px;
         font-weight: 900;
-        color: white;
-        letter-spacing: 8px;
-        text-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+        letter-spacing: 6px;
+        color: #fff;
         margin-bottom: 16px;
     }
 
-    .news-tagline {
-        font-size: 18px;
-        color: rgba(255, 255, 255, 0.7);
-        letter-spacing: 2px;
+    .visual-title span {
+        background: linear-gradient(90deg, var(--cyan), var(--mag));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
     }
 
-    .news-accent {
-        color: #f97316;
+    .visual-tagline {
+        font-size: 16px;
+        color: rgba(255,255,255,0.5);
+        letter-spacing: 3px;
+        text-transform: uppercase;
     }
 
-    .floating-elements {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        top: 0;
-        left: 0;
-        pointer-events: none;
+    .visual-features {
+        display: flex;
+        gap: 32px;
+        justify-content: center;
+        margin-top: 40px;
+        flex-wrap: wrap;
     }
 
-    .floating-element {
-        position: absolute;
-        width: 12px;
-        height: 12px;
-        background: rgba(249, 115, 22, 0.3);
-        border-radius: 2px;
-        animation: floatElement 8s ease-in-out infinite;
+    .visual-feature {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: rgba(255,255,255,0.4);
+        font-size: 13px;
+        font-weight: 500;
     }
 
-    .floating-element:nth-child(1) { top: 20%; left: 10%; animation-delay: 0s; }
-    .floating-element:nth-child(2) { top: 60%; left: 20%; animation-delay: 1s; }
-    .floating-element:nth-child(3) { top: 30%; right: 15%; animation-delay: 2s; }
-    .floating-element:nth-child(4) { top: 70%; right: 25%; animation-delay: 3s; }
-    .floating-element:nth-child(5) { top: 45%; left: 5%; animation-delay: 4s; }
+    .visual-feature i { color: var(--cyan); }
 
-    @@keyframes floatElement {
-        0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.3; }
-        50% { transform: translateY(-30px) rotate(45deg); opacity: 0.6; }
-    }
-
+    /* ===== RESPONSIVE ===== */
     @@media (max-width: 992px) {
-        .login-right {
-            display: none;
-        }
-        
-        .login-left {
-            flex: 1;
-        }
+        .login-visual-panel { display: none; }
+        .login-form-panel { flex: 1; }
     }
 </style>
 
-<div class="login-wrapper">
-    <!-- Left Side - Login Form -->
-    <div class="login-left">
-        <div class="login-card">
-            <div class="brand-logo">
-                <div class="brand-icon">
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M19 5V19H5V5H19ZM19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3ZM14.5 11L11 15.51L8.5 12.5L5 17H19L14.5 11Z"/>
-                    </svg>
-                </div>
-                <span class="brand-name">NEWS</span>
-            </div>
-            
-            <h1 class="login-title">Welcome Back</h1>
-            <p class="login-subtitle">Sign in to your account</p>
-            
+<div class="login-root">
+    <!-- Form Panel -->
+    <div class="login-form-panel">
+        <div class="login-box">
+            <a class="login-brand" asp-area="" asp-page="/Index">
+                <div class="login-brand-icon"><i class="bi bi-newspaper"></i></div>
+                <span class="login-brand-text">FUN<span>NEWS</span></span>
+            </a>
+
+            <h1 class="login-heading">Welcome Back</h1>
+            <p class="login-sub">Sign in to access your account</p>
+
             <form method="post">
                 <div asp-validation-summary="ModelOnly" class="validation-summary"></div>
-                
-                <div class="form-group">
-                    <div class="input-wrapper">
-                        <span class="input-icon">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
-                            </svg>
-                        </span>
-                        <input asp-for="Email" class="form-control" placeholder="Email Address" />
+
+                <div class="form-field">
+                    <label class="form-label">Email Address</label>
+                    <div class="input-wrap">
+                        <input asp-for="Email" class="cyber-input" placeholder="Enter your email" />
+                        <span class="input-icon"><i class="bi bi-envelope"></i></span>
                     </div>
                     <span asp-validation-for="Email" class="text-danger"></span>
                 </div>
-                
-                <div class="form-group">
-                    <div class="input-wrapper">
-                        <span class="input-icon">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
-                            </svg>
-                        </span>
-                        <input asp-for="Password" type="password" class="form-control" placeholder="Password" />
+
+                <div class="form-field">
+                    <label class="form-label">Password</label>
+                    <div class="input-wrap">
+                        <input asp-for="Password" type="password" class="cyber-input" placeholder="Enter your password" />
+                        <span class="input-icon"><i class="bi bi-lock"></i></span>
                     </div>
                     <span asp-validation-for="Password" class="text-danger"></span>
                 </div>
-                
+
                 <div class="form-options">
-                    <div class="remember-me">
+                    <div class="cyber-check">
                         <input type="checkbox" id="rememberMe" name="rememberMe" />
                         <label for="rememberMe">Remember me</label>
                     </div>
-                    <a href="#" class="forgot-password">Forgot Password?</a>
+                    <a href="#" class="forgot-link">Forgot Password?</a>
                 </div>
-                
-                <button type="submit" class="btn-signin">Sign In</button>
-                
-                <p class="signup-link">
-                    Don't have an account? <a href="#">Sign Up</a>
-                    <br/><br/>
-                    <a href="/News/View" style="color: #1e3a5f; text-decoration: underline;">Continue as Guest (View News)</a>
-                </p>
+
+                <button type="submit" class="btn-signin-cyber">
+                    <i class="bi bi-box-arrow-in-right me-2"></i>Sign In
+                </button>
+
+                @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+                {
+                    <div class="validation-summary mt-3">
+                        <ul><li>@Model.ErrorMessage</li></ul>
+                    </div>
+                }
             </form>
-            
-            @if (!string.IsNullOrEmpty(Model.ErrorMessage))
-            {
-                <div class="validation-summary mt-3">
-                    <ul>
-                        <li>@Model.ErrorMessage</li>
-                    </ul>
-                </div>
-            }
+
+            <div class="guest-link">
+                <a href="/News/View">
+                    <i class="bi bi-compass me-1"></i>Continue as Guest — Browse News
+                </a>
+            </div>
         </div>
     </div>
-    
-    <!-- Right Side - Decorative -->
-    <div class="login-right">
-        <div class="floating-elements">
-            <div class="floating-element"></div>
-            <div class="floating-element"></div>
-            <div class="floating-element"></div>
-            <div class="floating-element"></div>
-            <div class="floating-element"></div>
-        </div>
-        
-        <div class="news-illustration">
-            <svg class="news-icon-large" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-                <!-- Background circle -->
-                <circle cx="100" cy="100" r="95" fill="rgba(249, 115, 22, 0.15)" />
-                <circle cx="100" cy="100" r="80" fill="rgba(249, 115, 22, 0.2)" />
-                
-                <!-- Newspaper body -->
-                <rect x="40" y="50" width="120" height="100" rx="8" fill="#fef3c7" stroke="#f97316" stroke-width="3"/>
-                
-                <!-- Newspaper fold -->
-                <path d="M40 90 L160 90" stroke="#fcd34d" stroke-width="2"/>
-                
-                <!-- Header lines -->
-                <rect x="55" y="60" width="60" height="8" rx="2" fill="#f97316"/>
-                <rect x="55" y="75" width="40" height="4" rx="1" fill="#94a3b8"/>
-                
-                <!-- Content lines -->
-                <rect x="55" y="98" width="90" height="5" rx="1" fill="#cbd5e1"/>
-                <rect x="55" y="108" width="85" height="5" rx="1" fill="#cbd5e1"/>
-                <rect x="55" y="118" width="70" height="5" rx="1" fill="#cbd5e1"/>
-                <rect x="55" y="128" width="50" height="5" rx="1" fill="#cbd5e1"/>
-                
-                <!-- Right side content -->
-                <rect x="55" y="100" width="25" height="25" rx="3" fill="#f97316" opacity="0.3"/>
-                <rect x="85" y="100" width="25" height="25" rx="3" fill="#f97316" opacity="0.2"/>
-                <rect x="115" y="100" width="25" height="25" rx="3" fill="#f97316" opacity="0.1"/>
-                
-                <!-- Pen/pencil -->
-                <rect x="155" y="120" width="8" height="50" rx="2" fill="#1e3a5f" transform="rotate(-30 159 145)"/>
-                <polygon points="155,170 159,180 163,170" fill="#f97316" transform="rotate(-30 159 175)"/>
-            </svg>
-            
-            <h1 class="news-title">NEWS</h1>
-            <p class="news-tagline">Your Portal to <span class="news-accent">Breaking Stories</span></p>
+
+    <!-- Visual Panel -->
+    <div class="login-visual-panel">
+        <div class="visual-grid"></div>
+        <div class="visual-glow visual-glow-1"></div>
+        <div class="visual-glow visual-glow-2"></div>
+
+        <div class="visual-content">
+            <div class="visual-icon">
+                <i class="bi bi-newspaper" style="background: linear-gradient(135deg, var(--cyan), var(--mag)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"></i>
+            </div>
+            <h1 class="visual-title">FUN<span>NEWS</span></h1>
+            <p class="visual-tagline">Your portal to breaking stories</p>
+
+            <div class="visual-features">
+                <div class="visual-feature">
+                    <i class="bi bi-lightning-charge-fill"></i> Real-time News
+                </div>
+                <div class="visual-feature">
+                    <i class="bi bi-shield-check"></i> Secure Access
+                </div>
+                <div class="visual-feature">
+                    <i class="bi bi-bar-chart-fill"></i> Analytics
+                </div>
+            </div>
         </div>
     </div>
 </div>

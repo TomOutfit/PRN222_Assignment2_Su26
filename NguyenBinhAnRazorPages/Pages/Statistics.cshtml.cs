@@ -36,6 +36,7 @@ namespace NguyenBinhAnRazorPages.Pages
 
         public async Task OnGetAsync(DateTime? startDate = null, DateTime? endDate = null)
         {
+            OnPageAuthorization();
             StartDate = startDate;
             EndDate = endDate;
 

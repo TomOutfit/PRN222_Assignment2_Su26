@@ -6,7 +6,7 @@ namespace NguyenBinhAnRazorPages.Pages
     {
         public void OnGet()
         {
-            OnPageAuthorization();
+            // Skip base authorization — this page should always be accessible
         }
     }
 }
