@@ -26,11 +26,11 @@ namespace NguyenBinhAnRazorPages.Pages.Categories
         public int StartRecord { get; set; } = 1;
         public int EndRecord { get; set; } = 5;
 
-        public async Task OnGetAsync(string searchTerm = "", int page = 1)
+        public async Task OnGetAsync(string searchTerm = "", int pageIndex = 1)
         {
             OnPageAuthorization();
             SearchTerm = searchTerm ?? string.Empty;
-            CurrentPage = page < 1 ? 1 : page;
+            CurrentPage = pageIndex < 1 ? 1 : pageIndex;
 
             // Load all categories
             var allCategories = (await _categoryService.GetAllCategoriesAsync()).OrderBy(c => c.CategoryId).ToList();

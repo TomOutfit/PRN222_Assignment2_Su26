@@ -24,12 +24,12 @@ namespace NguyenBinhAnRazorPages.Pages.News
         public int StartRecord { get; set; } = 1;
         public int EndRecord { get; set; } = 5;
 
-        public async Task OnGetAsync(string searchTerm = "", int page = 1)
+        public async Task OnGetAsync(string searchTerm = "", int pageIndex = 1)
         {
             if (!AccountId.HasValue) return;
 
             SearchTerm = searchTerm ?? string.Empty;
-            CurrentPage = page < 1 ? 1 : page;
+            CurrentPage = pageIndex < 1 ? 1 : pageIndex;
 
             IEnumerable<NewsArticle> allNews;
             if (!string.IsNullOrEmpty(SearchTerm))

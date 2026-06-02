@@ -133,28 +133,28 @@
                     <nav>
                         <ul class="pagination justify-content-center mb-0" style="gap:4px;">
                             <li class="page-item @(Model.CurrentPage == 1 ? "disabled" : "")">
-                                <a class="page-link" href="?searchTerm=@Model.SearchTerm&page=@(Model.CurrentPage - 1)"
+                                <a class="page-link" href="/News/History?searchTerm=@Model.SearchTerm&pageIndex=@(Model.CurrentPage - 1)"
                                    style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); color:rgba(255,255,255,0.5); border-radius:6px; font-family:'Rajdhani',sans-serif; font-size:13px;">Previous</a>
                             </li>
                             @if (currentGroupStart > 1)
                             {
-                                <li class="page-item"><a class="page-link" href="?searchTerm=@Model.SearchTerm&page=@(currentGroupStart - 1)"
+                                <li class="page-item"><a class="page-link" href="/News/History?searchTerm=@Model.SearchTerm&pageIndex=@(currentGroupStart - 1)"
                                    style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); color:rgba(255,255,255,0.5); border-radius:6px; font-family:'Rajdhani',sans-serif; font-size:13px;">...</a></li>
                             }
                             @for (int i = currentGroupStart; i <= currentGroupEnd; i++)
                             {
                                 <li class="page-item @(Model.CurrentPage == i ? "active" : "")">
-                                    <a class="page-link" href="?searchTerm=@Model.SearchTerm&page=@i"
+                                    <a class="page-link" href="/News/History?searchTerm=@Model.SearchTerm&pageIndex=@i"
                                        style="background:@(Model.CurrentPage == i ? "linear-gradient(135deg,#ffc800,#ffaa00)" : "rgba(255,255,255,0.04)"); border:1px solid @(Model.CurrentPage == i ? "transparent" : "rgba(255,255,255,0.08)"); color:@(Model.CurrentPage == i ? "#050510" : "rgba(255,255,255,0.5)"); border-radius:6px; font-family:'Rajdhani',sans-serif; font-size:13px; font-weight:@(Model.CurrentPage == i ? "700" : "400");">@i</a>
                                 </li>
                             }
                             @if (currentGroupEnd < Model.TotalPages)
                             {
-                                <li class="page-item"><a class="page-link" href="?searchTerm=@Model.SearchTerm&page=@(currentGroupEnd + 1)"
+                                <li class="page-item"><a class="page-link" href="/News/History?searchTerm=@Model.SearchTerm&pageIndex=@(currentGroupEnd + 1)"
                                    style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); color:rgba(255,255,255,0.5); border-radius:6px; font-family:'Rajdhani',sans-serif; font-size:13px;">...</a></li>
                             }
                             <li class="page-item @(Model.CurrentPage == Model.TotalPages ? "disabled" : "")">
-                                <a class="page-link" href="?searchTerm=@Model.SearchTerm&page=@(Model.CurrentPage + 1)"
+                                <a class="page-link" href="/News/History?searchTerm=@Model.SearchTerm&pageIndex=@(Model.CurrentPage + 1)"
                                    style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); color:rgba(255,255,255,0.5); border-radius:6px; font-family:'Rajdhani',sans-serif; font-size:13px;">Next</a>
                             </li>
                         </ul>
