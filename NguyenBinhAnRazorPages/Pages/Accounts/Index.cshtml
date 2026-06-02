@@ -194,9 +194,9 @@
                         <label class="form-label" style="color:rgba(255,255,255,0.5); font-size:12px; font-weight:600; letter-spacing:1px; text-transform:uppercase;">Role</label>
                         <select class="form-control" id="createRole" name="AccountRole" required
                                 style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); color:#fff; border-radius:8px; font-family:'Rajdhani',sans-serif; padding:10px 14px;">
-                            <option value="" style="color:#fff;">Select Role</option>
-                            <option value="1" style="color:#00ffff;">Staff</option>
-                            <option value="2" style="color:#ffc800;">Lecturer</option>
+                            <option value="" style="color:#fff; background:#0a0a1a;">Select Role</option>
+                            <option value="1" style="color:#00ffff; background:#0a0a1a;">Staff</option>
+                            <option value="2" style="color:#ffc800; background:#0a0a1a;">Lecturer</option>
                         </select>
                         <small style="color:rgba(255,255,255,0.25); font-size:12px; margin-top:4px; display:block;">Admin accounts cannot be created here.</small>
                     </div>
@@ -247,9 +247,9 @@
                         <label class="form-label" style="color:rgba(255,255,255,0.5); font-size:12px; font-weight:600; letter-spacing:1px; text-transform:uppercase;">Role</label>
                         <select class="form-control" id="editRole" name="AccountRole" required
                                 style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); color:#fff; border-radius:8px; font-family:'Rajdhani',sans-serif; padding:10px 14px;">
-                            <option value="" style="color:#fff;">Select Role</option>
-                            <option value="1" style="color:#00ffff;">Staff</option>
-                            <option value="2" style="color:#ffc800;">Lecturer</option>
+                            <option value="" style="color:#fff; background:#0a0a1a;">Select Role</option>
+                            <option value="1" style="color:#00ffff; background:#0a0a1a;">Staff</option>
+                            <option value="2" style="color:#ffc800; background:#0a0a1a;">Lecturer</option>
                         </select>
                         <small style="color:rgba(255,255,255,0.25); font-size:12px; margin-top:4px; display:block;">Admin role cannot be changed here.</small>
                     </div>
@@ -299,7 +299,9 @@
     <script>
         $(document).ready(function() {
             $('#btnCreate').click(function() {
-                $.post('/Accounts/Create', $('#createForm').serialize(), function(response) {
+                const token = $('input[name="__RequestVerificationToken"]').first().val();
+                const formData = $('#createForm').serialize() + '&__RequestVerificationToken=' + encodeURIComponent(token);
+                $.post('?handler=Create', formData, function(response) {
                     if (response.success) { $('#createAccountModal').modal('hide'); location.reload(); }
                     else { alert('Error: ' + response.message); }
                 });
@@ -315,7 +317,9 @@
             });
 
             $('#btnUpdate').click(function() {
-                $.post('/Accounts/Update', $('#editForm').serialize(), function(response) {
+                const token = $('input[name="__RequestVerificationToken"]').first().val();
+                const formData = $('#editForm').serialize() + '&__RequestVerificationToken=' + encodeURIComponent(token);
+                $.post('?handler=Update', formData, function(response) {
                     if (response.success) { $('#editAccountModal').modal('hide'); location.reload(); }
                     else { alert('Error: ' + response.message); }
                 });
@@ -328,7 +332,8 @@
             });
 
             $('#btnConfirmDelete').click(function() {
-                $.post('/Accounts/Delete', { id: $(this).data('id') }, function(response) {
+                const token = $('input[name="__RequestVerificationToken"]').first().val();
+                $.post('?handler=Delete', { id: $(this).data('id'), __RequestVerificationToken: token }, function(response) {
                     if (response.success) { $('#deleteModal').modal('hide'); location.reload(); }
                     else { alert('Error: ' + response.message); }
                 });

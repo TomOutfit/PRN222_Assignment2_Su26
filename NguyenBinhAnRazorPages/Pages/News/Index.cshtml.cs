@@ -137,16 +137,31 @@ namespace NguyenBinhAnRazorPages.Pages.News
                     return new JsonResult(new { success = false, message = "Access denied" });
                 }
 
+                // Retrieve existing news article to preserve CreatedDate and CreatedById
+                var existingNews = await _newsService.GetNewsByIdAsync(newsArticle.NewsArticleId);
+                if (existingNews == null)
+                {
+                    return new JsonResult(new { success = false, message = "News article not found" });
+                }
+
+                // Update fields
+                existingNews.NewsTitle = newsArticle.NewsTitle;
+                existingNews.Headline = newsArticle.Headline;
+                existingNews.NewsContent = newsArticle.NewsContent;
+                existingNews.NewsSource = newsArticle.NewsSource;
+                existingNews.CategoryId = newsArticle.CategoryId;
+                existingNews.NewsStatus = newsArticle.NewsStatus;
+
                 // Set updater
                 if (AccountId.HasValue)
                 {
-                    newsArticle.UpdatedById = (short)AccountId.Value;
+                    existingNews.UpdatedById = (short)AccountId.Value;
                 }
 
-                await _newsService.UpdateNewsAsync(newsArticle, TagIds);
+                await _newsService.UpdateNewsAsync(existingNews, TagIds);
 
                 // Load full news with navigation properties for SignalR
-                var fullNews = await _newsService.GetNewsByIdAsync(newsArticle.NewsArticleId);
+                var fullNews = await _newsService.GetNewsByIdAsync(existingNews.NewsArticleId);
                 await _hubContext.Clients.All.SendAsync("NewsUpdated", fullNews);
 
                 return new JsonResult(new { success = true, message = "News updated successfully" });

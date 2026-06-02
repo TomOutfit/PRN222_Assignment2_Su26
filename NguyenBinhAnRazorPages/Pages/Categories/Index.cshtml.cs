@@ -83,7 +83,18 @@ namespace NguyenBinhAnRazorPages.Pages.Categories
                     return new JsonResult(new { success = false, message = "Access denied. Only Staff can manage categories." });
                 }
 
-                await _categoryService.UpdateCategoryAsync(category);
+                var existingCategory = await _categoryService.GetCategoryByIdAsync(category.CategoryId);
+                if (existingCategory == null)
+                {
+                    return new JsonResult(new { success = false, message = "Category not found" });
+                }
+
+                existingCategory.CategoryName = category.CategoryName;
+                existingCategory.CategoryDesciption = category.CategoryDesciption;
+                existingCategory.ParentCategoryId = category.ParentCategoryId;
+                existingCategory.IsActive = category.IsActive;
+
+                await _categoryService.UpdateCategoryAsync(existingCategory);
                 return new JsonResult(new { success = true, message = "Category updated successfully" });
             }
             catch (Exception ex)

@@ -197,10 +197,10 @@
                         <label class="form-label" style="color:rgba(255,255,255,0.5); font-size:12px; font-weight:600; letter-spacing:1px; text-transform:uppercase;">Parent Category</label>
                         <select class="form-control" id="createParent" name="ParentCategoryId"
                                 style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); color:#fff; border-radius:8px; font-family:'Rajdhani',sans-serif; padding:10px 14px;">
-                            <option value="" style="color:#fff;">None (Root Category)</option>
+                            <option value="" style="color:#fff; background:#0a0a1a;">None (Root Category)</option>
                             @foreach (var cat in Model.ParentCategories)
                             {
-                                <option value="@cat.CategoryId" style="color:#fff;">@cat.CategoryName</option>
+                                <option value="@cat.CategoryId" style="color:#fff; background:#0a0a1a;">@cat.CategoryName</option>
                             }
                         </select>
                     </div>
@@ -208,8 +208,8 @@
                         <label class="form-label" style="color:rgba(255,255,255,0.5); font-size:12px; font-weight:600; letter-spacing:1px; text-transform:uppercase;">Status</label>
                         <select class="form-control" id="createStatus" name="IsActive"
                                 style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); color:#fff; border-radius:8px; font-family:'Rajdhani',sans-serif; padding:10px 14px;">
-                            <option value="true" style="color:#00ff88;">Active</option>
-                            <option value="false" style="color:#888;">Inactive</option>
+                            <option value="true" style="color:#00ff88; background:#0a0a1a;">Active</option>
+                            <option value="false" style="color:#888; background:#0a0a1a;">Inactive</option>
                         </select>
                     </div>
                 </form>
@@ -253,10 +253,10 @@
                         <label class="form-label" style="color:rgba(255,255,255,0.5); font-size:12px; font-weight:600; letter-spacing:1px; text-transform:uppercase;">Parent Category</label>
                         <select class="form-control" id="editParent" name="ParentCategoryId"
                                 style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); color:#fff; border-radius:8px; font-family:'Rajdhani',sans-serif; padding:10px 14px;">
-                            <option value="" style="color:#fff;">None (Root Category)</option>
+                            <option value="" style="color:#fff; background:#0a0a1a;">None (Root Category)</option>
                             @foreach (var cat in Model.ParentCategories)
                             {
-                                <option value="@cat.CategoryId" style="color:#fff;">@cat.CategoryName</option>
+                                <option value="@cat.CategoryId" style="color:#fff; background:#0a0a1a;">@cat.CategoryName</option>
                             }
                         </select>
                     </div>
@@ -264,8 +264,8 @@
                         <label class="form-label" style="color:rgba(255,255,255,0.5); font-size:12px; font-weight:600; letter-spacing:1px; text-transform:uppercase;">Status</label>
                         <select class="form-control" id="editStatus" name="IsActive"
                                 style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); color:#fff; border-radius:8px; font-family:'Rajdhani',sans-serif; padding:10px 14px;">
-                            <option value="true" style="color:#00ff88;">Active</option>
-                            <option value="false" style="color:#888;">Inactive</option>
+                            <option value="true" style="color:#00ff88; background:#0a0a1a;">Active</option>
+                            <option value="false" style="color:#888; background:#0a0a1a;">Inactive</option>
                         </select>
                     </div>
                 </form>
@@ -314,7 +314,9 @@
     <script>
         $(document).ready(function() {
             $('#btnCreate').click(function() {
-                $.post('/Categories/Create', $('#createForm').serialize(), function(response) {
+                const token = $('input[name="__RequestVerificationToken"]').first().val();
+                const formData = $('#createForm').serialize() + '&__RequestVerificationToken=' + encodeURIComponent(token);
+                $.post('?handler=Create', formData, function(response) {
                     if (response.success) { $('#createCategoryModal').modal('hide'); location.reload(); }
                     else { alert('Error: ' + response.message); }
                 });
@@ -330,7 +332,9 @@
             });
 
             $('#btnUpdate').click(function() {
-                $.post('/Categories/Update', $('#editForm').serialize(), function(response) {
+                const token = $('input[name="__RequestVerificationToken"]').first().val();
+                const formData = $('#editForm').serialize() + '&__RequestVerificationToken=' + encodeURIComponent(token);
+                $.post('?handler=Update', formData, function(response) {
                     if (response.success) { $('#editCategoryModal').modal('hide'); location.reload(); }
                     else { alert('Error: ' + response.message); }
                 });
@@ -343,7 +347,8 @@
             });
 
             $('#btnConfirmDelete').click(function() {
-                $.post('/Categories/Delete', { id: $(this).data('id') }, function(response) {
+                const token = $('input[name="__RequestVerificationToken"]').first().val();
+                $.post('?handler=Delete', { id: $(this).data('id'), __RequestVerificationToken: token }, function(response) {
                     if (response.success) { $('#deleteModal').modal('hide'); location.reload(); }
                     else { alert('Error: ' + response.message); }
                 });

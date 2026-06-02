@@ -105,19 +105,24 @@ namespace NguyenBinhAnRazorPages.Pages.Accounts
                     return new JsonResult(new { success = false, message = "Email already exists" });
                 }
 
-                // Preserve password if empty
-                if (string.IsNullOrEmpty(account.AccountPassword))
+                // Update properties of the tracked existingAccount
+                existingAccount.AccountName = account.AccountName;
+                existingAccount.AccountEmail = account.AccountEmail;
+                existingAccount.AccountRole = account.AccountRole;
+
+                // Only update password if a new one was provided
+                if (!string.IsNullOrEmpty(account.AccountPassword))
                 {
-                    account.AccountPassword = existingAccount.AccountPassword;
+                    existingAccount.AccountPassword = account.AccountPassword;
                 }
 
                 // Validate role (cannot change to admin through this interface)
-                if (account.AccountRole == 0)
+                if (existingAccount.AccountRole == 0)
                 {
                     return new JsonResult(new { success = false, message = "Cannot set admin role through this interface" });
                 }
 
-                await _accountService.UpdateAccountAsync(account);
+                await _accountService.UpdateAccountAsync(existingAccount);
                 return new JsonResult(new { success = true, message = "Account updated successfully" });
             }
             catch (Exception ex)

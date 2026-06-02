@@ -211,10 +211,10 @@
                             <label class="form-label" style="color:rgba(255,255,255,0.5); font-size:12px; font-weight:600; letter-spacing:1px; text-transform:uppercase;">Category</label>
                             <select class="form-control" id="createCategory" name="CategoryId" required
                                     style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); color:#fff; border-radius:8px; font-family:'Rajdhani',sans-serif; padding:10px 14px;">
-                                <option value="" style="color:#fff;">Select Category</option>
+                                <option value="" style="color:#fff; background:#0a0a1a;">Select Category</option>
                                 @foreach (var category in Model.Categories)
                                 {
-                                    <option value="@category.CategoryId" style="color:#fff;">@category.CategoryName</option>
+                                    <option value="@category.CategoryId" style="color:#fff; background:#0a0a1a;">@category.CategoryName</option>
                                 }
                             </select>
                         </div>
@@ -222,8 +222,8 @@
                             <label class="form-label" style="color:rgba(255,255,255,0.5); font-size:12px; font-weight:600; letter-spacing:1px; text-transform:uppercase;">Status</label>
                             <select class="form-control" id="createStatus" name="NewsStatus"
                                     style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); color:#fff; border-radius:8px; font-family:'Rajdhani',sans-serif; padding:10px 14px;">
-                                <option value="true" style="color:#00ff88;">Active</option>
-                                <option value="false" style="color:#888;">Inactive</option>
+                                <option value="true" style="color:#00ff88; background:#0a0a1a;">Active</option>
+                                <option value="false" style="color:#888; background:#0a0a1a;">Inactive</option>
                             </select>
                         </div>
                         <div class="col-12">
@@ -296,10 +296,10 @@
                             <label class="form-label" style="color:rgba(255,255,255,0.5); font-size:12px; font-weight:600; letter-spacing:1px; text-transform:uppercase;">Category</label>
                             <select class="form-control" id="editCategory" name="CategoryId" required
                                     style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); color:#fff; border-radius:8px; font-family:'Rajdhani',sans-serif; padding:10px 14px;">
-                                <option value="" style="color:#fff;">Select Category</option>
+                                <option value="" style="color:#fff; background:#0a0a1a;">Select Category</option>
                                 @foreach (var category in Model.Categories)
                                 {
-                                    <option value="@category.CategoryId" style="color:#fff;">@category.CategoryName</option>
+                                    <option value="@category.CategoryId" style="color:#fff; background:#0a0a1a;">@category.CategoryName</option>
                                 }
                             </select>
                         </div>
@@ -307,8 +307,8 @@
                             <label class="form-label" style="color:rgba(255,255,255,0.5); font-size:12px; font-weight:600; letter-spacing:1px; text-transform:uppercase;">Status</label>
                             <select class="form-control" id="editStatus" name="NewsStatus"
                                     style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); color:#fff; border-radius:8px; font-family:'Rajdhani',sans-serif; padding:10px 14px;">
-                                <option value="true" style="color:#00ff88;">Active</option>
-                                <option value="false" style="color:#888;">Inactive</option>
+                                <option value="true" style="color:#00ff88; background:#0a0a1a;">Active</option>
+                                <option value="false" style="color:#888; background:#0a0a1a;">Inactive</option>
                             </select>
                         </div>
                         <div class="col-12">
