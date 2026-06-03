@@ -30,7 +30,7 @@
                     </h5>
                 </div>
                 <div style="padding:24px;">
-                    <form id="profileForm">
+                    <form id="profileForm" method="post">
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label class="form-label" style="color:rgba(255,255,255,0.5); font-size:12px; font-weight:600; letter-spacing:1px; text-transform:uppercase; display:block; margin-bottom:8px;">Full Name</label>
@@ -165,7 +165,7 @@
     <script>
         $(document).ready(function() {
             $('#btnUpdateProfile').click(function() {
-                $.post('/Profile/Update', $('#profileForm').serialize(), function(response) {
+                $.post('?handler=Update', $('#profileForm').serialize(), function(response) {
                     if (response.success) { alert('Profile updated successfully!'); location.reload(); }
                     else { alert('Error: ' + response.message); }
                 });

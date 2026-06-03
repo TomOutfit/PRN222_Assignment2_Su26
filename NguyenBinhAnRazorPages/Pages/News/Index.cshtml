@@ -374,6 +374,7 @@
 </div>
 
 @section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.min.js"></script>
     <script>
         let connection;
 
@@ -438,6 +439,34 @@
 
             connection.start().catch(err => console.error('SignalR error:', err.toString()));
             attachRowHandlers();
+
+            @if (!string.IsNullOrEmpty(Model.EditId))
+            {
+                <text>
+                setTimeout(function() {
+                    const btn = $('.btn-edit[data-id="@Model.EditId"]');
+                    if (btn.length) {
+                        btn.click();
+                    } else {
+                        const newsId = "@Model.EditId";
+                        $.get('?handler=Edit&id=' + newsId, function (data) {
+                            if (data.success) {
+                                $('#editId').val(data.news.newsArticleId);
+                                $('#editTitle').val(data.news.newsTitle);
+                                $('#editHeadline').val(data.news.headline);
+                                $('#editContent').val(data.news.newsContent);
+                                $('#editSource').val(data.news.newsSource);
+                                $('#editCategory').val(data.news.categoryId);
+                                $('#editStatus').val(String(data.news.newsStatus));
+                                $('#editTags input[type="checkbox"]').prop('checked', false);
+                                data.news.tags.forEach(tagId => { $('#edit_tag_' + tagId).prop('checked', true); });
+                                $('#editNewsModal').modal('show');
+                            }
+                        });
+                    }
+                }, 500);
+                </text>
+            }
 
             $('#btnCreate').click(function () {
                 const token = $('input[name="__RequestVerificationToken"]').first().val();

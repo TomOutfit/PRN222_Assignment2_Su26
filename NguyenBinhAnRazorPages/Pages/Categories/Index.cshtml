@@ -9,6 +9,7 @@
     body { font-family: 'Rajdhani', sans-serif; background: #050510; color: #e0e0ff; }
 </style>
 
+@Html.AntiForgeryToken()
 <div class="container-fluid py-4" style="position:relative; z-index:1;">
 
     <!-- Page Header -->
@@ -327,7 +328,7 @@
                 $('#editName').val($(this).data('name'));
                 $('#editDescription').val($(this).data('description'));
                 $('#editParent').val($(this).data('parent') || '');
-                $('#editStatus').val($(this).data('status'));
+                $('#editStatus').val(String($(this).data('status')).toLowerCase());
                 $('#editCategoryModal').modal('show');
             });
 

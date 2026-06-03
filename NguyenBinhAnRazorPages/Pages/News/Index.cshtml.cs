@@ -34,8 +34,11 @@ namespace NguyenBinhAnRazorPages.Pages.News
         public int StartRecord { get; set; } = 1;
         public int EndRecord { get; set; } = 5;
 
-        public async Task OnGetAsync(string searchTerm = "", int pageIndex = 1)
+        public string? EditId { get; set; }
+
+        public async Task OnGetAsync(string searchTerm = "", int pageIndex = 1, string? editId = null)
         {
+            EditId = editId;
             OnPageAuthorization();
             SearchTerm = searchTerm ?? string.Empty;
             CurrentPage = pageIndex < 1 ? 1 : pageIndex;
