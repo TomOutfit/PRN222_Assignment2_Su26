@@ -14,6 +14,6 @@ namespace NguyenBinhAn_A02_Business.Services
         Task<IEnumerable<NewsArticle>> SearchNewsAsync(string searchTerm);
         Task<IEnumerable<NewsArticle>> GetNewsByCategoryAsync(short categoryId);
         Task<IEnumerable<NewsArticle>> GetNewsHistoryAsync(short accountId);
-        Task<IEnumerable<NewsArticle>> GetNewsStatisticsAsync(DateTime startDate, DateTime endDate);
+        Task<IEnumerable<NewsArticle>> GetNewsStatisticsAsync(DateTime? startDate, DateTime? endDate);
     }
 }

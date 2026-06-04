@@ -80,7 +80,7 @@ namespace NguyenBinhAn_A02_Business.Services
             return await _newsArticleRepository.GetNewsByCreatorAsync(accountId);
         }
 
-        public async Task<IEnumerable<NewsArticle>> GetNewsStatisticsAsync(DateTime startDate, DateTime endDate)
+        public async Task<IEnumerable<NewsArticle>> GetNewsStatisticsAsync(DateTime? startDate, DateTime? endDate)
         {
             return await _newsArticleRepository.GetNewsInDateRangeAsync(startDate, endDate);
         }

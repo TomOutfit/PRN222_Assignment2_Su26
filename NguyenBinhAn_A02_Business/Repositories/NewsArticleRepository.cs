@@ -71,10 +71,22 @@ namespace NguyenBinhAn_A02_Business.Repositories
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<NewsArticle>> GetNewsInDateRangeAsync(DateTime startDate, DateTime endDate)
+        public async Task<IEnumerable<NewsArticle>> GetNewsInDateRangeAsync(DateTime? startDate, DateTime? endDate)
         {
-            return await _context.NewsArticles
-                .Where(n => n.CreatedDate >= startDate && n.CreatedDate <= endDate)
+            var query = _context.NewsArticles.AsQueryable();
+
+            if (startDate.HasValue)
+            {
+                query = query.Where(n => n.CreatedDate >= startDate.Value);
+            }
+
+            if (endDate.HasValue)
+            {
+                var nextDay = endDate.Value.Date.AddDays(1);
+                query = query.Where(n => n.CreatedDate < nextDay);
+            }
+
+            return await query
                 .Include(n => n.Category)
                 .Include(n => n.Creator)
                 .Include(n => n.NewsTags)
