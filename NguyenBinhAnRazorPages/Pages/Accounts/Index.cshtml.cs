@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using NguyenBinhAn_A02_Business.Services;
@@ -17,20 +18,38 @@ namespace NguyenBinhAnRazorPages.Pages.Accounts
         public IEnumerable<SystemAccount> Accounts { get; set; } = new List<SystemAccount>();
         public string SearchTerm { get; set; } = string.Empty;
 
-        public async Task OnGetAsync(string searchTerm = "")
+        public int PageSize { get; set; } = 5;
+        public int CurrentPage { get; set; } = 1;
+        public int TotalPages { get; set; } = 1;
+        public int TotalRecords { get; set; } = 0;
+        public int StartRecord { get; set; } = 1;
+        public int EndRecord { get; set; } = 5;
+
+        public async Task OnGetAsync(string searchTerm = "", int pageIndex = 1)
         {
+            OnPageAuthorization();
             SearchTerm = searchTerm ?? string.Empty;
-            
+            CurrentPage = pageIndex < 1 ? 1 : pageIndex;
+
             // Load all accounts
-            Accounts = await _accountService.GetAllAccountsAsync();
+            var allAccounts = (await _accountService.GetAllAccountsAsync()).OrderBy(a => a.AccountId).ToList();
 
             // Apply search filter
             if (!string.IsNullOrEmpty(SearchTerm))
             {
-                Accounts = Accounts.Where(a => 
-                    a.AccountName!.Contains(SearchTerm) || 
-                    a.AccountEmail!.Contains(SearchTerm));
+                allAccounts = allAccounts.Where(a =>
+                    a.AccountName!.Contains(SearchTerm) ||
+                    a.AccountEmail!.Contains(SearchTerm)).ToList();
             }
+
+            TotalRecords = allAccounts.Count;
+            TotalPages = (int)Math.Ceiling((double)TotalRecords / PageSize);
+            if (CurrentPage > TotalPages) CurrentPage = TotalPages > 0 ? TotalPages : 1;
+
+            StartRecord = TotalRecords > 0 ? (CurrentPage - 1) * PageSize + 1 : 0;
+            EndRecord = Math.Min(CurrentPage * PageSize, TotalRecords);
+
+            Accounts = allAccounts.Skip((CurrentPage - 1) * PageSize).Take(PageSize);
         }
 
         public async Task<JsonResult> OnPostCreateAsync(SystemAccount account)
@@ -86,19 +105,24 @@ namespace NguyenBinhAnRazorPages.Pages.Accounts
                     return new JsonResult(new { success = false, message = "Email already exists" });
                 }
 
-                // Preserve password if empty
-                if (string.IsNullOrEmpty(account.AccountPassword))
+                // Update properties of the tracked existingAccount
+                existingAccount.AccountName = account.AccountName;
+                existingAccount.AccountEmail = account.AccountEmail;
+                existingAccount.AccountRole = account.AccountRole;
+
+                // Only update password if a new one was provided
+                if (!string.IsNullOrEmpty(account.AccountPassword))
                 {
-                    account.AccountPassword = existingAccount.AccountPassword;
+                    existingAccount.AccountPassword = account.AccountPassword;
                 }
 
                 // Validate role (cannot change to admin through this interface)
-                if (account.AccountRole == 0)
+                if (existingAccount.AccountRole == 0)
                 {
                     return new JsonResult(new { success = false, message = "Cannot set admin role through this interface" });
                 }
 
-                await _accountService.UpdateAccountAsync(account);
+                await _accountService.UpdateAccountAsync(existingAccount);
                 return new JsonResult(new { success = true, message = "Account updated successfully" });
             }
             catch (Exception ex)

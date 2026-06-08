@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Filters;
 using System.Reflection;
 
 namespace NguyenBinhAnRazorPages.Pages
@@ -20,37 +21,53 @@ namespace NguyenBinhAnRazorPages.Pages
         public bool IsLecturer => AccountRole == LecturerRole;
         public bool IsAuthenticated => !string.IsNullOrEmpty(UserEmail);
 
-        public virtual void OnPageAuthorization()
+        public override async Task OnPageHandlerExecutionAsync(PageHandlerExecutingContext context, PageHandlerExecutionDelegate next)
         {
-            // Check if user is authenticated
-            if (!IsAuthenticated)
+            var pageType = this.GetType();
+            var pageRoute = context.ActionDescriptor.ViewEnginePath;
+
+            bool isPublicPage = pageRoute == "/Login" || 
+                               pageRoute == "/AccessDenied" || 
+                               pageRoute == "/Index" || 
+                               pageRoute == "/News/View" || 
+                               pageRoute == "/News/Detail" || 
+                               pageRoute == "/Error";
+
+            if (!isPublicPage && !IsAuthenticated)
             {
-                Response.Redirect("/Login");
+                context.Result = new RedirectToPageResult("/Login");
                 return;
             }
 
-            // Check if page requires specific role
-            var pageType = this.GetType();
-            
-            // Check for admin-only pages
-            if (pageType.GetCustomAttributes(typeof(AdminOnlyAttribute), false).Any())
+            if (IsAuthenticated)
             {
-                if (!IsAdmin)
+                // Check for admin-only pages
+                if (pageType.GetCustomAttributes(typeof(AdminOnlyAttribute), false).Any())
                 {
-                    Response.Redirect("/AccessDenied");
-                    return;
+                    if (!IsAdmin)
+                    {
+                        context.Result = new RedirectToPageResult("/AccessDenied");
+                        return;
+                    }
+                }
+
+                // Check for staff pages (admin and staff only)
+                if (pageType.GetCustomAttributes(typeof(StaffOnlyAttribute), false).Any())
+                {
+                    if (!IsAdmin && !IsStaff)
+                    {
+                        context.Result = new RedirectToPageResult("/AccessDenied");
+                        return;
+                    }
                 }
             }
 
-            // Check for staff pages (admin and staff only)
-            if (pageType.GetCustomAttributes(typeof(StaffOnlyAttribute), false).Any())
-            {
-                if (!IsAdmin && !IsStaff)
-                {
-                    Response.Redirect("/AccessDenied");
-                    return;
-                }
-            }
+            await next();
+        }
+
+        public virtual void OnPageAuthorization()
+        {
+            // Keep as empty or backward-compatible helper. The main authorization is handled by OnPageHandlerExecutionAsync.
         }
     }
 
@@ -60,3 +77,4 @@ namespace NguyenBinhAnRazorPages.Pages
     [AttributeUsage(AttributeTargets.Class)]
     public class StaffOnlyAttribute : Attribute { }
 }
+

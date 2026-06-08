@@ -1,0 +1,838 @@
+@*
+    Modified Layout for Index page - Neon Cyberpunk Edition
+*@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - FUNews</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/NguyenBinhAnRazorPages.styles.css" asp-append-version="true" />
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <style>
+        *, body { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            min-height: 100vh;
+            font-family: 'Rajdhani', sans-serif;
+            background: #050510;
+            overflow-x: hidden;
+            color: #e0e0ff;
+        }
+
+        /* ===== NEON GRID BACKGROUND ===== */
+        .neon-bg {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .neon-bg::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(transparent 49.5%, rgba(0, 255, 255, 0.03) 50%, transparent 50.5%),
+                linear-gradient(90deg, transparent 49.5%, rgba(0, 255, 255, 0.03) 50%, transparent 50.5%);
+            background-size: 60px 60px;
+        }
+
+        .neon-bg::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(0, 255, 255, 0.08), transparent),
+                        radial-gradient(ellipse 60% 40% at 100% 0%, rgba(255, 0, 255, 0.06), transparent),
+                        radial-gradient(ellipse 60% 40% at 0% 100%, rgba(255, 128, 0, 0.05), transparent);
+        }
+
+        /* ===== NEON GLOW BLOB ANIMATIONS ===== */
+        .glow-blob {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.35;
+            z-index: 0;
+            pointer-events: none;
+            animation: blobFloat 12s ease-in-out infinite;
+        }
+
+        .glow-blob-1 {
+            width: 500px; height: 500px;
+            background: #00ffff;
+            top: -100px; left: -100px;
+            animation-delay: 0s;
+        }
+
+        .glow-blob-2 {
+            width: 400px; height: 400px;
+            background: #ff00ff;
+            top: 30%; right: -80px;
+            animation-delay: -4s;
+            animation-duration: 15s;
+        }
+
+        .glow-blob-3 {
+            width: 350px; height: 350px;
+            background: #ff4400;
+            bottom: 0; left: 30%;
+            animation-delay: -8s;
+            animation-duration: 18s;
+        }
+
+        .glow-blob-4 {
+            width: 300px; height: 300px;
+            background: #00ff88;
+            bottom: 20%; right: 20%;
+            animation-delay: -2s;
+            animation-duration: 20s;
+        }
+
+        @@keyframes blobFloat {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25%  { transform: translate(40px, -60px) scale(1.1); }
+            50%  { transform: translate(-30px, 40px) scale(0.9); }
+            75%  { transform: translate(50px, 30px) scale(1.05); }
+        }
+
+        /* ===== LAYOUT WRAPPER ===== */
+        .layout-wrapper {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ===== TOP NAV BAR ===== */
+        .cyber-nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(5, 5, 16, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0, 255, 255, 0.15);
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.05);
+        }
+
+        .cyber-navbar {
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+        }
+
+        .cyber-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 800;
+            font-size: 20px;
+            color: #fff;
+            letter-spacing: 2px;
+            transition: all 0.3s;
+        }
+
+        .cyber-brand:hover { color: #fff; text-shadow: 0 0 20px #00ffff; }
+
+        .cyber-brand-icon {
+            width: 40px; height: 40px;
+            background: linear-gradient(135deg, #00ffff, #ff00ff);
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 18px;
+            color: #050510;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
+            animation: pulseGlow 3s ease-in-out infinite;
+        }
+
+        @@keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 15px rgba(0, 255, 255, 0.4); }
+            50%       { box-shadow: 0 0 35px rgba(0, 255, 255, 0.8), 0 0 60px rgba(255, 0, 255, 0.3); }
+        }
+
+        .cyber-nav-links {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .cyber-nav-links a {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            border-radius: 8px;
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: all 0.3s;
+            border: 1px solid transparent;
+            font-family: 'Rajdhani', sans-serif;
+        }
+
+        .cyber-nav-links a:hover {
+            color: #fff;
+            background: rgba(0, 255, 255, 0.08);
+            border-color: rgba(0, 255, 255, 0.2);
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+        }
+
+        .cyber-nav-links .nav-cyber {
+            color: #00ffff;
+            border-color: rgba(0, 255, 255, 0.3);
+            background: rgba(0, 255, 255, 0.05);
+        }
+
+        .cyber-user-chip {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 6px 16px 6px 6px;
+            border-radius: 50px;
+            background: rgba(255, 0, 255, 0.08);
+            border: 1px solid rgba(255, 0, 255, 0.25);
+            text-decoration: none;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .cyber-user-chip:hover {
+            background: rgba(255, 0, 255, 0.15);
+            border-color: rgba(255, 0, 255, 0.5);
+            box-shadow: 0 0 20px rgba(255, 0, 255, 0.2);
+            color: #fff;
+        }
+
+        .cyber-user-avatar {
+            width: 30px; height: 30px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #00ffff, #ff00ff);
+            display: flex; align-items: center; justify-content: center;
+            color: #050510;
+            font-weight: 800;
+            font-size: 13px;
+        }
+
+        /* ===== HERO SECTION ===== */
+        .cyber-hero {
+            position: relative;
+            padding: 80px 0 40px;
+            text-align: center;
+        }
+
+        .hero-pre-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 20px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: #ff6600;
+            border: 1px solid rgba(255, 102, 0, 0.4);
+            background: rgba(255, 102, 0, 0.08);
+            margin-bottom: 20px;
+        }
+
+        .hero-pre-badge .dot {
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: #ff6600;
+            animation: blink 1.5s ease-in-out infinite;
+        }
+
+        @@keyframes blink {
+            0%, 100% { opacity: 1; }
+            50%       { opacity: 0.2; }
+        }
+
+        .hero-main-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 4rem;
+            font-weight: 900;
+            color: #fff;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+        }
+
+        .hero-neon-text {
+            display: inline-block;
+            background: linear-gradient(90deg, #00ffff, #00ff88, #ffff00, #ff6600, #ff00ff, #00ffff);
+            background-size: 300% 100%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: neonFlow 4s linear infinite;
+            filter: drop-shadow(0 0 20px rgba(0, 255, 255, 0.3));
+        }
+
+        @@keyframes neonFlow {
+            0%   { background-position: 0% 50%; }
+            100% { background-position: 300% 50%; }
+        }
+
+        .hero-desc {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.55);
+            max-width: 600px;
+            margin: 0 auto 40px;
+            line-height: 1.8;
+            font-weight: 400;
+        }
+
+        .hero-cta-row {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-neon-cyan {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 36px;
+            border-radius: 4px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: #050510;
+            background: linear-gradient(90deg, #00ffff, #00ccff);
+            border: none;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.4), inset 0 1px 0 rgba(255,255,255,0.3);
+            transition: all 0.3s;
+            clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+        }
+
+        .btn-neon-cyan:hover {
+            box-shadow: 0 0 40px rgba(0, 255, 255, 0.7), inset 0 1px 0 rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+            color: #050510;
+        }
+
+        .btn-neon-mag {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 36px;
+            border-radius: 4px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: #fff;
+            background: transparent;
+            border: 2px solid rgba(255, 0, 255, 0.5);
+            transition: all 0.3s;
+            clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+        }
+
+        .btn-neon-mag:hover {
+            background: rgba(255, 0, 255, 0.1);
+            border-color: #ff00ff;
+            box-shadow: 0 0 30px rgba(255, 0, 255, 0.3);
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+        /* ===== SECTION LABEL ===== */
+        .section-label {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .section-label-line {
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(0,255,255,0.3));
+        }
+
+        .section-label-line.right {
+            background: linear-gradient(90deg, rgba(0,255,255,0.3), transparent);
+        }
+
+        .section-label-text {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: rgba(0, 255, 255, 0.6);
+        }
+
+        /* ===== CYBER CARD ===== */
+        .cyber-card {
+            position: relative;
+            border-radius: 12px;
+            padding: 32px 24px;
+            height: 100%;
+            text-decoration: none;
+            display: block;
+            overflow: hidden;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s;
+            cursor: pointer;
+        }
+
+        .cyber-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 12px;
+            padding: 1px;
+            background: linear-gradient(135deg, var(--glow-a), transparent 60%, var(--glow-b));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0.6;
+            transition: opacity 0.3s;
+        }
+
+        .cyber-card::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: radial-gradient(circle at top right, var(--glow-a), transparent 70%);
+            opacity: 0.08;
+            transition: opacity 0.3s;
+        }
+
+        .cyber-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 60px var(--shadow-color);
+        }
+
+        .cyber-card:hover::before { opacity: 1; }
+        .cyber-card:hover::after  { opacity: 0.15; }
+
+        .card-cyber-icon {
+            width: 60px; height: 60px;
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 26px;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+            background: var(--icon-bg);
+            color: var(--icon-color);
+            transition: all 0.4s;
+        }
+
+        .cyber-card:hover .card-cyber-icon {
+            transform: scale(1.1) rotate(-5deg);
+            box-shadow: 0 0 30px var(--icon-glow);
+        }
+
+        .card-cyber-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 15px;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .card-cyber-desc {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.5);
+            line-height: 1.6;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .card-cyber-arrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--icon-color);
+            position: relative;
+            z-index: 1;
+            transition: gap 0.3s;
+        }
+
+        .cyber-card:hover .card-cyber-arrow { gap: 12px; }
+
+        /* Card color themes */
+        .cyber-card-cyan {
+            --glow-a: rgba(0, 255, 255, 0.6); --glow-b: rgba(0, 200, 255, 0.2);
+            --shadow-color: rgba(0, 255, 255, 0.15);
+            --icon-bg: rgba(0, 255, 255, 0.1); --icon-color: #00ffff; --icon-glow: rgba(0,255,255,0.4);
+            background: rgba(0, 255, 255, 0.03);
+        }
+        .cyber-card-mag {
+            --glow-a: rgba(255, 0, 255, 0.6); --glow-b: rgba(200, 0, 255, 0.2);
+            --shadow-color: rgba(255, 0, 255, 0.15);
+            --icon-bg: rgba(255, 0, 255, 0.1); --icon-color: #ff00ff; --icon-glow: rgba(255,0,255,0.4);
+            background: rgba(255, 0, 255, 0.03);
+        }
+        .cyber-card-lime {
+            --glow-a: rgba(0, 255, 136, 0.6); --glow-b: rgba(0, 200, 100, 0.2);
+            --shadow-color: rgba(0, 255, 136, 0.15);
+            --icon-bg: rgba(0, 255, 136, 0.1); --icon-color: #00ff88; --icon-glow: rgba(0,255,136,0.4);
+            background: rgba(0, 255, 136, 0.03);
+        }
+        .cyber-card-orange {
+            --glow-a: rgba(255, 102, 0, 0.6); --glow-b: rgba(255, 60, 0, 0.2);
+            --shadow-color: rgba(255, 102, 0, 0.15);
+            --icon-bg: rgba(255, 102, 0, 0.1); --icon-color: #ff6600; --icon-glow: rgba(255,102,0,0.4);
+            background: rgba(255, 102, 0, 0.03);
+        }
+        .cyber-card-red {
+            --glow-a: rgba(255, 0, 50, 0.6); --glow-b: rgba(255, 50, 0, 0.2);
+            --shadow-color: rgba(255, 0, 50, 0.15);
+            --icon-bg: rgba(255, 0, 50, 0.1); --icon-color: #ff0032; --icon-glow: rgba(255,0,50,0.4);
+            background: rgba(255, 0, 50, 0.03);
+        }
+        .cyber-card-yellow {
+            --glow-a: rgba(255, 200, 0, 0.6); --glow-b: rgba(255, 160, 0, 0.2);
+            --shadow-color: rgba(255, 200, 0, 0.15);
+            --icon-bg: rgba(255, 200, 0, 0.1); --icon-color: #ffc800; --icon-glow: rgba(255,200,0,0.4);
+            background: rgba(255, 200, 0, 0.03);
+        }
+
+        /* ===== WIDE CARD ===== */
+        .cyber-card-wide {
+            padding: 28px 32px;
+        }
+
+        .cyber-card-wide .card-cyber-icon {
+            width: 70px; height: 70px; font-size: 30px; margin-bottom: 0;
+            flex-shrink: 0;
+        }
+
+        .cyber-card-inner {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            height: 100%;
+        }
+
+        .cyber-card-wide .card-cyber-content { flex: 1; }
+
+        .cyber-card-wide .card-cyber-arrow { margin-top: 16px; }
+
+        /* ===== STATS BAR ===== */
+        .cyber-stats {
+            border-top: 1px solid rgba(0, 255, 255, 0.08);
+            border-bottom: 1px solid rgba(0, 255, 255, 0.08);
+            padding: 28px 0;
+            margin: 40px 0;
+        }
+
+        .cyber-stat-item {
+            text-align: center;
+            padding: 12px;
+            position: relative;
+        }
+
+        .cyber-stat-item:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            right: 0; top: 20%; height: 60%;
+            width: 1px;
+            background: linear-gradient(transparent, rgba(0,255,255,0.2), transparent);
+        }
+
+        .cyber-stat-num {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.4rem;
+            font-weight: 900;
+            line-height: 1;
+            margin-bottom: 4px;
+            background: linear-gradient(135deg, #00ffff, #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .cyber-stat-label {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.35);
+        }
+
+        /* ===== WELCOME CHIP ===== */
+        .welcome-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            border-radius: 50px;
+            border: 1px solid;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .wc-admin  { background: rgba(255,0,50,0.1);  border-color: rgba(255,0,50,0.3);  color: #ff0032; }
+        .wc-staff  { background: rgba(0,255,255,0.1);   border-color: rgba(0,255,255,0.3);   color: #00ffff; }
+        .wc-lect   { background: rgba(255,200,0,0.1);  border-color: rgba(255,200,0,0.3);  color: #ffc800; }
+
+        /* ===== SCANLINE EFFECT ===== */
+        .scanlines {
+            position: fixed;
+            inset: 0;
+            z-index: 999;
+            pointer-events: none;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(0, 0, 0, 0.02) 2px,
+                rgba(0, 0, 0, 0.02) 4px
+            );
+        }
+
+        /* ===== FOOTER ===== */
+        .cyber-footer {
+            position: relative;
+            z-index: 1;
+            border-top: 1px solid rgba(0, 255, 255, 0.08);
+            padding: 32px 0 24px;
+            text-align: center;
+            margin-top: auto;
+        }
+
+        .cyber-footer-brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            font-size: 16px;
+            color: #fff;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+        }
+
+        .cyber-footer-brand-icon {
+            width: 32px; height: 32px;
+            background: linear-gradient(135deg, #00ffff, #ff00ff);
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            color: #050510;
+            font-size: 14px;
+        }
+
+        .cyber-footer-copy {
+            color: rgba(255, 255, 255, 0.25);
+            font-size: 12px;
+            letter-spacing: 1px;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @@media (max-width: 992px) {
+            .hero-main-title { font-size: 2.8rem; }
+        }
+
+        @@media (max-width: 768px) {
+            .hero-main-title { font-size: 2.2rem; letter-spacing: 2px; }
+            .hero-desc { font-size: 1rem; }
+            .cyber-card-inner { flex-direction: column; text-align: center; }
+            .cyber-stat-item:not(:last-child)::after { display: none; }
+        }
+
+        @@media (max-width: 576px) {
+            .hero-cta-row { flex-direction: column; align-items: center; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Scanlines overlay -->
+    <div class="scanlines"></div>
+
+    <!-- Animated glow blobs -->
+    <div class="glow-blob glow-blob-1"></div>
+    <div class="glow-blob glow-blob-2"></div>
+    <div class="glow-blob glow-blob-3"></div>
+    <div class="glow-blob glow-blob-4"></div>
+
+    <!-- Neon grid background -->
+    <div class="neon-bg"></div>
+
+    <!-- Layout wrapper -->
+    <div class="layout-wrapper">
+        <!-- Navbar -->
+        <nav class="cyber-nav">
+            <div class="container cyber-navbar">
+                <a class="cyber-brand" asp-area="" asp-page="/Index">
+                    <div class="cyber-brand-icon">
+                        <i class="bi bi-newspaper"></i>
+                    </div>
+                    FUN<span style="color:#00ffff">NEWS</span>
+                </a>
+
+                @{
+                    var currentPage = ViewContext.RouteData.Values["page"]?.ToString() ?? "";
+                }
+                <ul class="cyber-nav-links">
+                    <li>
+                        <a asp-area="" asp-page="/Index" class="@(currentPage == "/Index" ? "nav-cyber" : "")">
+                            <i class="bi bi-house-door"></i> Home
+                        </a>
+                    </li>
+                    <li>
+                        <a asp-area="" asp-page="/News/View" class="@(currentPage == "/News/View" ? "nav-cyber" : "")">
+                            <i class="bi bi-compass"></i> Browse
+                        </a>
+                    </li>
+                    @if (Context.Session.GetString("UserEmail") != null)
+                    {
+                        var userRole = Context.Session.GetInt32("AccountRole");
+                        @if (userRole == 1)
+                        {
+                            <li>
+                                <a asp-area="" asp-page="/News/Index" class="@(currentPage.StartsWith("/News") && currentPage != "/News/View" && currentPage != "/News/History" ? "nav-cyber" : "")">
+                                    <i class="bi bi-pen"></i> Write
+                                </a>
+                            </li>
+                            <li>
+                                <a asp-area="" asp-page="/Categories/Index" class="@(currentPage.StartsWith("/Categories") ? "nav-cyber" : "")">
+                                    <i class="bi bi-folder"></i> Categories
+                                </a>
+                            </li>
+                            <li>
+                                <a asp-area="" asp-page="/News/History" class="@(currentPage == "/News/History" ? "nav-cyber" : "")">
+                                    <i class="bi bi-clock-history"></i> History
+                                </a>
+                            </li>
+                        }
+                        @if (userRole == 0)
+                        {
+                            <li>
+                                <a asp-area="" asp-page="/Accounts/Index" class="@(currentPage.StartsWith("/Accounts") ? "nav-cyber" : "")">
+                                    <i class="bi bi-people"></i> Accounts
+                                </a>
+                            </li>
+                            <li>
+                                <a asp-area="" asp-page="/Statistics" class="@(currentPage == "/Statistics" ? "nav-cyber" : "")">
+                                    <i class="bi bi-bar-chart"></i> Reports
+                                </a>
+                            </li>
+                        }
+                    }
+                </ul>
+
+                <div>
+                    @if (Context.Session.GetString("UserEmail") != null)
+                    {
+                        <a class="cyber-user-chip" asp-area="" asp-page="/Profile">
+                            <div class="cyber-user-avatar">
+                                @Context.Session.GetString("UserName")?.Substring(0, 1).ToUpper()
+                            </div>
+                            <span>@Context.Session.GetString("UserName")</span>
+                            <i class="bi bi-chevron-down" style="font-size:10px;"></i>
+                        </a>
+                    }
+                    else
+                    {
+                        <a class="cyber-user-chip" asp-area="" asp-page="/Login" style="background: rgba(0,255,255,0.05); border-color: rgba(0,255,255,0.3);">
+                            <div class="cyber-user-avatar" style="background: linear-gradient(135deg, #00ffff, #ff00ff); color: #050510;">
+                                <i class="bi bi-box-arrow-in-right" style="font-size:12px;"></i>
+                            </div>
+                            <span>Sign In</span>
+                        </a>
+                    }
+                </div>
+            </div>
+        </nav>
+
+        <!-- Hero Section -->
+        <section class="cyber-hero">
+            <div class="container">
+                <div class="hero-pre-badge">
+                    <span class="dot"></span>
+                    FUNews Portal &bull; Live 2026
+                </div>
+                <h1 class="hero-main-title">
+                    FUN<span class="hero-neon-text">NEWS</span>
+                </h1>
+                <p class="hero-desc">
+                    The ultimate news management portal for FUN. Create, manage, and consume news content
+                    with a cutting-edge interface powered by ASP.NET Razor Pages.
+                </p>
+                <div class="hero-cta-row">
+                    <a href="/News/View" class="btn-neon-cyan">
+                        <i class="bi bi-play-fill"></i> Browse News
+                    </a>
+                    <a href="/Login" class="btn-neon-mag">
+                        <i class="bi bi-box-arrow-in-right"></i> Sign In
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Content -->
+        <main role="main" class="container" style="padding-bottom: 60px;">
+            @RenderBody()
+        </main>
+
+        <!-- Footer -->
+        <footer class="cyber-footer">
+            <div class="container">
+                <a class="cyber-footer-brand" asp-area="" asp-page="/Index">
+                    <div class="cyber-footer-brand-icon"><i class="bi bi-newspaper"></i></div>
+                    FUN<span style="color:#00ffff">NEWS</span>
+                </a>
+                <p class="cyber-footer-copy mb-0">
+                    &copy; 2026 FUNews Management System &bull; PRN222 &bull; ASP.NET Razor Pages
+                </p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <script>
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                window.location.href = '/Profile?handler=Logout';
+            }
+        }
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

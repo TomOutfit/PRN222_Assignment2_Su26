@@ -27,23 +27,45 @@ namespace NguyenBinhAnRazorPages.Pages.News
         public IEnumerable<Tag> Tags { get; set; } = new List<Tag>();
         public string SearchTerm { get; set; } = string.Empty;
 
-        public async Task OnGetAsync(string searchTerm = "")
+        public int PageSize { get; set; } = 5;
+        public int CurrentPage { get; set; } = 1;
+        public int TotalPages { get; set; } = 1;
+        public int TotalRecords { get; set; } = 0;
+        public int StartRecord { get; set; } = 1;
+        public int EndRecord { get; set; } = 5;
+
+        public string? EditId { get; set; }
+
+        public async Task OnGetAsync(string searchTerm = "", int pageIndex = 1, string? editId = null)
         {
+            EditId = editId;
+            OnPageAuthorization();
             SearchTerm = searchTerm ?? string.Empty;
-            
+            CurrentPage = pageIndex < 1 ? 1 : pageIndex;
+
             // Load categories and tags for dropdowns
             Categories = await _categoryService.GetActiveCategoriesAsync();
             Tags = await _tagService.GetAllTagsAsync();
 
             // Load news articles
+            IEnumerable<NewsArticle> allNews;
             if (!string.IsNullOrEmpty(SearchTerm))
             {
-                NewsArticles = await _newsService.SearchNewsAsync(SearchTerm);
+                allNews = (await _newsService.SearchNewsAsync(SearchTerm)).OrderByDescending(n => n.CreatedDate);
             }
             else
             {
-                NewsArticles = await _newsService.GetAllActiveNewsAsync();
+                allNews = (await _newsService.GetAllActiveNewsAsync()).OrderByDescending(n => n.CreatedDate);
             }
+
+            TotalRecords = allNews.Count();
+            TotalPages = (int)Math.Ceiling((double)TotalRecords / PageSize);
+            if (CurrentPage > TotalPages) CurrentPage = TotalPages > 0 ? TotalPages : 1;
+
+            StartRecord = TotalRecords > 0 ? (CurrentPage - 1) * PageSize + 1 : 0;
+            EndRecord = Math.Min(CurrentPage * PageSize, TotalRecords);
+
+            NewsArticles = allNews.Skip((CurrentPage - 1) * PageSize).Take(PageSize);
         }
 
         public async Task<JsonResult> OnGetEditAsync(string id)
@@ -118,16 +140,31 @@ namespace NguyenBinhAnRazorPages.Pages.News
                     return new JsonResult(new { success = false, message = "Access denied" });
                 }
 
+                // Retrieve existing news article to preserve CreatedDate and CreatedById
+                var existingNews = await _newsService.GetNewsByIdAsync(newsArticle.NewsArticleId);
+                if (existingNews == null)
+                {
+                    return new JsonResult(new { success = false, message = "News article not found" });
+                }
+
+                // Update fields
+                existingNews.NewsTitle = newsArticle.NewsTitle;
+                existingNews.Headline = newsArticle.Headline;
+                existingNews.NewsContent = newsArticle.NewsContent;
+                existingNews.NewsSource = newsArticle.NewsSource;
+                existingNews.CategoryId = newsArticle.CategoryId;
+                existingNews.NewsStatus = newsArticle.NewsStatus;
+
                 // Set updater
                 if (AccountId.HasValue)
                 {
-                    newsArticle.UpdatedById = (short)AccountId.Value;
+                    existingNews.UpdatedById = (short)AccountId.Value;
                 }
 
-                await _newsService.UpdateNewsAsync(newsArticle, TagIds);
+                await _newsService.UpdateNewsAsync(existingNews, TagIds);
 
                 // Load full news with navigation properties for SignalR
-                var fullNews = await _newsService.GetNewsByIdAsync(newsArticle.NewsArticleId);
+                var fullNews = await _newsService.GetNewsByIdAsync(existingNews.NewsArticleId);
                 await _hubContext.Clients.All.SendAsync("NewsUpdated", fullNews);
 
                 return new JsonResult(new { success = true, message = "News updated successfully" });

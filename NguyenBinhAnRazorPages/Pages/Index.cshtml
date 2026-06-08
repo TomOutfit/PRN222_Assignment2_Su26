@@ -1,113 +1,176 @@
 ﻿@page
 @model NguyenBinhAnRazorPages.Pages.IndexModel
 @{
-    ViewData["Title"] = "News Management System";
+    Layout = "_LayoutIndex";
+    ViewData["Title"] = "FUNews Portal";
 }
 
-<div class="container mt-4">
-    <div class="row">
-        <div class="col-12">
-            <h2 class="mb-4">FUNews Management System</h2>
-            
-            @if (Model.IsAuthenticated)
-            {
-                <div class="alert alert-info">
-                    <strong>Welcome, @Model.UserName!</strong> 
-                    @if (Model.IsAdmin)
-                    {
-                        <span>You are logged in as Administrator.</span>
-                    }
-                    else if (Model.IsStaff)
-                    {
-                        <span>You are logged in as Staff.</span>
-                    }
-                    else if (Model.IsLecturer)
-                    {
-                        <span>You are logged in as Lecturer.</span>
-                    }
+<!-- Welcome Bar (authenticated) -->
+@if (Model.IsAuthenticated)
+{
+    <div class="welcome-chip @(Model.IsAdmin ? "wc-admin" : Model.IsStaff ? "wc-staff" : "wc-lect")" style="margin-bottom: 28px;">
+        <i class="bi @(Model.IsAdmin ? "bi-shield-check" : Model.IsStaff ? "bi-person-badge" : "bi-mortarboard")"></i>
+        <span>
+            Welcome back, <strong>@Model.UserName</strong>
+            &mdash; @(Model.IsAdmin ? "Administrator" : Model.IsStaff ? "Staff Member" : "Lecturer")
+        </span>
+    </div>
+}
+
+<!-- Admin Section -->
+@if (Model.IsAdmin)
+{
+    <div class="section-label">
+        <span class="section-label-line"></span>
+        <span class="section-label-text">
+            <i class="bi bi-shield-fill me-1"></i> Administration Panel
+        </span>
+        <span class="section-label-line right"></span>
+    </div>
+    <div class="row g-3 mb-5">
+        <div class="col-md-4">
+            <a href="/Accounts" class="cyber-card cyber-card-cyan">
+                <div class="card-cyber-icon"><i class="bi bi-people-fill"></i></div>
+                <h5 class="card-cyber-title">Account Management</h5>
+                <p class="card-cyber-desc">Control all system accounts, roles, and permissions.</p>
+                <span class="card-cyber-arrow">
+                    Open Panel <i class="bi bi-arrow-right"></i>
+                </span>
+            </a>
+        </div>
+        <div class="col-md-4">
+            <a href="/Statistics" class="cyber-card cyber-card-mag">
+                <div class="card-cyber-icon"><i class="bi bi-bar-chart-fill"></i></div>
+                <h5 class="card-cyber-title">Statistics Report</h5>
+                <p class="card-cyber-desc">System-wide analytics and performance dashboards.</p>
+                <span class="card-cyber-arrow">
+                    View Reports <i class="bi bi-arrow-right"></i>
+                </span>
+            </a>
+        </div>
+        <div class="col-md-4">
+            <a href="/News" class="cyber-card cyber-card-orange">
+                <div class="card-cyber-icon"><i class="bi bi-file-earmark-post-fill"></i></div>
+                <h5 class="card-cyber-title">News Management</h5>
+                <p class="card-cyber-desc">Oversee all news articles across the system.</p>
+                <span class="card-cyber-arrow">
+                    Manage News <i class="bi bi-arrow-right"></i>
+                </span>
+            </a>
+        </div>
+    </div>
+}
+
+<!-- Staff Section -->
+@if (Model.IsStaff || Model.IsAdmin)
+{
+    <div class="section-label">
+        <span class="section-label-line"></span>
+        <span class="section-label-text">
+            <i class="bi bi-pen-fill me-1"></i> Staff Workspace
+        </span>
+        <span class="section-label-line right"></span>
+    </div>
+    <div class="row g-3 mb-5">
+        @if (Model.IsStaff)
+        {
+            <div class="col-md-4">
+                <a href="/News" class="cyber-card cyber-card-lime">
+                    <div class="card-cyber-icon"><i class="bi bi-plus-circle-fill"></i></div>
+                    <h5 class="card-cyber-title">Create News</h5>
+                    <p class="card-cyber-desc">Write and publish new articles for your audience.</p>
+                    <span class="card-cyber-arrow">
+                        Start Writing <i class="bi bi-arrow-right"></i>
+                    </span>
+                </a>
+            </div>
+        }
+        <div class="col-md-4">
+            <a href="/Categories" class="cyber-card cyber-card-yellow">
+                <div class="card-cyber-icon"><i class="bi bi-folder-fill"></i></div>
+                <h5 class="card-cyber-title">Category Management</h5>
+                <p class="card-cyber-desc">Organize articles with custom categories.</p>
+                <span class="card-cyber-arrow">
+                    Manage <i class="bi bi-arrow-right"></i>
+                </span>
+            </a>
+        </div>
+        @if (Model.IsStaff)
+        {
+            <div class="col-md-4">
+                <a href="/News/History" class="cyber-card cyber-card-cyan">
+                    <div class="card-cyber-icon"><i class="bi bi-clock-history"></i></div>
+                    <h5 class="card-cyber-title">News History</h5>
+                    <p class="card-cyber-desc">Track all your articles and their current status.</p>
+                    <span class="card-cyber-arrow">
+                        View History <i class="bi bi-arrow-right"></i>
+                    </span>
+                </a>
+            </div>
+        }
+    </div>
+}
+
+<!-- Browse Section -->
+<div class="section-label">
+    <span class="section-label-line"></span>
+    <span class="section-label-text">
+        <i class="bi bi-compass-fill me-1"></i> Discover
+    </span>
+    <span class="section-label-line right"></span>
+</div>
+<div class="row g-3 mb-5">
+    <div class="col-md-6">
+        <a href="/News/View" class="cyber-card cyber-card cyber-card-mag cyber-card-wide">
+            <div class="cyber-card-inner">
+                <div class="card-cyber-icon"><i class="bi bi-compass-fill"></i></div>
+                <div class="card-cyber-content">
+                    <h5 class="card-cyber-title">View All News</h5>
+                    <p class="card-cyber-desc">Browse every published article across all categories.</p>
+                    <span class="card-cyber-arrow">Explore Articles <i class="bi bi-arrow-right"></i></span>
                 </div>
-            }
-
-            <div class="row">
-                @if (Model.IsAdmin)
-                {
-                    <div class="col-md-4 mb-3">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">Account Management</h5>
-                                <p class="card-text">Manage system accounts and roles.</p>
-                                <a href="/Accounts" class="btn btn-primary">Manage Accounts</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">Statistics Report</h5>
-                                <p class="card-text">View news statistics and reports.</p>
-                                <a href="/Statistics" class="btn btn-primary">View Statistics</a>
-                            </div>
-                        </div>
-                    </div>
-                }
-
-                @if (Model.IsStaff || Model.IsAdmin)
-                {
-                    <div class="col-md-4 mb-3">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">News Management</h5>
-                                <p class="card-text">Create and manage news articles.</p>
-                                <a href="/News" class="btn btn-primary">Manage News</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">Category Management</h5>
-                                <p class="card-text">Manage news categories.</p>
-                                <a href="/Categories" class="btn btn-primary">Manage Categories</a>
-                            </div>
-                        </div>
-                    </div>
-                }
-
-                <div class="col-md-4 mb-3">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">View News</h5>
-                            <p class="card-text">Browse news articles.</p>
-                            <a href="/News/View" class="btn btn-primary">View News</a>
-                        </div>
-                    </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-6">
+        <a href="/Login" class="cyber-card cyber-card cyber-card-red cyber-card-wide">
+            <div class="cyber-card-inner">
+                <div class="card-cyber-icon"><i class="bi bi-box-arrow-in-right"></i></div>
+                <div class="card-cyber-content">
+                    <h5 class="card-cyber-title">@(Model.IsAuthenticated ? "Switch Account" : "Sign In")</h5>
+                    <p class="card-cyber-desc">@(Model.IsAuthenticated ? "Log out or change to a different account." : "Sign in to access content creation and management tools.")</p>
+                    <span class="card-cyber-arrow">@(Model.IsAuthenticated ? "Account Settings" : "Get Started") <i class="bi bi-arrow-right"></i></span>
                 </div>
+            </div>
+        </a>
+    </div>
+</div>
 
-                @if (Model.IsAuthenticated)
-                {
-                    <div class="col-md-4 mb-3">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">Profile</h5>
-                                <p class="card-text">Manage your profile.</p>
-                                <a href="/Profile" class="btn btn-primary">My Profile</a>
-                            </div>
-                        </div>
-                    </div>
-                }
-
-                @if (Model.IsStaff)
-                {
-                    <div class="col-md-4 mb-3">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">News History</h5>
-                                <p class="card-text">View your created news.</p>
-                                <a href="/News/History" class="btn btn-primary">My News History</a>
-                            </div>
-                        </div>
-                    </div>
-                }
+<!-- Stats Bar -->
+<div class="cyber-stats">
+    <div class="row g-0">
+        <div class="col-6 col-md-3">
+            <div class="cyber-stat-item">
+                <div class="cyber-stat-num">50+</div>
+                <div class="cyber-stat-label">Articles</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="cyber-stat-item">
+                <div class="cyber-stat-num">10</div>
+                <div class="cyber-stat-label">Categories</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="cyber-stat-item">
+                <div class="cyber-stat-num">20+</div>
+                <div class="cyber-stat-label">Users</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="cyber-stat-item">
+                <div class="cyber-stat-num">24/7</div>
+                <div class="cyber-stat-label">Uptime</div>
             </div>
         </div>
     </div>

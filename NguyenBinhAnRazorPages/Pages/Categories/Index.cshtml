@@ -5,78 +5,122 @@
 }
 @attribute [StaffOnly]
 
-<div class="container mt-4">
-    <div class="row">
-        <div class="col-12">
-            <h2>Category Management</h2>
-            
-            <!-- Search and Create -->
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <form method="get" class="d-flex">
-                        <input type="text" name="searchTerm" class="form-control me-2" placeholder="Search categories..." value="@Model.SearchTerm" />
-                        <button type="submit" class="btn btn-outline-primary">Search</button>
-                    </form>
-                </div>
-                <div class="col-md-6 text-end">
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createCategoryModal">
-                        <i class="bi bi-plus"></i> Create Category
-                    </button>
-                </div>
-            </div>
+<style>
+    body { font-family: 'Rajdhani', sans-serif; background: #050510; color: #e0e0ff; }
+</style>
 
-            <!-- Categories Table -->
+@Html.AntiForgeryToken()
+<div class="container-fluid py-4" style="position:relative; z-index:1;">
+
+    <!-- Page Header -->
+    <div class="d-flex align-items-center justify-content-between flex-wrap gap-3 mb-4">
+        <div>
+            <h2 style="font-family:'Orbitron',sans-serif; font-size:1.6rem; color:#fff; margin-bottom:4px;">
+                <i class="bi bi-folder-fill me-2" style="color:#ff6600;"></i> Category Management
+            </h2>
+            <p style="color:rgba(255,255,255,0.4); font-size:14px; margin:0;">Organize your news with categories</p>
+        </div>
+        <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#createCategoryModal"
+                style="background:linear-gradient(135deg,#ff6600,#cc5200); border:none; color:#fff; border-radius:8px; font-family:'Rajdhani',sans-serif; padding:10px 24px; letter-spacing:1px; font-size:14px; font-weight:700;">
+            <i class="bi bi-plus-circle me-2"></i>Create Category
+        </button>
+    </div>
+
+    <!-- Search -->
+    <div class="row mb-4">
+        <div class="col-md-5">
+            <form method="get" class="d-flex">
+                <div style="position:relative; flex:1;">
+                    <input type="text" name="searchTerm" class="form-control"
+                           style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#fff; padding:10px 16px 10px 40px; border-radius:8px 0 0 8px; font-family:'Rajdhani',sans-serif;"
+                           placeholder="Search categories..." value="@Model.SearchTerm" />
+                    <i class="bi bi-search" style="position:absolute; left:14px; top:50%; transform:translateY(-50%); color:rgba(255,255,255,0.3);"></i>
+                </div>
+                <button type="submit" class="btn"
+                        style="background:rgba(255,102,0,0.1); border:1px solid rgba(255,102,0,0.3); color:#ff6600; border-radius:0 8px 8px 0; font-family:'Rajdhani',sans-serif;">
+                    <i class="bi bi-search"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    @if (Model.TotalRecords > 0)
+    {
+        <div style="background:rgba(255,102,0,0.05); border:1px solid rgba(255,102,0,0.1); border-radius:10px; padding:10px 16px; margin-bottom:16px; display:inline-flex; align-items:center; gap:8px;">
+            <i class="bi bi-info-circle" style="color:#ff6600;"></i>
+            <span style="color:rgba(255,255,255,0.5); font-size:13px;">Showing <strong style="color:#fff;">@Model.StartRecord–@Model.EndRecord</strong> of <strong style="color:#fff;">@Model.TotalRecords</strong> categories</span>
+        </div>
+    }
+
+    <!-- Table -->
+    @if (!Model.Categories.Any())
+    {
+        <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:16px; padding:60px; text-align:center;">
+            <i class="bi bi-inbox" style="font-size:48px; color:rgba(255,255,255,0.15); display:block; margin-bottom:16px;"></i>
+            <h4 style="color:rgba(255,255,255,0.5); font-family:'Orbitron',sans-serif;">No Categories Found</h4>
+            <p style="color:rgba(255,255,255,0.3); font-size:14px;">Create your first category to organize news.</p>
+        </div>
+    }
+    else
+    {
+        <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06); border-radius:16px; overflow:hidden;">
             <div class="table-responsive">
-                <table class="table table-striped">
+                <table class="table mb-0" style="color:#e0e0ff; font-family:'Rajdhani',sans-serif; --bs-table-bg: transparent;">
                     <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>Description</th>
-                            <th>Parent Category</th>
-                            <th>Status</th>
-                            <th>Actions</th>
+                        <tr style="background:rgba(255,102,0,0.04); border-bottom:1px solid rgba(255,102,0,0.1);">
+                            <th style="padding:14px 16px; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:rgba(255,102,0,0.6);">#</th>
+                            <th style="padding:14px 16px; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:rgba(255,102,0,0.6);">ID</th>
+                            <th style="padding:14px 16px; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:rgba(255,102,0,0.6);">Name</th>
+                            <th style="padding:14px 16px; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:rgba(255,102,0,0.6);">Description</th>
+                            <th style="padding:14px 16px; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:rgba(255,102,0,0.6);">Parent</th>
+                            <th style="padding:14px 16px; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:rgba(255,102,0,0.6);">Status</th>
+                            <th style="padding:14px 16px; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:rgba(255,102,0,0.6);">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
+                        @{
+                            int rowIndex = Model.StartRecord;
+                        }
                         @foreach (var category in Model.Categories)
                         {
-                            <tr>
-                                <td>@category.CategoryId</td>
-                                <td>@category.CategoryName</td>
-                                <td>@category.CategoryDesciption</td>
-                                <td>
+                            <tr style="border-bottom:1px solid rgba(255,255,255,0.04); transition:background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.03)'" onmouseout="this.style.background='transparent'">
+                                <td style="padding:14px 16px; color:rgba(255,255,255,0.3); font-size:13px;">@rowIndex</td>
+                                @{ rowIndex++; }
+                                <td style="padding:14px 16px; color:rgba(255,102,0,0.5); font-size:13px; font-family:'Orbitron',sans-serif;">#@category.CategoryId</td>
+                                <td style="padding:14px 16px; font-size:14px; font-weight:600; color:#fff;">@category.CategoryName</td>
+                                <td style="padding:14px 16px; font-size:13px; color:rgba(255,255,255,0.5); max-width:200px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">@category.CategoryDesciption</td>
+                                <td style="padding:14px 16px;">
                                     @if (category.ParentCategory != null)
                                     {
-                                        @category.ParentCategory.CategoryName
+                                        <span style="background:rgba(139,92,246,0.1); color:#a78bfa; border:1px solid rgba(139,92,246,0.2); padding:3px 10px; border-radius:50px; font-size:12px;">
+                                            <i class="bi bi-folder-symlink me-1"></i>@category.ParentCategory.CategoryName
+                                        </span>
                                     }
                                     else
                                     {
-                                        <span class="text-muted">None</span>
+                                        <span style="color:rgba(255,255,255,0.25); font-size:13px;">—</span>
                                     }
                                 </td>
-                                <td>
+                                <td style="padding:14px 16px;">
                                     @if (category.IsActive == true)
                                     {
-                                        <span class="badge bg-success">Active</span>
+                                        <span style="background:rgba(0,255,136,0.1); color:#00ff88; border:1px solid rgba(0,255,136,0.2); padding:3px 10px; border-radius:50px; font-size:12px; font-weight:600;"><i class="bi bi-check-circle-fill me-1"></i>Active</span>
                                     }
                                     else
                                     {
-                                        <span class="badge bg-secondary">Inactive</span>
+                                        <span style="background:rgba(128,128,128,0.1); color:#888; border:1px solid rgba(128,128,128,0.2); padding:3px 10px; border-radius:50px; font-size:12px; font-weight:600;"><i class="bi bi-x-circle me-1"></i>Inactive</span>
                                     }
                                 </td>
-                                <td>
-                                    <button type="button" class="btn btn-sm btn-info btn-edit" 
-                                            data-id="@category.CategoryId"
-                                            data-name="@category.CategoryName"
-                                            data-description="@category.CategoryDesciption"
-                                            data-parent="@category.ParentCategoryId"
-                                            data-status="@category.IsActive">
+                                <td style="padding:14px 16px;">
+                                    <button type="button" class="btn btn-sm btn-edit"
+                                            style="background:rgba(255,102,0,0.08); border:1px solid rgba(255,102,0,0.2); color:#ff6600; border-radius:6px; font-size:12px; padding:5px 12px; margin-right:4px;"
+                                            data-id="@category.CategoryId" data-name="@category.CategoryName"
+                                            data-description="@category.CategoryDesciption" data-parent="@category.ParentCategoryId" data-status="@category.IsActive">
                                         <i class="bi bi-pencil"></i> Edit
                                     </button>
-                                    <button type="button" class="btn btn-sm btn-danger btn-delete" 
-                                            data-id="@category.CategoryId" 
-                                            data-name="@category.CategoryName">
+                                    <button type="button" class="btn btn-sm btn-delete"
+                                            style="background:rgba(255,0,50,0.08); border:1px solid rgba(255,0,50,0.2); color:#ff0032; border-radius:6px; font-size:12px; padding:5px 12px;"
+                                            data-id="@category.CategoryId" data-name="@category.CategoryName">
                                         <i class="bi bi-trash"></i> Delete
                                     </button>
                                 </td>
@@ -85,189 +129,229 @@
                     </tbody>
                 </table>
             </div>
+
+            @{
+                int currentGroupStart = ((Model.CurrentPage - 1) / Model.PageSize) * Model.PageSize + 1;
+                int currentGroupEnd = Math.Min(currentGroupStart + Model.PageSize - 1, Model.TotalPages);
+            }
+            @if (Model.TotalPages > 1)
+            {
+                <div style="padding:16px; border-top:1px solid rgba(255,255,255,0.05);">
+                    <nav>
+                        <ul class="pagination justify-content-center mb-0" style="gap:4px;">
+                            <li class="page-item @(Model.CurrentPage == 1 ? "disabled" : "")">
+                                <a class="page-link" href="/Categories/Index?searchTerm=@Model.SearchTerm&pageIndex=@(Model.CurrentPage - 1)"
+                                   style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); color:rgba(255,255,255,0.5); border-radius:6px; font-family:'Rajdhani',sans-serif; font-size:13px;">Previous</a>
+                            </li>
+                            @if (currentGroupStart > 1)
+                            {
+                                <li class="page-item"><a class="page-link" href="/Categories/Index?searchTerm=@Model.SearchTerm&pageIndex=@(currentGroupStart - 1)"
+                                   style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); color:rgba(255,255,255,0.5); border-radius:6px; font-family:'Rajdhani',sans-serif; font-size:13px;">...</a></li>
+                            }
+                            @for (int i = currentGroupStart; i <= currentGroupEnd; i++)
+                            {
+                                <li class="page-item @(Model.CurrentPage == i ? "active" : "")">
+                                    <a class="page-link" href="/Categories/Index?searchTerm=@Model.SearchTerm&pageIndex=@i"
+                                       style="background:@(Model.CurrentPage == i ? "linear-gradient(135deg,#ff6600,#cc5200)" : "rgba(255,255,255,0.04)"); border:1px solid @(Model.CurrentPage == i ? "transparent" : "rgba(255,255,255,0.08)"); color:@(Model.CurrentPage == i ? "#fff" : "rgba(255,255,255,0.5)"); border-radius:6px; font-family:'Rajdhani',sans-serif; font-size:13px; font-weight:@(Model.CurrentPage == i ? "700" : "400");">@i</a>
+                                </li>
+                            }
+                            @if (currentGroupEnd < Model.TotalPages)
+                            {
+                                <li class="page-item"><a class="page-link" href="/Categories/Index?searchTerm=@Model.SearchTerm&pageIndex=@(currentGroupEnd + 1)"
+                                   style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); color:rgba(255,255,255,0.5); border-radius:6px; font-family:'Rajdhani',sans-serif; font-size:13px;">...</a></li>
+                            }
+                            <li class="page-item @(Model.CurrentPage == Model.TotalPages ? "disabled" : "")">
+                                <a class="page-link" href="/Categories/Index?searchTerm=@Model.SearchTerm&pageIndex=@(Model.CurrentPage + 1)"
+                                   style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); color:rgba(255,255,255,0.5); border-radius:6px; font-family:'Rajdhani',sans-serif; font-size:13px;">Next</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            }
         </div>
-    </div>
+    }
 </div>
 
-<!-- Create Category Modal -->
+<!-- Create Modal -->
 <div class="modal fade" id="createCategoryModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Create Category</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="background:#0a0a1a; border:1px solid rgba(255,102,0,0.15); border-radius:16px;">
+            <div class="modal-header" style="border-bottom:1px solid rgba(255,102,0,0.1); padding:20px 24px;">
+                <h5 style="font-family:'Orbitron',sans-serif; color:#fff; font-size:15px; margin:0;">
+                    <i class="bi bi-plus-circle me-2" style="color:#ff6600;"></i>Create Category
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" style="padding:24px;">
                 <form id="createForm">
                     <div class="mb-3">
-                        <label for="createName" class="form-label">Category Name</label>
-                        <input type="text" class="form-control" id="createName" name="CategoryName" required />
+                        <label class="form-label" style="color:rgba(255,255,255,0.5); font-size:12px; font-weight:600; letter-spacing:1px; text-transform:uppercase;">Category Name</label>
+                        <input type="text" class="form-control" id="createName" name="CategoryName" required
+                               style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); color:#fff; border-radius:8px; font-family:'Rajdhani',sans-serif; padding:10px 14px;" />
                     </div>
                     <div class="mb-3">
-                        <label for="createDescription" class="form-label">Description</label>
-                        <textarea class="form-control" id="createDescription" name="CategoryDesciption" rows="3" required></textarea>
+                        <label class="form-label" style="color:rgba(255,255,255,0.5); font-size:12px; font-weight:600; letter-spacing:1px; text-transform:uppercase;">Description</label>
+                        <textarea class="form-control" id="createDescription" name="CategoryDesciption" rows="3" required
+                                  style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); color:#fff; border-radius:8px; font-family:'Rajdhani',sans-serif; padding:10px 14px;"></textarea>
                     </div>
                     <div class="mb-3">
-                        <label for="createParent" class="form-label">Parent Category</label>
-                        <select class="form-control" id="createParent" name="ParentCategoryId">
-                            <option value="">None (Root Category)</option>
-                            @foreach (var category in Model.ParentCategories)
+                        <label class="form-label" style="color:rgba(255,255,255,0.5); font-size:12px; font-weight:600; letter-spacing:1px; text-transform:uppercase;">Parent Category</label>
+                        <select class="form-control" id="createParent" name="ParentCategoryId"
+                                style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); color:#fff; border-radius:8px; font-family:'Rajdhani',sans-serif; padding:10px 14px;">
+                            <option value="" style="color:#fff; background:#0a0a1a;">None (Root Category)</option>
+                            @foreach (var cat in Model.ParentCategories)
                             {
-                                <option value="@category.CategoryId">@category.CategoryName</option>
+                                <option value="@cat.CategoryId" style="color:#fff; background:#0a0a1a;">@cat.CategoryName</option>
                             }
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label for="createStatus" class="form-label">Status</label>
-                        <select class="form-control" id="createStatus" name="IsActive">
-                            <option value="true">Active</option>
-                            <option value="false">Inactive</option>
+                        <label class="form-label" style="color:rgba(255,255,255,0.5); font-size:12px; font-weight:600; letter-spacing:1px; text-transform:uppercase;">Status</label>
+                        <select class="form-control" id="createStatus" name="IsActive"
+                                style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); color:#fff; border-radius:8px; font-family:'Rajdhani',sans-serif; padding:10px 14px;">
+                            <option value="true" style="color:#00ff88; background:#0a0a1a;">Active</option>
+                            <option value="false" style="color:#888; background:#0a0a1a;">Inactive</option>
                         </select>
                     </div>
                 </form>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" id="btnCreate">Create</button>
+            <div class="modal-footer" style="border-top:1px solid rgba(255,102,0,0.1); padding:16px 24px; gap:8px;">
+                <button type="button" class="btn" data-bs-dismiss="modal"
+                        style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:rgba(255,255,255,0.5); border-radius:8px; font-family:'Rajdhani',sans-serif; padding:10px 20px;">Cancel</button>
+                <button type="button" class="btn" id="btnCreate"
+                        style="background:linear-gradient(135deg,#ff6600,#cc5200); border:none; color:#fff; border-radius:8px; font-family:'Rajdhani',sans-serif; font-weight:700; padding:10px 24px; letter-spacing:1px;">
+                    <i class="bi bi-check-circle me-1"></i>Create
+                </button>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Edit Category Modal -->
+<!-- Edit Modal -->
 <div class="modal fade" id="editCategoryModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Edit Category</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="background:#0a0a1a; border:1px solid rgba(255,102,0,0.15); border-radius:16px;">
+            <div class="modal-header" style="border-bottom:1px solid rgba(255,102,0,0.1); padding:20px 24px;">
+                <h5 style="font-family:'Orbitron',sans-serif; color:#fff; font-size:15px; margin:0;">
+                    <i class="bi bi-pencil me-2" style="color:#ff6600;"></i>Edit Category
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" style="padding:24px;">
                 <form id="editForm">
                     <input type="hidden" id="editId" name="CategoryId" />
                     <div class="mb-3">
-                        <label for="editName" class="form-label">Category Name</label>
-                        <input type="text" class="form-control" id="editName" name="CategoryName" required />
+                        <label class="form-label" style="color:rgba(255,255,255,0.5); font-size:12px; font-weight:600; letter-spacing:1px; text-transform:uppercase;">Category Name</label>
+                        <input type="text" class="form-control" id="editName" name="CategoryName" required
+                               style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); color:#fff; border-radius:8px; font-family:'Rajdhani',sans-serif; padding:10px 14px;" />
                     </div>
                     <div class="mb-3">
-                        <label for="editDescription" class="form-label">Description</label>
-                        <textarea class="form-control" id="editDescription" name="CategoryDesciption" rows="3" required></textarea>
+                        <label class="form-label" style="color:rgba(255,255,255,0.5); font-size:12px; font-weight:600; letter-spacing:1px; text-transform:uppercase;">Description</label>
+                        <textarea class="form-control" id="editDescription" name="CategoryDesciption" rows="3" required
+                                  style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); color:#fff; border-radius:8px; font-family:'Rajdhani',sans-serif; padding:10px 14px;"></textarea>
                     </div>
                     <div class="mb-3">
-                        <label for="editParent" class="form-label">Parent Category</label>
-                        <select class="form-control" id="editParent" name="ParentCategoryId">
-                            <option value="">None (Root Category)</option>
-                            @foreach (var category in Model.ParentCategories)
+                        <label class="form-label" style="color:rgba(255,255,255,0.5); font-size:12px; font-weight:600; letter-spacing:1px; text-transform:uppercase;">Parent Category</label>
+                        <select class="form-control" id="editParent" name="ParentCategoryId"
+                                style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); color:#fff; border-radius:8px; font-family:'Rajdhani',sans-serif; padding:10px 14px;">
+                            <option value="" style="color:#fff; background:#0a0a1a;">None (Root Category)</option>
+                            @foreach (var cat in Model.ParentCategories)
                             {
-                                <option value="@category.CategoryId">@category.CategoryName</option>
+                                <option value="@cat.CategoryId" style="color:#fff; background:#0a0a1a;">@cat.CategoryName</option>
                             }
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label for="editStatus" class="form-label">Status</label>
-                        <select class="form-control" id="editStatus" name="IsActive">
-                            <option value="true">Active</option>
-                            <option value="false">Inactive</option>
+                        <label class="form-label" style="color:rgba(255,255,255,0.5); font-size:12px; font-weight:600; letter-spacing:1px; text-transform:uppercase;">Status</label>
+                        <select class="form-control" id="editStatus" name="IsActive"
+                                style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); color:#fff; border-radius:8px; font-family:'Rajdhani',sans-serif; padding:10px 14px;">
+                            <option value="true" style="color:#00ff88; background:#0a0a1a;">Active</option>
+                            <option value="false" style="color:#888; background:#0a0a1a;">Inactive</option>
                         </select>
                     </div>
                 </form>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" id="btnUpdate">Update</button>
+            <div class="modal-footer" style="border-top:1px solid rgba(255,102,0,0.1); padding:16px 24px; gap:8px;">
+                <button type="button" class="btn" data-bs-dismiss="modal"
+                        style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:rgba(255,255,255,0.5); border-radius:8px; font-family:'Rajdhani',sans-serif; padding:10px 20px;">Cancel</button>
+                <button type="button" class="btn" id="btnUpdate"
+                        style="background:linear-gradient(135deg,#ff6600,#cc5200); border:none; color:#fff; border-radius:8px; font-family:'Rajdhani',sans-serif; font-weight:700; padding:10px 24px; letter-spacing:1px;">
+                    <i class="bi bi-check-circle me-1"></i>Update
+                </button>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Delete Confirmation Modal -->
+<!-- Delete Modal -->
 <div class="modal fade" id="deleteModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Confirm Delete</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="background:#0a0a1a; border:1px solid rgba(255,0,50,0.2); border-radius:16px;">
+            <div class="modal-header" style="border-bottom:1px solid rgba(255,0,50,0.1); padding:20px 24px;">
+                <h5 style="font-family:'Orbitron',sans-serif; color:#fff; font-size:15px; margin:0;">
+                    <i class="bi bi-exclamation-triangle me-2" style="color:#ff0032;"></i>Confirm Delete
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
-            <div class="modal-body">
-                <p>Are you sure you want to delete the category: <strong id="deleteTitle"></strong>?</p>
-                <p class="text-warning">
-                    <small>Note: You can only delete categories that are not associated with any news articles.</small>
-                </p>
+            <div class="modal-body text-center" style="padding:32px 24px;">
+                <i class="bi bi-folder-x" style="font-size:48px; color:rgba(255,0,50,0.4); display:block; margin-bottom:16px;"></i>
+                <p style="color:rgba(255,255,255,0.7); font-size:15px; margin-bottom:4px;">Delete category:</p>
+                <p style="color:#ff0032; font-weight:700; font-size:16px;" id="deleteTitle"></p>
+                <p style="color:rgba(255,255,255,0.3); font-size:13px; margin-top:12px;">Ensure no news is associated with this category.</p>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-danger" id="btnConfirmDelete">Delete</button>
+            <div class="modal-footer" style="border-top:1px solid rgba(255,0,50,0.1); padding:16px 24px; gap:8px;">
+                <button type="button" class="btn" data-bs-dismiss="modal"
+                        style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:rgba(255,255,255,0.5); border-radius:8px; font-family:'Rajdhani',sans-serif; padding:10px 20px;">Cancel</button>
+                <button type="button" class="btn" id="btnConfirmDelete"
+                        style="background:linear-gradient(135deg,#ff0032,#cc0028); border:none; color:#fff; border-radius:8px; font-family:'Rajdhani',sans-serif; font-weight:700; padding:10px 24px; letter-spacing:1px;">
+                    <i class="bi bi-trash me-1"></i>Delete
+                </button>
             </div>
         </div>
     </div>
 </div>
 
 @section Scripts {
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         $(document).ready(function() {
-            // Handle create button
             $('#btnCreate').click(function() {
-                const formData = $('#createForm').serialize();
-                $.post('/Categories/Create', formData, function(response) {
-                    if (response.success) {
-                        $('#createCategoryModal').modal('hide');
-                        location.reload();
-                    } else {
-                        alert('Error creating category: ' + response.message);
-                    }
+                const token = $('input[name="__RequestVerificationToken"]').first().val();
+                const formData = $('#createForm').serialize() + '&__RequestVerificationToken=' + encodeURIComponent(token);
+                $.post('?handler=Create', formData, function(response) {
+                    if (response.success) { $('#createCategoryModal').modal('hide'); location.reload(); }
+                    else { alert('Error: ' + response.message); }
                 });
             });
-            
-            // Handle edit button clicks
+
             $('.btn-edit').click(function() {
-                const id = $(this).data('id');
-                const name = $(this).data('name');
-                const description = $(this).data('description');
-                const parent = $(this).data('parent');
-                const status = $(this).data('status');
-                
-                $('#editId').val(id);
-                $('#editName').val(name);
-                $('#editDescription').val(description);
-                $('#editParent').val(parent || '');
-                $('#editStatus').val(status);
-                
+                $('#editId').val($(this).data('id'));
+                $('#editName').val($(this).data('name'));
+                $('#editDescription').val($(this).data('description'));
+                $('#editParent').val($(this).data('parent') || '');
+                $('#editStatus').val(String($(this).data('status')).toLowerCase());
                 $('#editCategoryModal').modal('show');
             });
-            
-            // Handle update button
+
             $('#btnUpdate').click(function() {
-                const formData = $('#editForm').serialize();
-                $.post('/Categories/Update', formData, function(response) {
-                    if (response.success) {
-                        $('#editCategoryModal').modal('hide');
-                        location.reload();
-                    } else {
-                        alert('Error updating category: ' + response.message);
-                    }
+                const token = $('input[name="__RequestVerificationToken"]').first().val();
+                const formData = $('#editForm').serialize() + '&__RequestVerificationToken=' + encodeURIComponent(token);
+                $.post('?handler=Update', formData, function(response) {
+                    if (response.success) { $('#editCategoryModal').modal('hide'); location.reload(); }
+                    else { alert('Error: ' + response.message); }
                 });
             });
-            
-            // Handle delete button clicks
+
             $('.btn-delete').click(function() {
-                const id = $(this).data('id');
-                const name = $(this).data('name');
-                $('#deleteTitle').text(name);
+                $('#deleteTitle').text($(this).data('name'));
                 $('#deleteModal').modal('show');
-                $('#btnConfirmDelete').data('id', id);
+                $('#btnConfirmDelete').data('id', $(this).data('id'));
             });
-            
-            // Handle confirm delete
+
             $('#btnConfirmDelete').click(function() {
-                const id = $(this).data('id');
-                $.post('/Categories/Delete', { id: id }, function(response) {
-                    if (response.success) {
-                        $('#deleteModal').modal('hide');
-                        location.reload();
-                    } else {
-                        alert('Error deleting category: ' + response.message);
-                    }
+                const token = $('input[name="__RequestVerificationToken"]').first().val();
+                $.post('?handler=Delete', { id: $(this).data('id'), __RequestVerificationToken: token }, function(response) {
+                    if (response.success) { $('#deleteModal').modal('hide'); location.reload(); }
+                    else { alert('Error: ' + response.message); }
                 });
             });
         });

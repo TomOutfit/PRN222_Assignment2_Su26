@@ -4,87 +4,265 @@
     ViewData["Title"] = "View News";
 }
 
-<div class="container mt-4">
-    <div class="row">
-        <div class="col-12">
-            <h2>News Articles</h2>
-            
-            <!-- Search and Filter -->
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <form method="get" class="d-flex">
-                        <input type="text" name="searchTerm" class="form-control me-2" placeholder="Search news..." value="@Model.SearchTerm" />
-                        <button type="submit" class="btn btn-outline-primary">Search</button>
-                    </form>
-                </div>
-                <div class="col-md-6">
-                    <form method="get" class="d-flex">
-                        <select name="categoryId" class="form-control me-2">
-                            <option value="">All Categories</option>
-                            @foreach (var category in Model.Categories)
-                            {
-                                <option value="@category.CategoryId" selected="@(Model.CategoryId == category.CategoryId)">@category.CategoryName</option>
-                            }
-                        </select>
-                        <button type="submit" class="btn btn-outline-secondary">Filter</button>
-                    </form>
-                </div>
-            </div>
+<style>
+    body {
+        font-family: 'Rajdhani', sans-serif;
+        background: #050510;
+        color: #e0e0ff;
+        min-height: 100vh;
+    }
 
-            <!-- News Cards -->
-            <div class="row">
-                @foreach (var news in Model.NewsArticles)
-                {
-                    <div class="col-md-6 col-lg-4 mb-4">
-                        <div class="card h-100">
-                            <div class="card-body">
-                                <h5 class="card-title">@news.NewsTitle</h5>
-                                <h6 class="card-subtitle mb-2 text-muted">@news.Headline</h6>
-                                <div class="mb-2">
-                                    <span class="badge bg-primary">@news.Category?.CategoryName</span>
-                                    @if (news.NewsStatus == true)
-                                    {
-                                        <span class="badge bg-success">Active</span>
-                                    }
-                                    else
-                                    {
-                                        <span class="badge bg-secondary">Inactive</span>
-                                    }
-                                </div>
-                                <p class="card-text">
-                                    @(news.NewsContent?.Length > 200 ? news.NewsContent.Substring(0, 200) + "..." : news.NewsContent)
+    .news-card-wrap {
+        height: 100%;
+    }
+
+    /* Color variants via nth-child */
+    .news-card-wrap:nth-child(6n+1) .news-card { --card-accent: #00ffff; --card-bg: rgba(0,255,255,0.06); --card-hover: rgba(0,255,255,0.12); }
+    .news-card-wrap:nth-child(6n+2) .news-card { --card-accent: #ff00ff; --card-bg: rgba(255,0,255,0.06); --card-hover: rgba(255,0,255,0.12); }
+    .news-card-wrap:nth-child(6n+3) .news-card { --card-accent: #00ff88; --card-bg: rgba(0,255,136,0.06); --card-hover: rgba(0,255,136,0.12); }
+    .news-card-wrap:nth-child(6n+4) .news-card { --card-accent: #ff6600; --card-bg: rgba(255,102,0,0.06); --card-hover: rgba(255,102,0,0.12); }
+    .news-card-wrap:nth-child(6n+5) .news-card { --card-accent: #ffc800; --card-bg: rgba(255,200,0,0.06); --card-hover: rgba(255,200,0,0.12); }
+    .news-card-wrap:nth-child(6n+6) .news-card { --card-accent: #a78bfa; --card-bg: rgba(167,139,250,0.06); --card-hover: rgba(167,139,250,0.12); }
+
+    .news-card {
+        background: var(--card-bg);
+        border: 1px solid rgba(255,255,255,0.06);
+        border-radius: 16px;
+        height: 100%;
+        overflow: hidden;
+        transition: transform 0.4s, box-shadow 0.4s, border-color 0.3s;
+        display: flex;
+        flex-direction: column;
+        text-decoration: none;
+    }
+
+    .news-card:hover {
+        transform: translateY(-6px);
+        border-color: rgba(255,255,255,0.14);
+        box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+    }
+
+    .news-card-accent {
+        height: 3px;
+        background: linear-gradient(90deg, var(--card-accent), transparent);
+    }
+
+    .news-card-body {
+        padding: 24px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .badge-cat {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 4px 12px;
+        border-radius: 50px;
+        font-size: 12px;
+        font-weight: 600;
+        background: var(--card-hover);
+        color: var(--card-accent);
+        border: 1px solid var(--card-accent);
+        opacity: 0.9;
+    }
+
+    .badge-status-active {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 4px 12px;
+        border-radius: 50px;
+        font-size: 12px;
+        font-weight: 600;
+        background: rgba(0,255,136,0.1);
+        color: #00ff88;
+        border: 1px solid rgba(0,255,136,0.2);
+    }
+
+    .badge-status-inactive {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 4px 12px;
+        border-radius: 50px;
+        font-size: 12px;
+        font-weight: 600;
+        background: rgba(128,128,128,0.1);
+        color: #888;
+        border: 1px solid rgba(128,128,128,0.15);
+    }
+
+    .card-title {
+        font-family: 'Orbitron', sans-serif;
+        font-size: 14px;
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 8px;
+        line-height: 1.4;
+        letter-spacing: 0.3px;
+    }
+
+    .card-headline {
+        color: rgba(255,255,255,0.5);
+        font-size: 14px;
+        margin-bottom: 12px;
+        line-height: 1.6;
+        flex: 1;
+    }
+
+    .card-meta {
+        color: rgba(255,255,255,0.3);
+        font-size: 12px;
+        margin-bottom: 16px;
+    }
+
+    .card-meta i { color: var(--card-accent); }
+
+    .card-cta {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 16px;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        text-decoration: none;
+        font-family: 'Orbitron', sans-serif;
+        background: var(--card-hover);
+        color: var(--card-accent);
+        border: 1px solid var(--card-accent);
+        transition: all 0.3s;
+        margin-top: auto;
+    }
+
+    .card-cta:hover {
+        background: var(--card-accent);
+        color: #050510;
+    }
+</style>
+
+<div class="container-fluid py-4" style="position:relative; z-index:1;">
+
+    <!-- Page Header -->
+    <div class="d-flex align-items-center justify-content-between flex-wrap gap-3 mb-4">
+        <div>
+            <h2 style="font-family:'Orbitron',sans-serif; font-size:1.6rem; color:#fff; margin-bottom:4px;">
+                <i class="bi bi-compass-fill me-2" style="color:#00ffff;"></i> Browse News
+            </h2>
+            <p style="color:rgba(255,255,255,0.4); font-size:14px; margin:0;">Discover the latest articles across all categories</p>
+        </div>
+    </div>
+
+    <!-- Search & Filter -->
+    <div class="row mb-4">
+        <div class="col-md-6 mb-2 mb-md-0">
+            <form method="get" class="d-flex">
+                <div style="position:relative; flex:1;">
+                    <input type="text" name="searchTerm" class="form-control"
+                           style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#fff; padding:10px 16px 10px 40px; border-radius:8px 0 0 8px; font-family:'Rajdhani',sans-serif;"
+                           placeholder="Search news articles..." value="@Model.SearchTerm" />
+                    <i class="bi bi-search" style="position:absolute; left:14px; top:50%; transform:translateY(-50%); color:rgba(255,255,255,0.3); font-size:14px;"></i>
+                </div>
+                <button type="submit" class="btn btn-primary"
+                        style="background:linear-gradient(135deg,#00ffff,#00aaff); border:none; color:#050510; font-weight:700; border-radius:0 8px 8px 0; font-family:'Rajdhani',sans-serif; padding:10px 20px;">
+                    <i class="bi bi-search"></i>
+                </button>
+            </form>
+        </div>
+        <div class="col-md-4">
+            <form method="get">
+                <div class="d-flex">
+                    <select name="categoryId" class="form-control"
+                            style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#fff; border-radius:8px 0 0 8px; font-family:'Rajdhani',sans-serif;">
+                        <option value="" style="color:#fff;">All Categories</option>
+                        @foreach (var category in Model.Categories)
+                        {
+                            <option value="@category.CategoryId" selected="@(Model.CategoryId == category.CategoryId)" style="color:#fff;">@category.CategoryName</option>
+                        }
+                    </select>
+                    <input type="hidden" name="searchTerm" value="@Model.SearchTerm" />
+                    <button type="submit" class="btn"
+                            style="background:rgba(0,255,255,0.1); border:1px solid rgba(0,255,255,0.2); color:#00ffff; border-radius:0 8px 8px 0; font-family:'Rajdhani',sans-serif; padding:10px 16px;">
+                        <i class="bi bi-filter"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Cards Grid -->
+    @if (!Model.NewsArticles.Any())
+    {
+        <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:16px; padding:60px; text-align:center;">
+            <i class="bi bi-inbox" style="font-size:48px; color:rgba(255,255,255,0.2); display:block; margin-bottom:16px;"></i>
+            <h4 style="color:rgba(255,255,255,0.6); font-family:'Orbitron',sans-serif;">No Articles Found</h4>
+            <p style="color:rgba(255,255,255,0.35); font-size:14px;">Try adjusting your search term or category filter.</p>
+        </div>
+    }
+    else
+    {
+        <div class="row g-4">
+            @foreach (var news in Model.NewsArticles)
+            {
+                var isActive = news.NewsStatus == true;
+                <div class="col-md-6 col-lg-4 news-card-wrap">
+                    <a href="/News/Detail/@news.NewsArticleId" class="news-card" style="display:block;">
+                        <div class="news-card-accent"></div>
+                        <div class="news-card-body">
+                            <div class="d-flex align-items-center justify-content-between mb-3" style="flex-wrap:wrap; gap:6px;">
+                                <span class="badge-cat">
+                                    <i class="bi bi-folder"></i> @news.Category?.CategoryName
+                                </span>
+                                @if (isActive)
+                                {
+                                    <span class="badge-status-active"><i class="bi bi-check-circle-fill"></i> Active</span>
+                                }
+                                else
+                                {
+                                    <span class="badge-status-inactive"><i class="bi bi-x-circle"></i> Inactive</span>
+                                }
+                            </div>
+                            <h5 class="card-title">@news.NewsTitle</h5>
+                            <p class="card-headline">@news.Headline</p>
+                            @if (!string.IsNullOrEmpty(news.NewsContent))
+                            {
+                                <p style="color:rgba(255,255,255,0.28); font-size:13px; line-height:1.6; margin-bottom:16px; overflow:hidden; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;">
+                                    @(news.NewsContent.Length > 150 ? news.NewsContent.Substring(0, 150) + "..." : news.NewsContent)
                                 </p>
-                                <div class="text-muted small mb-2">
-                                    <i class="bi bi-calendar"></i> @news.CreatedDate?.ToString("dd/MM/yyyy")
-                                    @if (!string.IsNullOrEmpty(news.NewsSource))
-                                    {
-                                        <span class="ms-3"><i class="bi bi-link"></i> @news.NewsSource</span>
-                                    }
-                                </div>
-                                <div class="mb-2">
+                            }
+                            @if (news.NewsTags.Any())
+                            {
+                                <div class="d-flex flex-wrap gap-1 mb-3">
                                     @foreach (var newsTag in news.NewsTags.Take(3))
                                     {
-                                        <span class="badge bg-light text-dark me-1">@newsTag.Tag?.TagName</span>
+                                        <span style="background:rgba(255,255,255,0.04); color:rgba(255,255,255,0.35); padding:2px 10px; border-radius:50px; font-size:11px; border:1px solid rgba(255,255,255,0.06);">
+                                            #@newsTag.Tag?.TagName
+                                        </span>
                                     }
                                     @if (news.NewsTags.Count > 3)
                                     {
-                                        <span class="badge bg-light text-dark">+@(news.NewsTags.Count - 3) more</span>
+                                        <span style="color:rgba(255,255,255,0.2); font-size:11px; align-self:center;">+@(news.NewsTags.Count - 3)</span>
                                     }
                                 </div>
-                                <a href="/News/Detail/@news.NewsArticleId" class="btn btn-primary btn-sm">Read More</a>
+                            }
+                            <div class="d-flex align-items-center justify-content-between" style="border-top:1px solid rgba(255,255,255,0.05); padding-top:14px; margin-top:auto;">
+                                <div class="card-meta">
+                                    <i class="bi bi-calendar3 me-1"></i>@news.CreatedDate?.ToString("dd MMM yyyy")
+                                    @if (!string.IsNullOrEmpty(news.NewsSource))
+                                    {
+                                        <span class="ms-2"><i class="bi bi-link-45deg"></i> @news.NewsSource</span>
+                                    }
+                                </div>
+                                <span class="card-cta">Read <i class="bi bi-arrow-right"></i></span>
                             </div>
                         </div>
-                    </div>
-                }
-            </div>
-
-            @if (!Model.NewsArticles.Any())
-            {
-                <div class="alert alert-info text-center">
-                    <h4>No news articles found</h4>
-                    <p>Try adjusting your search or filter criteria.</p>
+                    </a>
                 </div>
             }
         </div>
-    </div>
+    }
 </div>

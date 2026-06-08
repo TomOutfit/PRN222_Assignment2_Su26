@@ -22,12 +22,6 @@ namespace NguyenBinhAnRazorPages.Pages.News
 
         public async Task OnGetAsync(string searchTerm = "", short categoryId = 0)
         {
-            // Require authentication to view news
-            if (!IsAuthenticated)
-            {
-                Response.Redirect("/Login");
-                return;
-            }
 
             SearchTerm = searchTerm ?? string.Empty;
             CategoryId = categoryId > 0 ? categoryId : null;

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using NguyenBinhAn_A02_Business.Services;
 using NguyenBinhAn_A02_Data.Models;
@@ -34,15 +35,26 @@ namespace NguyenBinhAnRazorPages.Pages
         public string CreatorLabels { get; set; } = "[]";
         public string CreatorData { get; set; } = "[]";
 
+        private async Task<IEnumerable<NewsArticle>> GetFilteredNewsAsync(DateTime? startDate, DateTime? endDate)
+        {
+            if (startDate.HasValue || endDate.HasValue)
+            {
+                return await _newsService.GetNewsStatisticsAsync(startDate, endDate);
+            }
+            return await _newsService.GetAllNewsAsync();
+        }
+
         public async Task OnGetAsync(DateTime? startDate = null, DateTime? endDate = null)
         {
+            OnPageAuthorization();
             StartDate = startDate;
             EndDate = endDate;
 
-            // Load ALL news for summary (both active and inactive for admin view)
-            var allNews = await _newsService.GetAllNewsAsync();
-            TotalNewsArticles = allNews.Count();
-            ActiveNewsArticles = allNews.Count(n => n.NewsStatus == true);
+            // Load filtered news for the report
+            NewsStatistics = await GetFilteredNewsAsync(startDate, endDate);
+            
+            TotalNewsArticles = NewsStatistics.Count();
+            ActiveNewsArticles = NewsStatistics.Count(n => n.NewsStatus == true);
             
             var allCategories = await _categoryService.GetAllCategoriesAsync();
             TotalCategories = allCategories.Count();
@@ -50,19 +62,67 @@ namespace NguyenBinhAnRazorPages.Pages
             var allAccounts = await _accountService.GetAllAccountsAsync();
             TotalAccounts = allAccounts.Count();
 
-            // Load news statistics - if date range specified, filter by it, otherwise show all
-            if (startDate.HasValue && endDate.HasValue)
-            {
-                NewsStatistics = await _newsService.GetNewsStatisticsAsync(startDate.Value, endDate.Value);
-            }
-            else
-            {
-                // Show all news when no date filter
-                NewsStatistics = allNews;
-            }
-
             // Generate chart data
             GenerateChartData();
+        }
+
+        public async Task<IActionResult> OnGetExportCsvAsync(DateTime? startDate = null, DateTime? endDate = null)
+        {
+            var news = await GetFilteredNewsAsync(startDate, endDate);
+            
+            var csvBuilder = new System.Text.StringBuilder();
+            // Add UTF-8 BOM so Excel opens it correctly with Vietnamese characters
+            csvBuilder.Append('\uFEFF');
+            csvBuilder.AppendLine("ID,Title,Category,Creator,Created Date,Status");
+
+            foreach (var item in news)
+            {
+                var id = EscapeCsv(item.NewsArticleId);
+                var title = EscapeCsv(item.NewsTitle ?? "");
+                var category = EscapeCsv(item.Category?.CategoryName ?? "");
+                var creator = EscapeCsv(item.Creator?.AccountName ?? "");
+                var createdDate = item.CreatedDate?.ToString("dd/MM/yyyy HH:mm") ?? "";
+                var status = item.NewsStatus == true ? "Active" : "Inactive";
+
+                csvBuilder.AppendLine($"{id},{title},{category},{creator},{createdDate},{status}");
+            }
+
+            var bytes = System.Text.Encoding.UTF8.GetBytes(csvBuilder.ToString());
+            return File(bytes, "text/csv", $"NewsReport_{DateTime.Now:yyyyMMddHHmmss}.csv");
+        }
+
+        public async Task<IActionResult> OnGetExportJsonAsync(DateTime? startDate = null, DateTime? endDate = null)
+        {
+            var news = await GetFilteredNewsAsync(startDate, endDate);
+            
+            var exportData = news.Select(n => new
+            {
+                n.NewsArticleId,
+                n.NewsTitle,
+                n.Headline,
+                CategoryName = n.Category?.CategoryName,
+                CreatorName = n.Creator?.AccountName,
+                CreatedDate = n.CreatedDate?.ToString("yyyy-MM-dd HH:mm:ss"),
+                Status = n.NewsStatus == true ? "Active" : "Inactive"
+            });
+
+            var options = new JsonSerializerOptions
+            {
+                WriteIndented = true,
+                Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+            };
+
+            var jsonBytes = JsonSerializer.SerializeToUtf8Bytes(exportData, options);
+            return File(jsonBytes, "application/json", $"NewsReport_{DateTime.Now:yyyyMMddHHmmss}.json");
+        }
+
+        private string EscapeCsv(string val)
+        {
+            if (val.Contains(",") || val.Contains("\"") || val.Contains("\n") || val.Contains("\r"))
+            {
+                return $"\"{val.Replace("\"", "\"\"")}\"";
+            }
+            return val;
         }
 
         private void GenerateChartData()
