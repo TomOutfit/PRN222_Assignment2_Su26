@@ -54,9 +54,9 @@ namespace NguyenBinhAnRazorPages.Pages.News
                 NewsArticles = await _newsService.GetAllActiveNewsAsync();
             }
 
-            // Lecturer role: only show active news (already filtered by GetAllActiveNewsAsync,
+            // Lecturer and Guest roles: only show active news (already filtered by GetAllActiveNewsAsync,
             // but enforce here in case search/category returned inactive items)
-            if (IsLecturer)
+            if (!IsStaff && !IsAdmin)
             {
                 NewsArticles = NewsArticles.Where(n => n.NewsStatus == true);
             }

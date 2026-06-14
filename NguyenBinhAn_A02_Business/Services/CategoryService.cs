@@ -51,7 +51,14 @@ namespace NguyenBinhAn_A02_Business.Services
 
         public async Task<bool> CanDeleteCategoryAsync(short categoryId)
         {
-            return !await _categoryRepository.HasNewsArticlesAsync(categoryId);
+            if (await _categoryRepository.HasNewsArticlesAsync(categoryId))
+                return false;
+
+            var category = await _categoryRepository.GetCategoryWithChildrenAsync(categoryId);
+            if (category != null && category.ChildCategories.Any())
+                return false;
+
+            return true;
         }
     }
 }

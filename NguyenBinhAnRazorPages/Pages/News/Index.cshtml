@@ -88,7 +88,7 @@
                         }
                         @foreach (var news in Model.NewsArticles)
                         {
-                            <tr style="border-bottom:1px solid rgba(255,255,255,0.04); transition:background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.03)'" onmouseout="this.style.background='transparent'">
+                            <tr id="row-@news.NewsArticleId" style="border-bottom:1px solid rgba(255,255,255,0.04); transition:background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.03)'" onmouseout="this.style.background='transparent'">
                                 <td style="padding:14px 16px; color:rgba(255,255,255,0.3); font-size:13px;">@rowIndex</td>
                                 @{ rowIndex++; }
                                 <td style="padding:14px 16px; color:rgba(0,255,255,0.5); font-size:13px; font-family:'Orbitron',sans-serif;">#@news.NewsArticleId</td>
@@ -383,7 +383,7 @@
                 ? '<span style="background:rgba(0,255,136,0.1); color:#00ff88; border:1px solid rgba(0,255,136,0.2); padding:3px 10px; border-radius:50px; font-size:12px; font-weight:600;"><i class="bi bi-check-circle-fill me-1"></i>Active</span>'
                 : '<span style="background:rgba(128,128,128,0.1); color:#888; border:1px solid rgba(128,128,128,0.2); padding:3px 10px; border-radius:50px; font-size:12px; font-weight:600;"><i class="bi bi-x-circle me-1"></i>Inactive</span>';
             const createdDate = news.createdDate ? new Date(news.createdDate).toLocaleDateString('vi-VN') : '';
-            return '<tr style="border-bottom:1px solid rgba(255,255,255,0.04);">' +
+            return '<tr id="row-' + news.newsArticleId + '" style="border-bottom:1px solid rgba(255,255,255,0.04);">' +
                 '<td style="padding:14px 16px; color:rgba(255,255,255,0.3); font-size:13px;"></td>' +
                 '<td style="padding:14px 16px; color:rgba(0,255,255,0.5); font-size:13px; font-family:\'Orbitron\',sans-serif;">#' + news.newsArticleId + '</td>' +
                 '<td style="padding:14px 16px; font-size:14px; font-weight:600; color:#fff;">' + (news.newsTitle || '') + '</td>' +
