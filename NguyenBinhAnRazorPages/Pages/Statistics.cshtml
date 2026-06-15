@@ -3,7 +3,7 @@
 @{
     ViewData["Title"] = "Statistics Report";
 }
-@attribute [AdminOnly]
+@attribute [StaffOnly]
 
 <style>
     body { font-family: 'Rajdhani', sans-serif; background: #050510; color: #e0e0ff; }
@@ -181,6 +181,33 @@
                 </div>
                 <div style="padding:24px;">
                     <canvas id="creatorChart" style="max-height:280px;"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row g-3 mt-1">
+        <div class="col-md-6">
+            <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(0,255,136,0.1); border-radius:16px; overflow:hidden;">
+                <div style="background:rgba(0,255,136,0.04); border-bottom:1px solid rgba(0,255,136,0.08); padding:14px 20px;">
+                    <h6 style="font-family:'Orbitron',sans-serif; color:#00ff88; font-size:12px; margin:0; letter-spacing:1px;">
+                        <i class="bi bi-pie-chart-fill me-2"></i>News by Status
+                    </h6>
+                </div>
+                <div style="padding:24px;">
+                    <canvas id="statusChart" style="max-height:280px;"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,200,0,0.1); border-radius:16px; overflow:hidden;">
+                <div style="background:rgba(255,200,0,0.04); border-bottom:1px solid rgba(255,200,0,0.08); padding:14px 20px;">
+                    <h6 style="font-family:'Orbitron',sans-serif; color:#ffc800; font-size:12px; margin:0; letter-spacing:1px;">
+                        <i class="bi bi-graph-up me-2"></i>News Trend (Creation Date)
+                    </h6>
+                </div>
+                <div style="padding:24px;">
+                    <canvas id="trendChart" style="max-height:280px;"></canvas>
                 </div>
             </div>
         </div>
@@ -367,6 +394,58 @@
                 });
             } else {
                 document.getElementById('creatorChart').parentElement.innerHTML = '<p style="color:rgba(255,255,255,0.3); text-align:center; font-size:14px; padding:40px 0;">No data available</p>';
+            }
+
+            const statusLabels = @Html.Raw(Model.StatusLabels);
+            const statusData = @Html.Raw(Model.StatusData);
+            if (statusLabels.length > 0) {
+                new Chart(document.getElementById('statusChart').getContext('2d'), {
+                    type: 'pie',
+                    data: {
+                        labels: statusLabels,
+                        datasets: [{ data: statusData, backgroundColor: ['#00ff88', '#ff0032'], borderColor: '#050510', borderWidth: 2 }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: { position: 'bottom', labels: { color: 'rgba(255,255,255,0.5)', font: { family: 'Rajdhani', size: 12 } } }
+                        }
+                    }
+                });
+            } else {
+                document.getElementById('statusChart').parentElement.innerHTML = '<p style="color:rgba(255,255,255,0.3); text-align:center; font-size:14px; padding:40px 0;">No data available</p>';
+            }
+
+            const trendLabels = @Html.Raw(Model.TrendLabels);
+            const trendData = @Html.Raw(Model.TrendData);
+            if (trendLabels.length > 0) {
+                new Chart(document.getElementById('trendChart').getContext('2d'), {
+                    type: 'line',
+                    data: {
+                        labels: trendLabels,
+                        datasets: [{ 
+                            label: 'Articles Created', 
+                            data: trendData, 
+                            borderColor: '#ffc800', 
+                            backgroundColor: 'rgba(255,200,0,0.1)', 
+                            borderWidth: 2, 
+                            fill: true, 
+                            tension: 0.3 
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: { display: false }
+                        },
+                        scales: {
+                            y: { beginAtZero: true, ticks: { color: 'rgba(255,255,255,0.4)', font: { family: 'Rajdhani', stepSize: 1 } }, grid: { color: 'rgba(255,255,255,0.05)' } },
+                            x: { ticks: { color: 'rgba(255,255,255,0.4)', font: { family: 'Rajdhani' } }, grid: { display: false } }
+                        }
+                    }
+                });
+            } else {
+                document.getElementById('trendChart').parentElement.innerHTML = '<p style="color:rgba(255,255,255,0.3); text-align:center; font-size:14px; padding:40px 0;">No data available</p>';
             }
         });
     </script>

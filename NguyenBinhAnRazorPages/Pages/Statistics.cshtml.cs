@@ -34,14 +34,28 @@ namespace NguyenBinhAnRazorPages.Pages
         public string CategoryData { get; set; } = "[]";
         public string CreatorLabels { get; set; } = "[]";
         public string CreatorData { get; set; } = "[]";
+        public string StatusLabels { get; set; } = "[]";
+        public string StatusData { get; set; } = "[]";
+        public string TrendLabels { get; set; } = "[]";
+        public string TrendData { get; set; } = "[]";
 
         private async Task<IEnumerable<NewsArticle>> GetFilteredNewsAsync(DateTime? startDate, DateTime? endDate)
         {
+            IEnumerable<NewsArticle> news;
             if (startDate.HasValue || endDate.HasValue)
             {
-                return await _newsService.GetNewsStatisticsAsync(startDate, endDate);
+                news = await _newsService.GetNewsStatisticsAsync(startDate, endDate);
             }
-            return await _newsService.GetAllNewsAsync();
+            else
+            {
+                news = await _newsService.GetAllNewsAsync();
+            }
+
+            if (IsStaff && !IsAdmin)
+            {
+                return news.Where(n => n.CreatedById == AccountId).ToList();
+            }
+            return news.ToList();
         }
 
         public async Task OnGetAsync(DateTime? startDate = null, DateTime? endDate = null)
@@ -149,6 +163,23 @@ namespace NguyenBinhAnRazorPages.Pages
 
             CreatorLabels = JsonSerializer.Serialize(creatorStats.Select(c => c.Creator));
             CreatorData = JsonSerializer.Serialize(creatorStats.Select(c => c.Count));
+
+            // Status Chart Data
+            var activeCount = NewsStatistics.Count(n => n.NewsStatus == true);
+            var inactiveCount = NewsStatistics.Count(n => n.NewsStatus != true);
+            StatusLabels = JsonSerializer.Serialize(new[] { "Active", "Inactive" });
+            StatusData = JsonSerializer.Serialize(new[] { activeCount, inactiveCount });
+
+            // Trend Chart Data
+            var trendStats = NewsStatistics
+                .Where(n => n.CreatedDate.HasValue)
+                .GroupBy(n => n.CreatedDate!.Value.ToString("yyyy-MM-dd"))
+                .Select(g => new { Date = g.Key, Count = g.Count() })
+                .OrderBy(g => g.Date)
+                .ToList();
+
+            TrendLabels = JsonSerializer.Serialize(trendStats.Select(t => t.Date));
+            TrendData = JsonSerializer.Serialize(trendStats.Select(t => t.Count));
         }
     }
 }
