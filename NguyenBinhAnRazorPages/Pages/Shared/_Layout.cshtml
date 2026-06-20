@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="dark">
+<html lang="en" data-bs-theme="light">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -19,8 +19,8 @@
             display: flex;
             flex-direction: column;
             font-family: 'Rajdhani', sans-serif;
-            background: #050510;
-            color: #e0e0ff;
+            background: var(--bg-main);
+            color: var(--text-main);
         }
 
         /* ===== SCANLINES ===== */
@@ -29,7 +29,7 @@
             inset: 0;
             z-index: 999;
             pointer-events: none;
-            background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.015) 2px, rgba(0,0,0,0.015) 4px);
+            background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.01) 2px, rgba(0,0,0,0.01) 4px);
         }
 
         /* ===== HEADER ===== */
@@ -37,11 +37,11 @@
             position: sticky;
             top: 0;
             z-index: 100;
-            background: rgba(5, 5, 16, 0.92);
+            background: var(--bg-nav);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(0, 255, 255, 0.1);
-            box-shadow: 0 0 30px rgba(0, 255, 255, 0.04);
+            border-bottom: 1px solid rgba(0, 180, 216, 0.15);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.02);
         }
 
         .cyber-navbar {
@@ -60,27 +60,27 @@
             font-family: 'Orbitron', sans-serif;
             font-weight: 800;
             font-size: 18px;
-            color: #fff;
+            color: var(--text-main);
             letter-spacing: 2px;
             transition: all 0.3s;
         }
 
-        .cyber-brand:hover { color: #fff; text-shadow: 0 0 20px rgba(0,255,255,0.5); }
+        .cyber-brand:hover { color: var(--text-main); text-shadow: 0 0 10px rgba(0,180,216,0.3); }
 
         .brand-icon {
             width: 36px; height: 36px;
-            background: linear-gradient(135deg, #00ffff, #ff00ff);
+            background: linear-gradient(135deg, #00b4d8, #ff00ff);
             border-radius: 8px;
             display: flex; align-items: center; justify-content: center;
             font-size: 16px;
-            color: #050510;
-            box-shadow: 0 0 15px rgba(0,255,255,0.3);
+            color: #fff;
+            box-shadow: 0 0 15px rgba(0,180,216,0.2);
             animation: brandPulse 3s ease-in-out infinite;
         }
 
         @@keyframes brandPulse {
-            0%, 100% { box-shadow: 0 0 10px rgba(0,255,255,0.3); }
-            50%       { box-shadow: 0 0 25px rgba(0,255,255,0.6), 0 0 40px rgba(255,0,255,0.2); }
+            0%, 100% { box-shadow: 0 0 10px rgba(0,180,216,0.2); }
+            50%       { box-shadow: 0 0 20px rgba(0,180,216,0.4), 0 0 35px rgba(255,0,255,0.15); }
         }
 
         .nav-links {
@@ -98,7 +98,7 @@
             gap: 6px;
             padding: 8px 14px;
             border-radius: 6px;
-            color: rgba(255, 255, 255, 0.65);
+            color: var(--text-muted);
             text-decoration: none;
             font-size: 14px;
             font-weight: 600;
@@ -108,16 +108,16 @@
         }
 
         .nav-links a:hover {
-            color: #fff;
-            background: rgba(0, 255, 255, 0.07);
-            border-color: rgba(0, 255, 255, 0.15);
-            text-shadow: 0 0 8px rgba(0,255,255,0.4);
+            color: var(--text-main);
+            background: rgba(0, 180, 216, 0.06);
+            border-color: rgba(0, 180, 216, 0.12);
         }
 
         .nav-links .nav-active {
-            color: #00ffff;
-            border-color: rgba(0, 255, 255, 0.2);
-            background: rgba(0, 255, 255, 0.05);
+            color: #0077b6;
+            border-color: rgba(0, 180, 216, 0.25);
+            background: rgba(0, 180, 216, 0.08);
+            font-weight: 700;
         }
 
         .user-chip {
@@ -126,28 +126,28 @@
             gap: 8px;
             padding: 5px 14px 5px 5px;
             border-radius: 50px;
-            background: rgba(255, 0, 255, 0.07);
-            border: 1px solid rgba(255, 0, 255, 0.2);
+            background: rgba(255, 0, 255, 0.05);
+            border: 1px solid rgba(255, 0, 255, 0.15);
             text-decoration: none;
-            color: #fff;
+            color: var(--text-main);
             font-size: 14px;
             font-weight: 600;
             transition: all 0.3s;
         }
 
         .user-chip:hover {
-            background: rgba(255, 0, 255, 0.12);
-            border-color: rgba(255, 0, 255, 0.4);
-            color: #fff;
-            box-shadow: 0 0 15px rgba(255,0,255,0.15);
+            background: rgba(255, 0, 255, 0.09);
+            border-color: rgba(255, 0, 255, 0.3);
+            color: var(--text-main);
+            box-shadow: 0 0 10px rgba(255,0,255,0.08);
         }
 
         .user-avatar {
             width: 28px; height: 28px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #00ffff, #ff00ff);
+            background: linear-gradient(135deg, #00b4d8, #ff00ff);
             display: flex; align-items: center; justify-content: center;
-            color: #050510;
+            color: #fff;
             font-weight: 800;
             font-size: 12px;
         }
@@ -158,10 +158,10 @@
             gap: 8px;
             padding: 7px 18px;
             border-radius: 50px;
-            background: rgba(0, 255, 255, 0.07);
-            border: 1px solid rgba(0, 255, 255, 0.25);
+            background: rgba(0, 180, 216, 0.05);
+            border: 1px solid rgba(0, 180, 216, 0.25);
             text-decoration: none;
-            color: #00ffff;
+            color: #0077b6;
             font-size: 13px;
             font-weight: 700;
             letter-spacing: 0.5px;
@@ -169,9 +169,9 @@
         }
 
         .signin-chip:hover {
-            background: rgba(0, 255, 255, 0.12);
-            color: #00ffff;
-            box-shadow: 0 0 20px rgba(0,255,255,0.2);
+            background: rgba(0, 180, 216, 0.12);
+            color: #0077b6;
+            box-shadow: 0 0 15px rgba(0,180,216,0.15);
         }
 
         /* ===== MAIN ===== */
@@ -183,7 +183,7 @@
         .cyber-footer {
             position: relative;
             z-index: 1;
-            border-top: 1px solid rgba(0, 255, 255, 0.06);
+            border-top: 1px solid rgba(0, 0, 0, 0.06);
             padding: 28px 0 20px;
             text-align: center;
         }
@@ -196,22 +196,22 @@
             font-family: 'Orbitron', sans-serif;
             font-weight: 700;
             font-size: 14px;
-            color: #fff;
+            color: var(--text-main);
             letter-spacing: 1px;
             margin-bottom: 8px;
         }
 
         .footer-brand-icon {
             width: 28px; height: 28px;
-            background: linear-gradient(135deg, #00ffff, #ff00ff);
+            background: linear-gradient(135deg, #00b4d8, #ff00ff);
             border-radius: 6px;
             display: flex; align-items: center; justify-content: center;
-            color: #050510;
+            color: #fff;
             font-size: 12px;
         }
 
         .footer-copy {
-            color: rgba(255, 255, 255, 0.2);
+            color: var(--text-muted);
             font-size: 12px;
             letter-spacing: 0.5px;
         }

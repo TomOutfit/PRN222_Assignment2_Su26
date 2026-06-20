@@ -7,17 +7,18 @@
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
 <style>
     :root {
-        --cyan: #00ffff;
+        --cyan: #00b4d8;
         --mag: #ff00ff;
-        --dark: #050510;
+        --dark: #f4f6fa;
     }
 
     body {
         font-family: 'Rajdhani', sans-serif;
         margin: 0;
-        background: var(--dark);
+        background: var(--bg-main);
         min-height: 100vh;
         overflow: hidden;
+        color: var(--text-main);
     }
 
     .login-root {
@@ -31,10 +32,13 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        background: rgba(5, 5, 16, 0.95);
+        background: var(--bg-card);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
         position: relative;
         z-index: 1;
         padding: 40px;
+        border-right: 1px solid var(--card-border);
     }
 
     .login-form-panel::before {
@@ -42,7 +46,7 @@
         position: absolute;
         top: -200px; left: -100px;
         width: 400px; height: 400px;
-        background: radial-gradient(circle, rgba(0,255,255,0.07), transparent);
+        background: radial-gradient(circle, rgba(0, 180, 216, 0.05), transparent);
         border-radius: 50%;
         pointer-events: none;
     }
@@ -52,7 +56,7 @@
         position: absolute;
         bottom: -100px; right: -50px;
         width: 300px; height: 300px;
-        background: radial-gradient(circle, rgba(255,0,255,0.07), transparent);
+        background: radial-gradient(circle, rgba(255, 0, 255, 0.05), transparent);
         border-radius: 50%;
         pointer-events: none;
     }
@@ -75,33 +79,33 @@
         background: linear-gradient(135deg, var(--cyan), var(--mag));
         border-radius: 10px;
         display: flex; align-items: center; justify-content: center;
-        color: var(--dark);
+        color: #fff;
         font-size: 20px;
-        box-shadow: 0 0 20px rgba(0,255,255,0.3);
+        box-shadow: 0 4px 15px rgba(0, 180, 216, 0.2);
     }
 
     .login-brand-text {
         font-family: 'Orbitron', sans-serif;
         font-weight: 800;
         font-size: 22px;
-        color: #fff;
+        color: var(--text-main);
         letter-spacing: 2px;
     }
 
-    .login-brand-text span { color: var(--cyan); }
+    .login-brand-text span { color: #0077b6; }
 
     .login-heading {
         font-family: 'Orbitron', sans-serif;
         font-size: 28px;
         font-weight: 700;
-        color: #fff;
+        color: var(--text-main);
         margin-bottom: 6px;
         letter-spacing: 1px;
     }
 
     .login-sub {
         font-size: 15px;
-        color: rgba(255,255,255,0.45);
+        color: var(--text-muted);
         margin-bottom: 36px;
         font-weight: 400;
     }
@@ -116,17 +120,17 @@
         font-weight: 600;
         letter-spacing: 2px;
         text-transform: uppercase;
-        color: rgba(255,255,255,0.5);
+        color: var(--text-muted);
         margin-bottom: 8px;
     }
 
     .cyber-input {
         width: 100%;
         padding: 14px 16px 14px 48px;
-        background: rgba(255,255,255,0.04);
-        border: 1px solid rgba(255,255,255,0.1);
+        background: rgba(0, 0, 0, 0.02);
+        border: 1px solid rgba(0, 0, 0, 0.08);
         border-radius: 8px;
-        color: #fff;
+        color: var(--text-main);
         font-size: 15px;
         font-family: 'Rajdhani', sans-serif;
         transition: all 0.3s;
@@ -135,12 +139,12 @@
 
     .cyber-input:focus {
         outline: none;
-        border-color: var(--cyan);
-        background: rgba(0,255,255,0.04);
-        box-shadow: 0 0 0 3px rgba(0,255,255,0.1), 0 0 20px rgba(0,255,255,0.1);
+        border-color: #0077b6;
+        background: #fff;
+        box-shadow: 0 0 0 3px rgba(0,180,216,0.1), 0 0 20px rgba(0,180,216,0.05);
     }
 
-    .cyber-input::placeholder { color: rgba(255,255,255,0.2); }
+    .cyber-input::placeholder { color: var(--text-muted); opacity: 0.5; }
 
     .input-wrap {
         position: relative;
@@ -151,12 +155,12 @@
         left: 16px;
         top: 50%;
         transform: translateY(-50%);
-        color: rgba(0,255,255,0.5);
+        color: #0077b6;
         font-size: 16px;
         transition: color 0.3s;
     }
 
-    .cyber-input:focus ~ .input-icon { color: var(--cyan); }
+    .cyber-input:focus ~ .input-icon { color: #0077b6; }
 
     .form-options {
         display: flex;
@@ -174,33 +178,33 @@
 
     .cyber-check input {
         width: 16px; height: 16px;
-        accent-color: var(--cyan);
+        accent-color: #0077b6;
         cursor: pointer;
     }
 
     .cyber-check label {
         font-size: 14px;
-        color: rgba(255,255,255,0.5);
+        color: var(--text-muted);
         cursor: pointer;
     }
 
     .forgot-link {
         font-size: 13px;
-        color: var(--mag);
+        color: #cc00cc;
         text-decoration: none;
         font-weight: 500;
         transition: color 0.3s;
     }
 
-    .forgot-link:hover { color: #ff66ff; }
+    .forgot-link:hover { color: #ff00ff; }
 
     .btn-signin-cyber {
         width: 100%;
         padding: 15px;
-        background: linear-gradient(135deg, var(--cyan), #00aaff);
+        background: linear-gradient(135deg, #00b4d8, #0077b6);
         border: none;
         border-radius: 8px;
-        color: var(--dark);
+        color: #fff;
         font-family: 'Orbitron', sans-serif;
         font-size: 13px;
         font-weight: 700;
@@ -208,12 +212,12 @@
         text-transform: uppercase;
         cursor: pointer;
         transition: all 0.3s;
-        box-shadow: 0 0 20px rgba(0,255,255,0.2);
+        box-shadow: 0 4px 15px rgba(0, 180, 216, 0.2);
         clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
     }
 
     .btn-signin-cyber:hover {
-        box-shadow: 0 0 40px rgba(0,255,255,0.5);
+        box-shadow: 0 6px 25px rgba(0, 180, 216, 0.3);
         transform: translateY(-2px);
     }
 
@@ -221,35 +225,35 @@
         text-align: center;
         margin-top: 20px;
         font-size: 14px;
-        color: rgba(255,255,255,0.35);
+        color: var(--text-muted);
     }
 
     .guest-link a {
-        color: var(--cyan);
+        color: #0077b6;
         text-decoration: none;
         font-weight: 600;
         transition: color 0.3s;
     }
 
-    .guest-link a:hover { color: #fff; }
+    .guest-link a:hover { color: var(--text-main); }
 
     .validation-summary {
-        background: rgba(255,0,50,0.08);
-        border: 1px solid rgba(255,0,50,0.25);
+        background: rgba(255,0,50,0.04);
+        border: 1px solid rgba(255,0,50,0.15);
         border-radius: 8px;
         padding: 14px 16px;
         margin-bottom: 20px;
     }
 
     .validation-summary ul { margin: 0; padding-left: 20px; }
-    .validation-summary li { color: #ff6666; font-size: 14px; }
+    .validation-summary li { color: #d6002b; font-size: 14px; }
 
-    .text-danger { color: #ff6666; font-size: 13px; margin-top: 6px; display: block; }
+    .text-danger { color: #d6002b; font-size: 13px; margin-top: 6px; display: block; }
 
     /* ===== RIGHT - VISUAL PANEL ===== */
     .login-visual-panel {
         flex: 1.2;
-        background: var(--dark);
+        background: var(--bg-main);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -261,8 +265,8 @@
         position: absolute;
         inset: 0;
         background:
-            linear-gradient(transparent 49.5%, rgba(0,255,255,0.04) 50%, transparent 50.5%),
-            linear-gradient(90deg, transparent 49.5%, rgba(0,255,255,0.04) 50%, transparent 50.5%);
+            linear-gradient(transparent 49.5%, rgba(0, 180, 216, 0.03) 50%, transparent 50.5%),
+            linear-gradient(90deg, transparent 49.5%, rgba(0, 180, 216, 0.03) 50%, transparent 50.5%);
         background-size: 50px 50px;
     }
 
@@ -271,7 +275,7 @@
         width: 600px; height: 600px;
         border-radius: 50%;
         filter: blur(100px);
-        opacity: 0.2;
+        opacity: var(--glow-opacity);
         animation: visualPulse 8s ease-in-out infinite;
     }
 
@@ -300,8 +304,8 @@
     .visual-icon {
         width: 140px; height: 140px;
         margin: 0 auto 32px;
-        background: linear-gradient(135deg, rgba(0,255,255,0.1), rgba(255,0,255,0.1));
-        border: 1px solid rgba(0,255,255,0.2);
+        background: linear-gradient(135deg, rgba(0, 180, 216, 0.08), rgba(255, 0, 255, 0.08));
+        border: 1px solid rgba(0, 180, 216, 0.15);
         border-radius: 24px;
         display: flex; align-items: center; justify-content: center;
         font-size: 60px;
@@ -318,12 +322,12 @@
         font-size: 56px;
         font-weight: 900;
         letter-spacing: 6px;
-        color: #fff;
+        color: var(--text-main);
         margin-bottom: 16px;
     }
 
     .visual-title span {
-        background: linear-gradient(90deg, var(--cyan), var(--mag));
+        background: linear-gradient(90deg, #0077b6, var(--mag));
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
@@ -331,7 +335,7 @@
 
     .visual-tagline {
         font-size: 16px;
-        color: rgba(255,255,255,0.5);
+        color: var(--text-muted);
         letter-spacing: 3px;
         text-transform: uppercase;
     }
@@ -348,12 +352,12 @@
         display: flex;
         align-items: center;
         gap: 8px;
-        color: rgba(255,255,255,0.4);
+        color: var(--text-muted);
         font-size: 13px;
         font-weight: 500;
     }
 
-    .visual-feature i { color: var(--cyan); }
+    .visual-feature i { color: #0077b6; }
 
     /* ===== RESPONSIVE ===== */
     @@media (max-width: 992px) {

@@ -55,7 +55,7 @@ namespace NguyenBinhAnRazorPages.Pages.News
             }
             else
             {
-                allNews = (await _newsService.GetAllActiveNewsAsync()).OrderByDescending(n => n.CreatedDate);
+                allNews = (await _newsService.GetAllNewsAsync()).OrderByDescending(n => n.CreatedDate);
             }
 
             TotalRecords = allNews.Count();

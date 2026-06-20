@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using NguyenBinhAn_A02_Business.Services;
 using NguyenBinhAn_A02_Data.Models;
 using System.Text.Json;
+using ClosedXML.Excel;
 
 namespace NguyenBinhAnRazorPages.Pages
 {
@@ -80,29 +81,111 @@ namespace NguyenBinhAnRazorPages.Pages
             GenerateChartData();
         }
 
-        public async Task<IActionResult> OnGetExportCsvAsync(DateTime? startDate = null, DateTime? endDate = null)
+        public async Task<IActionResult> OnGetExportExcelAsync(DateTime? startDate = null, DateTime? endDate = null)
         {
             var news = await GetFilteredNewsAsync(startDate, endDate);
-            
-            var csvBuilder = new System.Text.StringBuilder();
-            // Add UTF-8 BOM so Excel opens it correctly with Vietnamese characters
-            csvBuilder.Append('\uFEFF');
-            csvBuilder.AppendLine("ID,Title,Category,Creator,Created Date,Status");
 
-            foreach (var item in news)
+            using var workbook = new XLWorkbook();
+            var ws = workbook.Worksheets.Add("News Report");
+
+            // ── Title row ──
+            var titleCell = ws.Cell(1, 1);
+            titleCell.Value = "News Report";
+            titleCell.Style.Font.Bold = true;
+            titleCell.Style.Font.FontSize = 16;
+            titleCell.Style.Font.FontColor = XLColor.FromHtml("#1e3a5f");
+            ws.Range(1, 1, 1, 6).Merge();
+
+            // ── Date range row ──
+            var rangeLabel = startDate.HasValue || endDate.HasValue
+                ? $"Period: {startDate?.ToString("dd/MM/yyyy") ?? "All"} – {endDate?.ToString("dd/MM/yyyy") ?? "Present"}"
+                : "Period: All Time";
+            ws.Cell(2, 1).Value = rangeLabel;
+            ws.Cell(2, 1).Style.Font.Italic = true;
+            ws.Cell(2, 1).Style.Font.FontColor = XLColor.FromHtml("#6b7280");
+            ws.Range(2, 1, 2, 6).Merge();
+
+            // ── Generated row ──
+            ws.Cell(3, 1).Value = $"Generated: {DateTime.Now:dd/MM/yyyy HH:mm}";
+            ws.Cell(3, 1).Style.Font.Italic = true;
+            ws.Cell(3, 1).Style.Font.FontColor = XLColor.FromHtml("#9ca3af");
+            ws.Range(3, 1, 3, 6).Merge();
+
+            // ── Header row (row 5) ──
+            string[] headers = { "#", "Article ID", "Title", "Category", "Creator", "Created Date", "Status" };
+            for (int col = 1; col <= headers.Length; col++)
             {
-                var id = EscapeCsv(item.NewsArticleId);
-                var title = EscapeCsv(item.NewsTitle ?? "");
-                var category = EscapeCsv(item.Category?.CategoryName ?? "");
-                var creator = EscapeCsv(item.Creator?.AccountName ?? "");
-                var createdDate = item.CreatedDate?.ToString("dd/MM/yyyy HH:mm") ?? "";
-                var status = item.NewsStatus == true ? "Active" : "Inactive";
-
-                csvBuilder.AppendLine($"{id},{title},{category},{creator},{createdDate},{status}");
+                var cell = ws.Cell(5, col);
+                cell.Value = headers[col - 1];
+                cell.Style.Font.Bold = true;
+                cell.Style.Font.FontColor = XLColor.White;
+                cell.Style.Fill.BackgroundColor = XLColor.FromHtml("#1e3a5f");
+                cell.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                cell.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+                cell.Style.Border.OutsideBorderColor = XLColor.FromHtml("#93c5fd");
             }
 
-            var bytes = System.Text.Encoding.UTF8.GetBytes(csvBuilder.ToString());
-            return File(bytes, "text/csv", $"NewsReport_{DateTime.Now:yyyyMMddHHmmss}.csv");
+            // ── Data rows ──
+            var newsList = news.ToList();
+            for (int i = 0; i < newsList.Count; i++)
+            {
+                var item = newsList[i];
+                int row = i + 6;
+                bool isEven = i % 2 == 1;
+
+                var rowBg = isEven ? XLColor.FromHtml("#f0f4ff") : XLColor.White;
+
+                ws.Cell(row, 1).Value = i + 1;
+                ws.Cell(row, 2).Value = item.NewsArticleId ?? "";
+                ws.Cell(row, 3).Value = item.NewsTitle ?? "";
+                ws.Cell(row, 4).Value = item.Category?.CategoryName ?? "";
+                ws.Cell(row, 5).Value = item.Creator?.AccountName ?? "";
+                ws.Cell(row, 6).Value = item.CreatedDate?.ToString("dd/MM/yyyy HH:mm") ?? "";
+
+                var statusCell = ws.Cell(row, 7);
+                bool isActive = item.NewsStatus == true;
+                statusCell.Value = isActive ? "Active" : "Inactive";
+                statusCell.Style.Font.Bold = true;
+                statusCell.Style.Font.FontColor = isActive ? XLColor.FromHtml("#166534") : XLColor.FromHtml("#991b1b");
+                statusCell.Style.Fill.BackgroundColor = isActive ? XLColor.FromHtml("#dcfce7") : XLColor.FromHtml("#fee2e2");
+                statusCell.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+
+                for (int col = 1; col <= 7; col++)
+                {
+                    var cell = ws.Cell(row, col);
+                    if (col != 7) cell.Style.Fill.BackgroundColor = rowBg;
+                    cell.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+                    cell.Style.Border.OutsideBorderColor = XLColor.FromHtml("#e5e7eb");
+                    cell.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+                }
+            }
+
+            // ── Summary row ──
+            int summaryRow = newsList.Count + 6;
+            ws.Cell(summaryRow, 1).Value = $"Total: {newsList.Count} articles";
+            ws.Cell(summaryRow, 1).Style.Font.Bold = true;
+            ws.Cell(summaryRow, 1).Style.Fill.BackgroundColor = XLColor.FromHtml("#dbeafe");
+            ws.Range(summaryRow, 1, summaryRow, 7).Merge();
+
+            // ── Column widths ──
+            ws.Column(1).Width = 6;   // #
+            ws.Column(2).Width = 16;  // Article ID
+            ws.Column(3).Width = 45;  // Title
+            ws.Column(4).Width = 22;  // Category
+            ws.Column(5).Width = 22;  // Creator
+            ws.Column(6).Width = 18;  // Created Date
+            ws.Column(7).Width = 12;  // Status
+            ws.Row(5).Height = 22;
+
+            // ── Freeze header ──
+            ws.SheetView.FreezeRows(5);
+
+            using var stream = new MemoryStream();
+            workbook.SaveAs(stream);
+            stream.Position = 0;
+            return File(stream.ToArray(),
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                $"NewsReport_{DateTime.Now:yyyyMMddHHmmss}.xlsx");
         }
 
         public async Task<IActionResult> OnGetExportJsonAsync(DateTime? startDate = null, DateTime? endDate = null)
@@ -130,14 +213,6 @@ namespace NguyenBinhAnRazorPages.Pages
             return File(jsonBytes, "application/json", $"NewsReport_{DateTime.Now:yyyyMMddHHmmss}.json");
         }
 
-        private string EscapeCsv(string val)
-        {
-            if (val.Contains(",") || val.Contains("\"") || val.Contains("\n") || val.Contains("\r"))
-            {
-                return $"\"{val.Replace("\"", "\"\"")}\"";
-            }
-            return val;
-        }
 
         private void GenerateChartData()
         {

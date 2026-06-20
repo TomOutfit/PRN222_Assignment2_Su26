@@ -1,3 +1,38 @@
+:root {
+  /* Main Background & Text */
+  --bg-main: #f4f6fa;
+  --bg-nav: rgba(255, 255, 255, 0.85);
+  --text-main: #1a1e2d;
+  --text-muted: rgba(26, 30, 45, 0.65);
+  --text-white: #ffffff;
+  --text-dark: #121520;
+  
+  /* Glassmorphism Cards */
+  --card-bg: rgba(255, 255, 255, 0.95);
+  --bg-card: rgba(255, 255, 255, 0.95);  /* alias for --card-bg */
+  --card-border: rgba(0, 0, 0, 0.08);
+  --card-shadow: rgba(31, 38, 135, 0.04);
+  --card-hover-shadow: rgba(0, 180, 216, 0.12);
+  
+  /* Inputs */
+  --input-bg: rgba(255, 255, 255, 0.9);
+  --input-border: rgba(0, 0, 0, 0.12);
+  --input-text: #1a1e2d;
+  --input-focus-bg: #ffffff;
+  
+  /* Modals & Popups */
+  --modal-bg: #ffffff;
+  --modal-border: rgba(0, 0, 0, 0.08);
+  
+  /* Tables */
+  --table-border: rgba(0, 0, 0, 0.06);
+  --table-hover-bg: rgba(0, 0, 0, 0.02);
+  
+  /* Grid & Glow Overlays */
+  --grid-line: rgba(0, 180, 216, 0.04);
+  --glow-opacity: 0.12;
+}
+
 html {
   font-size: 14px;
 }
@@ -29,3 +64,31 @@ body {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
 }
+
+/* Base override for all Bootstrap Form Controls and Modals in our light design system */
+.form-control, .form-select {
+  background-color: var(--input-bg) !important;
+  border-color: var(--input-border) !important;
+  color: var(--input-text) !important;
+}
+
+.form-control:focus, .form-select:focus {
+  background-color: var(--input-focus-bg) !important;
+  color: var(--input-text) !important;
+  box-shadow: 0 0 0 0.25rem rgba(0, 180, 216, 0.2) !important;
+  border-color: #00b4d8 !important;
+}
+
+.modal-content {
+  background-color: var(--modal-bg) !important;
+  border-color: var(--modal-border) !important;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08) !important;
+}
+
+.modal-header, .modal-footer {
+  border-color: var(--table-border) !important;
+}
+
+.modal-title, .modal-body, .modal-body label {
+  color: var(--text-main) !important;
+}

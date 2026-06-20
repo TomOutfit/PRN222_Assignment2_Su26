@@ -50,7 +50,7 @@
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark" aria-labelledby="dropdownMenuButton" style="background:#0c0b1e; border:1px solid rgba(167,139,250,0.2); box-shadow: 0 4px 20px rgba(0,0,0,0.5); border-radius: 8px;">
                         <li><a class="dropdown-item py-2" href="#" onclick="exportPDF(); return false;"><i class="bi bi-file-earmark-pdf-fill me-2" style="color:#ef4444;"></i>Export PDF</a></li>
-                        <li><a class="dropdown-item py-2" href="#" onclick="exportCSV(); return false;"><i class="bi bi-file-earmark-spreadsheet-fill me-2" style="color:#10b981;"></i>Export CSV</a></li>
+                        <li><a class="dropdown-item py-2" href="#" onclick="exportExcel(); return false;"><i class="bi bi-file-earmark-excel-fill me-2" style="color:#10b981;"></i>Export Excel</a></li>
                         <li><a class="dropdown-item py-2" href="#" onclick="exportJSON(); return false;"><i class="bi bi-filetype-json me-2" style="color:#3b82f6;"></i>Export JSON</a></li>
                     </ul>
                 </div>
@@ -218,10 +218,10 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script>
-        function exportCSV() {
+        function exportExcel() {
             const startDate = $('#startDate').val() || '';
             const endDate = $('#endDate').val() || '';
-            window.location.href = `/Statistics?handler=ExportCsv&startDate=${startDate}&endDate=${endDate}`;
+            window.location.href = `/Statistics?handler=ExportExcel&startDate=${startDate}&endDate=${endDate}`;
         }
 
         function exportJSON() {

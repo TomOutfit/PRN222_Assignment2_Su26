@@ -7,8 +7,8 @@
 <style>
     body {
         font-family: 'Rajdhani', sans-serif;
-        background: #050510;
-        color: #e0e0ff;
+        background: var(--bg-main);
+        color: var(--text-main);
         min-height: 100vh;
     }
 
@@ -17,16 +17,16 @@
     }
 
     /* Color variants via nth-child */
-    .news-card-wrap:nth-child(6n+1) .news-card { --card-accent: #00ffff; --card-bg: rgba(0,255,255,0.06); --card-hover: rgba(0,255,255,0.12); }
-    .news-card-wrap:nth-child(6n+2) .news-card { --card-accent: #ff00ff; --card-bg: rgba(255,0,255,0.06); --card-hover: rgba(255,0,255,0.12); }
-    .news-card-wrap:nth-child(6n+3) .news-card { --card-accent: #00ff88; --card-bg: rgba(0,255,136,0.06); --card-hover: rgba(0,255,136,0.12); }
-    .news-card-wrap:nth-child(6n+4) .news-card { --card-accent: #ff6600; --card-bg: rgba(255,102,0,0.06); --card-hover: rgba(255,102,0,0.12); }
-    .news-card-wrap:nth-child(6n+5) .news-card { --card-accent: #ffc800; --card-bg: rgba(255,200,0,0.06); --card-hover: rgba(255,200,0,0.12); }
-    .news-card-wrap:nth-child(6n+6) .news-card { --card-accent: #a78bfa; --card-bg: rgba(167,139,250,0.06); --card-hover: rgba(167,139,250,0.12); }
+    .news-card-wrap:nth-child(6n+1) .news-card { --card-accent: #0077b6; --card-bg: rgba(255, 255, 255, 0.75); --card-hover: rgba(0, 180, 216, 0.08); }
+    .news-card-wrap:nth-child(6n+2) .news-card { --card-accent: #c900c9; --card-bg: rgba(255, 255, 255, 0.75); --card-hover: rgba(255, 0, 255, 0.08); }
+    .news-card-wrap:nth-child(6n+3) .news-card { --card-accent: #009944; --card-bg: rgba(255, 255, 255, 0.75); --card-hover: rgba(0, 180, 80, 0.08); }
+    .news-card-wrap:nth-child(6n+4) .news-card { --card-accent: #e65a00; --card-bg: rgba(255, 255, 255, 0.75); --card-hover: rgba(230, 90, 0, 0.08); }
+    .news-card-wrap:nth-child(6n+5) .news-card { --card-accent: #b38600; --card-bg: rgba(255, 255, 255, 0.75); --card-hover: rgba(200, 150, 0, 0.08); }
+    .news-card-wrap:nth-child(6n+6) .news-card { --card-accent: #6d28d9; --card-bg: rgba(255, 255, 255, 0.75); --card-hover: rgba(109, 40, 217, 0.08); }
 
     .news-card {
         background: var(--card-bg);
-        border: 1px solid rgba(255,255,255,0.06);
+        border: 1px solid rgba(0, 0, 0, 0.06);
         border-radius: 16px;
         height: 100%;
         overflow: hidden;
@@ -38,8 +38,8 @@
 
     .news-card:hover {
         transform: translateY(-6px);
-        border-color: rgba(255,255,255,0.14);
-        box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+        border-color: var(--card-accent);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.06);
     }
 
     .news-card-accent {
@@ -76,9 +76,9 @@
         border-radius: 50px;
         font-size: 12px;
         font-weight: 600;
-        background: rgba(0,255,136,0.1);
-        color: #00ff88;
-        border: 1px solid rgba(0,255,136,0.2);
+        background: rgba(0, 180, 80, 0.08);
+        color: #009944;
+        border: 1px solid rgba(0, 180, 80, 0.15);
     }
 
     .badge-status-inactive {
@@ -89,23 +89,23 @@
         border-radius: 50px;
         font-size: 12px;
         font-weight: 600;
-        background: rgba(128,128,128,0.1);
-        color: #888;
-        border: 1px solid rgba(128,128,128,0.15);
+        background: rgba(0, 0, 0, 0.04);
+        color: var(--text-muted);
+        border: 1px solid rgba(0, 0, 0, 0.08);
     }
 
     .card-title {
         font-family: 'Orbitron', sans-serif;
         font-size: 14px;
         font-weight: 700;
-        color: #fff;
+        color: var(--text-main);
         margin-bottom: 8px;
         line-height: 1.4;
         letter-spacing: 0.3px;
     }
 
     .card-headline {
-        color: rgba(255,255,255,0.5);
+        color: var(--text-muted);
         font-size: 14px;
         margin-bottom: 12px;
         line-height: 1.6;
@@ -113,9 +113,10 @@
     }
 
     .card-meta {
-        color: rgba(255,255,255,0.3);
+        color: var(--text-muted);
         font-size: 12px;
         margin-bottom: 16px;
+        opacity: 0.8;
     }
 
     .card-meta i { color: var(--card-accent); }
@@ -141,7 +142,7 @@
 
     .card-cta:hover {
         background: var(--card-accent);
-        color: #050510;
+        color: #fff;
     }
 </style>
 
@@ -150,10 +151,10 @@
     <!-- Page Header -->
     <div class="d-flex align-items-center justify-content-between flex-wrap gap-3 mb-4">
         <div>
-            <h2 style="font-family:'Orbitron',sans-serif; font-size:1.6rem; color:#fff; margin-bottom:4px;">
-                <i class="bi bi-compass-fill me-2" style="color:#00ffff;"></i> Browse News
+            <h2 style="font-family:'Orbitron',sans-serif; font-size:1.6rem; color:var(--text-main); margin-bottom:4px;">
+                <i class="bi bi-compass-fill me-2" style="color:#0077b6;"></i> Browse News
             </h2>
-            <p style="color:rgba(255,255,255,0.4); font-size:14px; margin:0;">Discover the latest articles across all categories</p>
+            <p style="color:var(--text-muted); font-size:14px; margin:0;">Discover the latest articles across all categories</p>
         </div>
     </div>
 
@@ -163,12 +164,12 @@
             <form method="get" class="d-flex">
                 <div style="position:relative; flex:1;">
                     <input type="text" name="searchTerm" class="form-control"
-                           style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#fff; padding:10px 16px 10px 40px; border-radius:8px 0 0 8px; font-family:'Rajdhani',sans-serif;"
+                           style="background:rgba(0,0,0,0.02); border:1px solid rgba(0,0,0,0.08); color:var(--text-main); padding:10px 16px 10px 40px; border-radius:8px 0 0 8px; font-family:'Rajdhani',sans-serif;"
                            placeholder="Search news articles..." value="@Model.SearchTerm" />
-                    <i class="bi bi-search" style="position:absolute; left:14px; top:50%; transform:translateY(-50%); color:rgba(255,255,255,0.3); font-size:14px;"></i>
+                    <i class="bi bi-search" style="position:absolute; left:14px; top:50%; transform:translateY(-50%); color:var(--text-muted); font-size:14px;"></i>
                 </div>
                 <button type="submit" class="btn btn-primary"
-                        style="background:linear-gradient(135deg,#00ffff,#00aaff); border:none; color:#050510; font-weight:700; border-radius:0 8px 8px 0; font-family:'Rajdhani',sans-serif; padding:10px 20px;">
+                        style="background:linear-gradient(135deg,#00b4d8,#0077b6); border:none; color:#fff; font-weight:700; border-radius:0 8px 8px 0; font-family:'Rajdhani',sans-serif; padding:10px 20px;">
                     <i class="bi bi-search"></i>
                 </button>
             </form>
@@ -177,16 +178,16 @@
             <form method="get">
                 <div class="d-flex">
                     <select name="categoryId" class="form-control"
-                            style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#fff; border-radius:8px 0 0 8px; font-family:'Rajdhani',sans-serif;">
-                        <option value="" style="color:#fff;">All Categories</option>
+                            style="background:rgba(0,0,0,0.02); border:1px solid rgba(0,0,0,0.08); color:var(--text-main); border-radius:8px 0 0 8px; font-family:'Rajdhani',sans-serif;">
+                        <option value="" style="color:var(--text-main);">All Categories</option>
                         @foreach (var category in Model.Categories)
                         {
-                            <option value="@category.CategoryId" selected="@(Model.CategoryId == category.CategoryId)" style="color:#fff;">@category.CategoryName</option>
+                            <option value="@category.CategoryId" selected="@(Model.CategoryId == category.CategoryId)" style="color:var(--text-main);">@category.CategoryName</option>
                         }
                     </select>
                     <input type="hidden" name="searchTerm" value="@Model.SearchTerm" />
                     <button type="submit" class="btn"
-                            style="background:rgba(0,255,255,0.1); border:1px solid rgba(0,255,255,0.2); color:#00ffff; border-radius:0 8px 8px 0; font-family:'Rajdhani',sans-serif; padding:10px 16px;">
+                            style="background:rgba(0,180,216,0.06); border:1px solid rgba(0,180,216,0.2); color:#0077b6; border-radius:0 8px 8px 0; font-family:'Rajdhani',sans-serif; padding:10px 16px;">
                         <i class="bi bi-filter"></i>
                     </button>
                 </div>
@@ -197,10 +198,10 @@
     <!-- Cards Grid -->
     @if (!Model.NewsArticles.Any())
     {
-        <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:16px; padding:60px; text-align:center;">
-            <i class="bi bi-inbox" style="font-size:48px; color:rgba(255,255,255,0.2); display:block; margin-bottom:16px;"></i>
-            <h4 style="color:rgba(255,255,255,0.6); font-family:'Orbitron',sans-serif;">No Articles Found</h4>
-            <p style="color:rgba(255,255,255,0.35); font-size:14px;">Try adjusting your search term or category filter.</p>
+        <div style="background:var(--bg-card); border:1px solid var(--card-border); border-radius:16px; padding:60px; text-align:center;">
+            <i class="bi bi-inbox" style="font-size:48px; color:var(--text-muted); display:block; margin-bottom:16px;"></i>
+            <h4 style="color:var(--text-main); font-family:'Orbitron',sans-serif;">No Articles Found</h4>
+            <p style="color:var(--text-muted); font-size:14px;">Try adjusting your search term or category filter.</p>
         </div>
     }
     else
@@ -230,7 +231,7 @@
                             <p class="card-headline">@news.Headline</p>
                             @if (!string.IsNullOrEmpty(news.NewsContent))
                             {
-                                <p style="color:rgba(255,255,255,0.28); font-size:13px; line-height:1.6; margin-bottom:16px; overflow:hidden; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;">
+                                <p style="color:var(--text-muted); opacity:0.85; font-size:13px; line-height:1.6; margin-bottom:16px; overflow:hidden; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;">
                                     @(news.NewsContent.Length > 150 ? news.NewsContent.Substring(0, 150) + "..." : news.NewsContent)
                                 </p>
                             }
@@ -239,17 +240,17 @@
                                 <div class="d-flex flex-wrap gap-1 mb-3">
                                     @foreach (var newsTag in news.NewsTags.Take(3))
                                     {
-                                        <span style="background:rgba(255,255,255,0.04); color:rgba(255,255,255,0.35); padding:2px 10px; border-radius:50px; font-size:11px; border:1px solid rgba(255,255,255,0.06);">
+                                        <span style="background:rgba(0,0,0,0.02); color:var(--text-muted); padding:2px 10px; border-radius:50px; font-size:11px; border:1px solid rgba(0,0,0,0.06);">
                                             #@newsTag.Tag?.TagName
                                         </span>
                                     }
                                     @if (news.NewsTags.Count > 3)
                                     {
-                                        <span style="color:rgba(255,255,255,0.2); font-size:11px; align-self:center;">+@(news.NewsTags.Count - 3)</span>
+                                        <span style="color:var(--text-muted); font-size:11px; align-self:center;">+@(news.NewsTags.Count - 3)</span>
                                     }
                                 </div>
                             }
-                            <div class="d-flex align-items-center justify-content-between" style="border-top:1px solid rgba(255,255,255,0.05); padding-top:14px; margin-top:auto;">
+                            <div class="d-flex align-items-center justify-content-between" style="border-top:1px solid rgba(0,0,0,0.05); padding-top:14px; margin-top:auto;">
                                 <div class="card-meta">
                                     <i class="bi bi-calendar3 me-1"></i>@news.CreatedDate?.ToString("dd MMM yyyy")
                                     @if (!string.IsNullOrEmpty(news.NewsSource))
