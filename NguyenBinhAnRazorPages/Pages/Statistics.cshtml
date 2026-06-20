@@ -6,7 +6,7 @@
 @attribute [StaffOnly]
 
 <style>
-    body { font-family: 'Rajdhani', sans-serif; background: #050510; color: #e0e0ff; }
+    body { font-family: 'Rajdhani', sans-serif; background: var(--bg-main); color: var(--text-main); }
 </style>
 
 <div class="container-fluid py-4" style="position:relative; z-index:1;">
@@ -14,44 +14,44 @@
     <!-- Page Header -->
     <div class="d-flex align-items-center justify-content-between flex-wrap gap-3 mb-4">
         <div>
-            <h2 style="font-family:'Orbitron',sans-serif; font-size:1.6rem; color:#fff; margin-bottom:4px;">
-                <i class="bi bi-bar-chart-fill me-2" style="color:#a78bfa;"></i> Statistics Report
+            <h2 style="font-family:'Orbitron',sans-serif; font-size:1.6rem; color:var(--text-main); margin-bottom:4px;">
+                <i class="bi bi-bar-chart-fill me-2" style="color:#5b21b6;"></i> Statistics Report
             </h2>
-            <p style="color:rgba(255,255,255,0.4); font-size:14px; margin:0;">System overview and analytics dashboard</p>
+            <p style="color:var(--text-muted); font-size:14px; margin:0;">System overview and analytics dashboard</p>
         </div>
     </div>
 
     <!-- Date Filter -->
-    <div style="background:rgba(167,139,250,0.05); border:1px solid rgba(167,139,250,0.12); border-radius:16px; padding:20px 24px; margin-bottom:28px;">
+    <div style="background:rgba(109,40,217,0.03); border:1px solid rgba(109,40,217,0.15); border-radius:16px; padding:20px 24px; margin-bottom:28px;">
         <form method="get" class="row g-3 align-items-end mb-0">
             <div class="col-md-4">
-                <label style="color:rgba(255,255,255,0.5); font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; display:block; margin-bottom:6px;">Start Date</label>
+                <label style="color:var(--text-muted); font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; display:block; margin-bottom:6px;">Start Date</label>
                 <input type="date" id="startDate" name="startDate" class="form-control"
-                       style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#fff; border-radius:8px; font-family:'Rajdhani',sans-serif; padding:10px 14px;"
+                       style="background:rgba(0,0,0,0.02); border:1px solid rgba(0,0,0,0.08); color:var(--text-main); border-radius:8px; font-family:'Rajdhani',sans-serif; padding:10px 14px;"
                        value="@Model.StartDate?.ToString("yyyy-MM-dd")" />
             </div>
             <div class="col-md-4">
-                <label style="color:rgba(255,255,255,0.5); font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; display:block; margin-bottom:6px;">End Date</label>
+                <label style="color:var(--text-muted); font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; display:block; margin-bottom:6px;">End Date</label>
                 <input type="date" id="endDate" name="endDate" class="form-control"
-                       style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#fff; border-radius:8px; font-family:'Rajdhani',sans-serif; padding:10px 14px;"
+                       style="background:rgba(0,0,0,0.02); border:1px solid rgba(0,0,0,0.08); color:var(--text-main); border-radius:8px; font-family:'Rajdhani',sans-serif; padding:10px 14px;"
                        value="@Model.EndDate?.ToString("yyyy-MM-dd")" />
             </div>
             <div class="col-md-4" style="display:flex; gap:8px; align-items: flex-end;">
-                <button type="submit" class="btn" style="background:linear-gradient(135deg,#a78bfa,#8b5cf6); border:none; color:#fff; border-radius:8px; font-family:'Rajdhani',sans-serif; font-weight:700; padding:10px 20px; letter-spacing:1px; flex:1;">
+                <button type="submit" class="btn" style="background:linear-gradient(135deg,#7c3aed,#5b21b6); border:none; color:#fff; border-radius:8px; font-family:'Rajdhani',sans-serif; font-weight:700; padding:10px 20px; letter-spacing:1px; flex:1;">
                     <i class="bi bi-graph-up me-1"></i>Generate Report
                 </button>
-                <button type="button" id="btnClear" class="btn" style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:rgba(255,255,255,0.5); border-radius:8px; font-family:'Rajdhani',sans-serif; padding:10px 16px;">
+                <button type="button" id="btnClear" class="btn" style="background:rgba(0,0,0,0.03); border:1px solid rgba(0,0,0,0.08); color:var(--text-muted); border-radius:8px; font-family:'Rajdhani',sans-serif; padding:10px 16px;">
                     <i class="bi bi-x-circle"></i>
                 </button>
                 
                 <div class="dropdown">
-                    <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#fff; border-radius:8px; font-family:'Rajdhani',sans-serif; padding:10px 16px; font-weight:700; display: flex; align-items: center; justify-content: center; gap: 4px;">
+                    <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" style="background:rgba(0,0,0,0.03); border:1px solid rgba(0,0,0,0.08); color:var(--text-main); border-radius:8px; font-family:'Rajdhani',sans-serif; padding:10px 16px; font-weight:700; display: flex; align-items: center; justify-content: center; gap: 4px;">
                         <i class="bi bi-download"></i> Export
                     </button>
-                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark" aria-labelledby="dropdownMenuButton" style="background:#0c0b1e; border:1px solid rgba(167,139,250,0.2); box-shadow: 0 4px 20px rgba(0,0,0,0.5); border-radius: 8px;">
-                        <li><a class="dropdown-item py-2" href="#" onclick="exportPDF(); return false;"><i class="bi bi-file-earmark-pdf-fill me-2" style="color:#ef4444;"></i>Export PDF</a></li>
-                        <li><a class="dropdown-item py-2" href="#" onclick="exportExcel(); return false;"><i class="bi bi-file-earmark-excel-fill me-2" style="color:#10b981;"></i>Export Excel</a></li>
-                        <li><a class="dropdown-item py-2" href="#" onclick="exportJSON(); return false;"><i class="bi bi-filetype-json me-2" style="color:#3b82f6;"></i>Export JSON</a></li>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton" style="background:var(--bg-card); border:1px solid var(--card-border); box-shadow: 0 4px 20px rgba(0,0,0,0.08); border-radius: 8px;">
+                        <li><a class="dropdown-item py-2" href="#" onclick="exportPDF(); return false;" style="color:var(--text-main);"><i class="bi bi-file-earmark-pdf-fill me-2" style="color:#ef4444;"></i>Export PDF</a></li>
+                        <li><a class="dropdown-item py-2" href="#" onclick="exportExcel(); return false;" style="color:var(--text-main);"><i class="bi bi-file-earmark-excel-fill me-2" style="color:#10b981;"></i>Export Excel</a></li>
+                        <li><a class="dropdown-item py-2" href="#" onclick="exportJSON(); return false;" style="color:var(--text-main);"><i class="bi bi-filetype-json me-2" style="color:#3b82f6;"></i>Export JSON</a></li>
                     </ul>
                 </div>
             </div>
@@ -61,87 +61,87 @@
     <!-- Summary Cards -->
     <div class="row g-3 mb-4">
         <div class="col-md-3">
-            <div style="background:rgba(0,255,255,0.05); border:1px solid rgba(0,255,255,0.12); border-top:3px solid #00ffff; border-radius:16px; padding:24px 20px;">
+            <div style="background:var(--bg-card); border:1px solid var(--card-border); border-top:3px solid #0077b6; border-radius:16px; padding:24px 20px;">
                 <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
-                    <div style="width:44px; height:44px; background:rgba(0,255,255,0.1); border-radius:10px; display:flex; align-items:center; justify-content:center; color:#00ffff; font-size:20px;">
+                    <div style="width:44px; height:44px; background:rgba(0,119,182,0.08); border-radius:10px; display:flex; align-items:center; justify-content:center; color:#0077b6; font-size:20px;">
                         <i class="bi bi-newspaper"></i>
                     </div>
                 </div>
-                <div style="font-family:'Orbitron',sans-serif; font-size:2.2rem; font-weight:800; color:#00ffff; line-height:1; margin-bottom:4px;">@Model.TotalNewsArticles</div>
-                <div style="color:rgba(255,255,255,0.4); font-size:12px; font-weight:600; letter-spacing:1px; text-transform:uppercase;">Total Articles</div>
+                <div style="font-family:'Orbitron',sans-serif; font-size:2.2rem; font-weight:800; color:#0077b6; line-height:1; margin-bottom:4px;">@Model.TotalNewsArticles</div>
+                <div style="color:var(--text-muted); font-size:12px; font-weight:600; letter-spacing:1px; text-transform:uppercase;">Total Articles</div>
             </div>
         </div>
         <div class="col-md-3">
-            <div style="background:rgba(0,255,136,0.05); border:1px solid rgba(0,255,136,0.12); border-top:3px solid #00ff88; border-radius:16px; padding:24px 20px;">
+            <div style="background:var(--bg-card); border:1px solid var(--card-border); border-top:3px solid #009944; border-radius:16px; padding:24px 20px;">
                 <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
-                    <div style="width:44px; height:44px; background:rgba(0,255,136,0.1); border-radius:10px; display:flex; align-items:center; justify-content:center; color:#00ff88; font-size:20px;">
+                    <div style="width:44px; height:44px; background:rgba(0,153,68,0.08); border-radius:10px; display:flex; align-items:center; justify-content:center; color:#009944; font-size:20px;">
                         <i class="bi bi-check-circle-fill"></i>
                     </div>
                 </div>
-                <div style="font-family:'Orbitron',sans-serif; font-size:2.2rem; font-weight:800; color:#00ff88; line-height:1; margin-bottom:4px;">@Model.ActiveNewsArticles</div>
-                <div style="color:rgba(255,255,255,0.4); font-size:12px; font-weight:600; letter-spacing:1px; text-transform:uppercase;">Active Articles</div>
+                <div style="font-family:'Orbitron',sans-serif; font-size:2.2rem; font-weight:800; color:#009944; line-height:1; margin-bottom:4px;">@Model.ActiveNewsArticles</div>
+                <div style="color:var(--text-muted); font-size:12px; font-weight:600; letter-spacing:1px; text-transform:uppercase;">Active Articles</div>
             </div>
         </div>
         <div class="col-md-3">
-            <div style="background:rgba(255,102,0,0.05); border:1px solid rgba(255,102,0,0.12); border-top:3px solid #ff6600; border-radius:16px; padding:24px 20px;">
+            <div style="background:var(--bg-card); border:1px solid var(--card-border); border-top:3px solid #d64f00; border-radius:16px; padding:24px 20px;">
                 <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
-                    <div style="width:44px; height:44px; background:rgba(255,102,0,0.1); border-radius:10px; display:flex; align-items:center; justify-content:center; color:#ff6600; font-size:20px;">
+                    <div style="width:44px; height:44px; background:rgba(214,79,0,0.08); border-radius:10px; display:flex; align-items:center; justify-content:center; color:#d64f00; font-size:20px;">
                         <i class="bi bi-folder-fill"></i>
                     </div>
                 </div>
-                <div style="font-family:'Orbitron',sans-serif; font-size:2.2rem; font-weight:800; color:#ff6600; line-height:1; margin-bottom:4px;">@Model.TotalCategories</div>
-                <div style="color:rgba(255,255,255,0.4); font-size:12px; font-weight:600; letter-spacing:1px; text-transform:uppercase;">Categories</div>
+                <div style="font-family:'Orbitron',sans-serif; font-size:2.2rem; font-weight:800; color:#d64f00; line-height:1; margin-bottom:4px;">@Model.TotalCategories</div>
+                <div style="color:var(--text-muted); font-size:12px; font-weight:600; letter-spacing:1px; text-transform:uppercase;">Categories</div>
             </div>
         </div>
         <div class="col-md-3">
-            <div style="background:rgba(255,0,255,0.05); border:1px solid rgba(255,0,255,0.12); border-top:3px solid #ff00ff; border-radius:16px; padding:24px 20px;">
+            <div style="background:var(--bg-card); border:1px solid var(--card-border); border-top:3px solid #b300b3; border-radius:16px; padding:24px 20px;">
                 <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
-                    <div style="width:44px; height:44px; background:rgba(255,0,255,0.1); border-radius:10px; display:flex; align-items:center; justify-content:center; color:#ff00ff; font-size:20px;">
+                    <div style="width:44px; height:44px; background:rgba(179,0,179,0.08); border-radius:10px; display:flex; align-items:center; justify-content:center; color:#b300b3; font-size:20px;">
                         <i class="bi bi-people-fill"></i>
                     </div>
                 </div>
-                <div style="font-family:'Orbitron',sans-serif; font-size:2.2rem; font-weight:800; color:#ff00ff; line-height:1; margin-bottom:4px;">@Model.TotalAccounts</div>
-                <div style="color:rgba(255,255,255,0.4); font-size:12px; font-weight:600; letter-spacing:1px; text-transform:uppercase;">Accounts</div>
+                <div style="font-family:'Orbitron',sans-serif; font-size:2.2rem; font-weight:800; color:#b300b3; line-height:1; margin-bottom:4px;">@Model.TotalAccounts</div>
+                <div style="color:var(--text-muted); font-size:12px; font-weight:600; letter-spacing:1px; text-transform:uppercase;">Accounts</div>
             </div>
         </div>
     </div>
 
     <!-- News Table -->
-    <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(167,139,250,0.12); border-radius:16px; overflow:hidden; margin-bottom:28px;">
-        <div style="background:rgba(167,139,250,0.05); border-bottom:1px solid rgba(167,139,250,0.1); padding:16px 24px;">
-            <h5 style="font-family:'Orbitron',sans-serif; color:#fff; font-size:14px; margin:0; letter-spacing:1px;">
-                <i class="bi bi-list-ul me-2" style="color:#a78bfa;"></i>News Articles (Sorted by Created Date)
+    <div style="background:var(--bg-card); border:1px solid var(--card-border); border-radius:16px; overflow:hidden; margin-bottom:28px;">
+        <div style="background:rgba(109,40,217,0.03); border-bottom:1px solid rgba(109,40,217,0.1); padding:16px 24px;">
+            <h5 style="font-family:'Orbitron',sans-serif; color:var(--text-main); font-size:14px; margin:0; letter-spacing:1px;">
+                <i class="bi bi-list-ul me-2" style="color:#5b21b6;"></i>News Articles (Sorted by Created Date)
             </h5>
         </div>
         <div class="table-responsive">
-            <table class="table mb-0" style="color:#e0e0ff; font-family:'Rajdhani',sans-serif; --bs-table-bg: transparent;">
+            <table class="table mb-0" style="color:var(--text-main); font-family:'Rajdhani',sans-serif; --bs-table-bg: transparent;">
                 <thead>
-                    <tr style="background:rgba(167,139,250,0.03); border-bottom:1px solid rgba(167,139,250,0.08);">
-                        <th style="padding:12px 16px; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:rgba(167,139,250,0.6);">ID</th>
-                        <th style="padding:12px 16px; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:rgba(167,139,250,0.6);">Title</th>
-                        <th style="padding:12px 16px; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:rgba(167,139,250,0.6);">Category</th>
-                        <th style="padding:12px 16px; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:rgba(167,139,250,0.6);">Creator</th>
-                        <th style="padding:12px 16px; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:rgba(167,139,250,0.6);">Created</th>
-                        <th style="padding:12px 16px; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:rgba(167,139,250,0.6);">Status</th>
+                    <tr style="background:rgba(109,40,217,0.02); border-bottom:1px solid rgba(109,40,217,0.08);">
+                        <th style="padding:12px 16px; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#5b21b6;">ID</th>
+                        <th style="padding:12px 16px; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#5b21b6;">Title</th>
+                        <th style="padding:12px 16px; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#5b21b6;">Category</th>
+                        <th style="padding:12px 16px; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#5b21b6;">Creator</th>
+                        <th style="padding:12px 16px; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#5b21b6;">Created</th>
+                        <th style="padding:12px 16px; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#5b21b6;">Status</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var news in Model.NewsStatistics)
                     {
-                        <tr style="border-bottom:1px solid rgba(255,255,255,0.03);">
-                            <td style="padding:12px 16px; color:rgba(167,139,250,0.5); font-size:13px; font-family:'Orbitron',sans-serif;">#@news.NewsArticleId</td>
-                            <td style="padding:12px 16px; font-size:14px; font-weight:600; color:#fff; max-width:200px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">@news.NewsTitle</td>
-                            <td style="padding:12px 16px;"><span style="background:rgba(255,102,0,0.1); color:#ff6600; border:1px solid rgba(255,102,0,0.2); padding:3px 10px; border-radius:50px; font-size:12px;">@news.Category?.CategoryName</span></td>
-                            <td style="padding:12px 16px; color:rgba(255,255,255,0.5); font-size:13px;">@news.Creator?.AccountName</td>
-                            <td style="padding:12px 16px; color:rgba(255,255,255,0.4); font-size:13px;">@news.CreatedDate?.ToString("dd/MM/yyyy HH:mm")</td>
+                        <tr style="border-bottom:1px solid rgba(0,0,0,0.04);">
+                            <td style="padding:12px 16px; color:#5b21b6; font-size:13px; font-family:'Orbitron',sans-serif;">#@news.NewsArticleId</td>
+                            <td style="padding:12px 16px; font-size:14px; font-weight:600; color:var(--text-main); max-width:200px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">@news.NewsTitle</td>
+                            <td style="padding:12px 16px;"><span style="background:rgba(214,79,0,0.08); color:#d64f00; border:1px solid rgba(214,79,0,0.2); padding:3px 10px; border-radius:50px; font-size:12px;">@news.Category?.CategoryName</span></td>
+                            <td style="padding:12px 16px; color:var(--text-muted); font-size:13px;">@news.Creator?.AccountName</td>
+                            <td style="padding:12px 16px; color:var(--text-muted); font-size:13px;">@news.CreatedDate?.ToString("dd/MM/yyyy HH:mm")</td>
                             <td style="padding:12px 16px;">
                                 @if (news.NewsStatus == true)
                                 {
-                                    <span style="background:rgba(0,255,136,0.1); color:#00ff88; border:1px solid rgba(0,255,136,0.2); padding:3px 10px; border-radius:50px; font-size:12px; font-weight:600;"><i class="bi bi-check-circle-fill me-1"></i>Active</span>
+                                    <span style="background:rgba(0,180,80,0.08); color:#009944; border:1px solid rgba(0,180,80,0.15); padding:3px 10px; border-radius:50px; font-size:12px; font-weight:600;"><i class="bi bi-check-circle-fill me-1"></i>Active</span>
                                 }
                                 else
                                 {
-                                    <span style="background:rgba(128,128,128,0.1); color:#888; border:1px solid rgba(128,128,128,0.2); padding:3px 10px; border-radius:50px; font-size:12px; font-weight:600;"><i class="bi bi-x-circle me-1"></i>Inactive</span>
+                                    <span style="background:rgba(0,0,0,0.04); color:var(--text-muted); border:1px solid rgba(0,0,0,0.08); padding:3px 10px; border-radius:50px; font-size:12px; font-weight:600;"><i class="bi bi-x-circle me-1"></i>Inactive</span>
                                 }
                             </td>
                         </tr>
@@ -152,8 +152,8 @@
         @if (!Model.NewsStatistics.Any())
         {
             <div style="padding:40px; text-align:center;">
-                <i class="bi bi-inbox" style="font-size:36px; color:rgba(255,255,255,0.15); display:block; margin-bottom:12px;"></i>
-                <p style="color:rgba(255,255,255,0.4); font-size:14px;">No articles found in selected date range.</p>
+                <i class="bi bi-inbox" style="font-size:36px; color:var(--text-muted); display:block; margin-bottom:12px;"></i>
+                <p style="color:var(--text-muted); font-size:14px;">No articles found in selected date range.</p>
             </div>
         }
     </div>
@@ -161,9 +161,9 @@
     <!-- Charts -->
     <div class="row g-3">
         <div class="col-md-6">
-            <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(0,255,255,0.1); border-radius:16px; overflow:hidden;">
-                <div style="background:rgba(0,255,255,0.04); border-bottom:1px solid rgba(0,255,255,0.08); padding:14px 20px;">
-                    <h6 style="font-family:'Orbitron',sans-serif; color:#00ffff; font-size:12px; margin:0; letter-spacing:1px;">
+            <div style="background:var(--bg-card); border:1px solid var(--card-border); border-radius:16px; overflow:hidden;">
+                <div style="background:rgba(0,119,182,0.03); border-bottom:1px solid rgba(0,119,182,0.08); padding:14px 20px;">
+                    <h6 style="font-family:'Orbitron',sans-serif; color:#0077b6; font-size:12px; margin:0; letter-spacing:1px;">
                         <i class="bi bi-pie-chart-fill me-2"></i>News by Category
                     </h6>
                 </div>
@@ -173,9 +173,9 @@
             </div>
         </div>
         <div class="col-md-6">
-            <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,0,255,0.1); border-radius:16px; overflow:hidden;">
-                <div style="background:rgba(255,0,255,0.04); border-bottom:1px solid rgba(255,0,255,0.08); padding:14px 20px;">
-                    <h6 style="font-family:'Orbitron',sans-serif; color:#ff00ff; font-size:12px; margin:0; letter-spacing:1px;">
+            <div style="background:var(--bg-card); border:1px solid var(--card-border); border-radius:16px; overflow:hidden;">
+                <div style="background:rgba(179,0,179,0.03); border-bottom:1px solid rgba(179,0,179,0.08); padding:14px 20px;">
+                    <h6 style="font-family:'Orbitron',sans-serif; color:#b300b3; font-size:12px; margin:0; letter-spacing:1px;">
                         <i class="bi bi-bar-chart-fill me-2"></i>News by Creator
                     </h6>
                 </div>
@@ -188,9 +188,9 @@
     
     <div class="row g-3 mt-1">
         <div class="col-md-6">
-            <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(0,255,136,0.1); border-radius:16px; overflow:hidden;">
-                <div style="background:rgba(0,255,136,0.04); border-bottom:1px solid rgba(0,255,136,0.08); padding:14px 20px;">
-                    <h6 style="font-family:'Orbitron',sans-serif; color:#00ff88; font-size:12px; margin:0; letter-spacing:1px;">
+            <div style="background:var(--bg-card); border:1px solid var(--card-border); border-radius:16px; overflow:hidden;">
+                <div style="background:rgba(0,153,68,0.03); border-bottom:1px solid rgba(0,153,68,0.08); padding:14px 20px;">
+                    <h6 style="font-family:'Orbitron',sans-serif; color:#009944; font-size:12px; margin:0; letter-spacing:1px;">
                         <i class="bi bi-pie-chart-fill me-2"></i>News by Status
                     </h6>
                 </div>
@@ -200,9 +200,9 @@
             </div>
         </div>
         <div class="col-md-6">
-            <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,200,0,0.1); border-radius:16px; overflow:hidden;">
-                <div style="background:rgba(255,200,0,0.04); border-bottom:1px solid rgba(255,200,0,0.08); padding:14px 20px;">
-                    <h6 style="font-family:'Orbitron',sans-serif; color:#ffc800; font-size:12px; margin:0; letter-spacing:1px;">
+            <div style="background:var(--bg-card); border:1px solid var(--card-border); border-radius:16px; overflow:hidden;">
+                <div style="background:rgba(214,79,0,0.03); border-bottom:1px solid rgba(214,79,0,0.08); padding:14px 20px;">
+                    <h6 style="font-family:'Orbitron',sans-serif; color:#d64f00; font-size:12px; margin:0; letter-spacing:1px;">
                         <i class="bi bi-graph-up me-2"></i>News Trend (Creation Date)
                     </h6>
                 </div>
@@ -350,7 +350,7 @@
                 window.location.href = '/Statistics';
             });
 
-            const cyberColors = ['#00ffff', '#ff00ff', '#00ff88', '#ff6600', '#ffc800', '#a78bfa', '#ff0032', '#22d3ee'];
+            const cyberColors = ['#0077b6', '#b300b3', '#009944', '#d64f00', '#ff9f43', '#5b21b6', '#ff4d4d', '#00b4d8'];
 
             const categoryLabels = @Html.Raw(Model.CategoryLabels);
             const categoryData = @Html.Raw(Model.CategoryData);
@@ -359,17 +359,17 @@
                     type: 'doughnut',
                     data: {
                         labels: categoryLabels,
-                        datasets: [{ data: categoryData, backgroundColor: cyberColors, borderColor: '#050510', borderWidth: 2 }]
+                        datasets: [{ data: categoryData, backgroundColor: cyberColors, borderColor: '#fff', borderWidth: 2 }]
                     },
                     options: {
                         responsive: true,
                         plugins: {
-                            legend: { position: 'bottom', labels: { color: 'rgba(255,255,255,0.5)', font: { family: 'Rajdhani', size: 12 } } }
+                            legend: { position: 'bottom', labels: { color: '#4a4f63', font: { family: 'Rajdhani', size: 12 } } }
                         }
                     }
                 });
             } else {
-                document.getElementById('categoryChart').parentElement.innerHTML = '<p style="color:rgba(255,255,255,0.3); text-align:center; font-size:14px; padding:40px 0;">No data available</p>';
+                document.getElementById('categoryChart').parentElement.innerHTML = '<p style="color:var(--text-muted); text-align:center; font-size:14px; padding:40px 0;">No data available</p>';
             }
 
             const creatorLabels = @Html.Raw(Model.CreatorLabels);
@@ -387,13 +387,13 @@
                             legend: { display: false }
                         },
                         scales: {
-                            y: { beginAtZero: true, ticks: { color: 'rgba(255,255,255,0.4)', font: { family: 'Rajdhani' } }, grid: { color: 'rgba(255,255,255,0.05)' } },
-                            x: { ticks: { color: 'rgba(255,255,255,0.4)', font: { family: 'Rajdhani' } }, grid: { display: false } }
+                            y: { beginAtZero: true, ticks: { color: '#4a4f63', font: { family: 'Rajdhani' } }, grid: { color: 'rgba(0,0,0,0.05)' } },
+                            x: { ticks: { color: '#4a4f63', font: { family: 'Rajdhani' } }, grid: { display: false } }
                         }
                     }
                 });
             } else {
-                document.getElementById('creatorChart').parentElement.innerHTML = '<p style="color:rgba(255,255,255,0.3); text-align:center; font-size:14px; padding:40px 0;">No data available</p>';
+                document.getElementById('creatorChart').parentElement.innerHTML = '<p style="color:var(--text-muted); text-align:center; font-size:14px; padding:40px 0;">No data available</p>';
             }
 
             const statusLabels = @Html.Raw(Model.StatusLabels);
@@ -403,17 +403,17 @@
                     type: 'pie',
                     data: {
                         labels: statusLabels,
-                        datasets: [{ data: statusData, backgroundColor: ['#00ff88', '#ff0032'], borderColor: '#050510', borderWidth: 2 }]
+                        datasets: [{ data: statusData, backgroundColor: ['#009944', '#d6002a'], borderColor: '#fff', borderWidth: 2 }]
                     },
                     options: {
                         responsive: true,
                         plugins: {
-                            legend: { position: 'bottom', labels: { color: 'rgba(255,255,255,0.5)', font: { family: 'Rajdhani', size: 12 } } }
+                            legend: { position: 'bottom', labels: { color: '#4a4f63', font: { family: 'Rajdhani', size: 12 } } }
                         }
                     }
                 });
             } else {
-                document.getElementById('statusChart').parentElement.innerHTML = '<p style="color:rgba(255,255,255,0.3); text-align:center; font-size:14px; padding:40px 0;">No data available</p>';
+                document.getElementById('statusChart').parentElement.innerHTML = '<p style="color:var(--text-muted); text-align:center; font-size:14px; padding:40px 0;">No data available</p>';
             }
 
             const trendLabels = @Html.Raw(Model.TrendLabels);
@@ -426,8 +426,8 @@
                         datasets: [{ 
                             label: 'Articles Created', 
                             data: trendData, 
-                            borderColor: '#ffc800', 
-                            backgroundColor: 'rgba(255,200,0,0.1)', 
+                            borderColor: '#d64f00', 
+                            backgroundColor: 'rgba(214,79,0,0.08)', 
                             borderWidth: 2, 
                             fill: true, 
                             tension: 0.3 
@@ -439,13 +439,13 @@
                             legend: { display: false }
                         },
                         scales: {
-                            y: { beginAtZero: true, ticks: { color: 'rgba(255,255,255,0.4)', font: { family: 'Rajdhani', stepSize: 1 } }, grid: { color: 'rgba(255,255,255,0.05)' } },
-                            x: { ticks: { color: 'rgba(255,255,255,0.4)', font: { family: 'Rajdhani' } }, grid: { display: false } }
+                            y: { beginAtZero: true, ticks: { color: '#4a4f63', font: { family: 'Rajdhani', stepSize: 1 } }, grid: { color: 'rgba(0,0,0,0.05)' } },
+                            x: { ticks: { color: '#4a4f63', font: { family: 'Rajdhani' } }, grid: { display: false } }
                         }
                     }
                 });
             } else {
-                document.getElementById('trendChart').parentElement.innerHTML = '<p style="color:rgba(255,255,255,0.3); text-align:center; font-size:14px; padding:40px 0;">No data available</p>';
+                document.getElementById('trendChart').parentElement.innerHTML = '<p style="color:var(--text-muted); text-align:center; font-size:14px; padding:40px 0;">No data available</p>';
             }
         });
     </script>
