@@ -1,234 +1,133 @@
 # FUNews Management System
 
-PRN222 Assignment 02 - Building a News Management website with ASP.NET Core Razor Pages and SignalR
+Phiên bản hoàn thiện — Hệ thống quản lý tin tức (ASP.NET Core Razor Pages + SignalR)
 
-## Project Overview
+Đây là bản README hoàn chỉnh cho bài tập PRN222 — Assignment 02. Tài liệu mô tả nhanh chức năng, cách cài đặt, cấu trúc dự án và các bước kiểm thử cơ bản.
 
-This is a comprehensive News Management System developed using ASP.NET Core Razor Pages with SignalR. The system implements a 3-layer architecture with Repository pattern and provides role-based access control for different user types.
+## Tổng quan
 
-## Features
+Ứng dụng cung cấp một hệ thống quản lý tin tức theo kiến trúc 3 lớp (Presentation / Business / Data) sử dụng Entity Framework Core và SignalR để cập nhật thời gian thực.
 
-### Authentication & Authorization
-- **Default Admin Account**: 
-  - Email: `admin@FUNewsManagementSystem.org`
-  - Password: `@@abc123@@`
-- **Role-based Access Control**:
-  - **Admin**: Full system access, account management, statistics
-  - **Staff**: News/category management, profile management
-  - **Lecturer**: View active news only
+Ngôn ngữ giao diện: Razor Pages (ASP.NET Core). Database: SQL Server (database script: `FUNewsManagement.sql`).
 
-### Core Functionality
-1. **News Management** (Staff/Admin)
-   - Create, Read, Update, Delete news articles
-   - Real-time updates using SignalR
-   - Tag management for news articles
-   - Popup dialogs for CRUD operations
-   - Search functionality
+## Tính năng chính
 
-2. **Category Management** (Staff/Admin)
-   - Hierarchical category structure
-   - Active/Inactive status management
-   - Delete protection for categories with associated news
+- Đăng nhập phân quyền (Admin / Staff / Lecturer)
+- Quản lý bài viết: CRUD, gán tag, tìm kiếm, phân trang
+- Quản lý chuyên mục (có cây phân cấp, khóa xóa khi có bài liên kết)
+- Quản lý tài khoản (Admin)
+- Báo cáo thống kê theo khoảng thời gian (Admin)
+- Cập nhật thời gian thực cho các sự kiện Create/Update/Delete bằng SignalR
+- Validation client + server
 
-3. **Account Management** (Admin only)
-   - User account CRUD operations
-   - Role assignment (Staff/Lecturer)
-   - Email uniqueness validation
+## Thông tin tài khoản mặc định
 
-4. **Profile Management** (All authenticated users)
-   - Update personal information
-   - Password change functionality
-   - Account statistics
+- Email: `admin@FUNewsManagementSystem.org`
+- Password: `@@abc123@@`
 
-5. **Statistics & Reports** (Admin only)
-   - Date range filtering
-   - News statistics with charts
-   - Category and creator analytics
+> Lưu ý: tài khoản Admin này được cấu hình trong file `NguyenBinhAnRazorPages/appsettings.json`.
 
-6. **News Viewing** (Public)
-   - Browse news articles
-   - Category filtering
-   - Search functionality
-   - Responsive card layout
+## Yêu cầu môi trường
 
-## Technical Implementation
+- .NET SDK 10.0
+- SQL Server 2012 trở lên (local hoặc remote)
+- Visual Studio 2019/2022 hoặc VS Code
 
-### Architecture
-- **3-Layer Architecture**:
-  - **Presentation Layer**: Razor Pages
-  - **Business Layer**: Services and Repositories
-  - **Data Layer**: Entity Framework Core
+## Cài đặt & chạy nhanh (Quickstart)
 
-### Design Patterns
-- **Repository Pattern**: Generic and specific repositories
-- **Service Layer**: Business logic separation
-- **Singleton Pattern**: SignalR Hub management
+1. Mở terminal tại thư mục gốc của repo.
 
-### Technologies Used
-- **.NET 10.0**
-- **ASP.NET Core Razor Pages**
-- **Entity Framework Core 8.0**
-- **SignalR** for real-time communication
-- **SQL Server** database
-- **Bootstrap 5** for UI
-- **jQuery** for client-side interactions
+2. Tạo cơ sở dữ liệu (nếu chưa có) bằng script SQL:
 
-### Database Schema
-The system uses the `FUNewsManagement` database with the following tables:
-- `SystemAccount` - User accounts and roles
-- `Category` - News categories (hierarchical)
-- `NewsArticle` - News articles
-- `Tag` - News tags
-- `NewsTag` - Many-to-many relationship between news and tags
-
-## Project Structure
-
-```
-NguyenBinhAnRazorPages/
-├── Pages/
-│   ├── Login.cshtml              # Authentication page
-│   ├── Index.cshtml              # Dashboard
-│   ├── Profile.cshtml            # User profile management
-│   ├── Statistics.cshtml         # Admin statistics
-│   ├── AccessDenied.cshtml       # Access denied page
-│   ├── Accounts/                 # Account management (Admin only)
-│   │   └── Index.cshtml
-│   ├── Categories/               # Category management (Staff/Admin)
-│   │   └── Index.cshtml
-│   └── News/                     # News management
-│       ├── Index.cshtml          # News CRUD (Staff/Admin)
-│       ├── View.cshtml           # Public news viewing
-│       └── History.cshtml        # Staff news history
-├── Hubs/
-│   └── NewsHub.cs                # SignalR hub for real-time updates
-└── BasePageModel.cs              # Base class with authentication
-
-NguyenBinhAn_A02_Business/
-├── Repositories/                 # Repository pattern implementation
-│   ├── IGenericRepository.cs
-│   ├── GenericRepository.cs
-│   ├── INewsArticleRepository.cs
-│   ├── NewsArticleRepository.cs
-│   ├── ICategoryRepository.cs
-│   ├── CategoryRepository.cs
-│   ├── ISystemAccountRepository.cs
-│   ├── SystemAccountRepository.cs
-│   ├── ITagRepository.cs
-│   └── TagRepository.cs
-└── Services/                     # Business logic layer
-    ├── INewsArticleService.cs
-    ├── NewsArticleService.cs
-    ├── ICategoryService.cs
-    ├── CategoryService.cs
-    ├── IAccountService.cs
-    ├── AccountService.cs
-    ├── ITagService.cs
-    └── TagService.cs
-
-NguyenBinhAn_A02_Data/
-├── Models/                       # Entity Framework models
-│   ├── SystemAccount.cs
-│   ├── Category.cs
-│   ├── NewsArticle.cs
-│   ├── Tag.cs
-│   └── NewsTag.cs
-└── FUNewsManagementDbContext.cs  # Database context
+```powershell
+sqlcmd -S .\\SQLEXPRESS -i FUNewsManagement.sql
 ```
 
-## Setup Instructions
+Thay `.\\SQLEXPRESS` bằng tên server SQL của bạn nếu cần.
 
-### Prerequisites
-- Visual Studio 2019 or later
-- .NET 10.0 SDK
-- SQL Server 2012 or later
-- Git (for cloning)
+3. Mở solution `NguyenBinhAn_QE190061_A02.slnx` bằng Visual Studio hoặc chạy từ terminal:
 
-### Database Setup
-1. Run the `FUNewsManagement.sql` script to create the database
-2. Update the connection string in `appsettings.json` if needed:
-   ```json
-   "ConnectionStrings": {
-     "DefaultConnection": "Server=localhost;Database=FUNewsManagement;Trusted_Connection=true;TrustServerCertificate=true;"
-   }
-   ```
+```powershell
+cd NguyenBinhAnRazorPages
+dotnet build
+dotnet run
+```
 
-### Running the Application
-1. Open the solution in Visual Studio
-2. Restore NuGet packages
-3. Set `NguyenBinhAnRazorPages` as the startup project
-4. Press F5 or click "Start Debugging"
+4. Mở trình duyệt tại: `http://localhost:5295` (port có thể khác, xem log khi khởi chạy).
 
-### Default Login
-- **Email**: `admin@FUNewsManagementSystem.org`
-- **Password**: `@@abc123@@`
+## Cấu hình kết nối
 
-## User Roles & Permissions
+- Connection string nằm trong `NguyenBinhAnRazorPages/appsettings.json` (key `ConnectionStrings:DefaultConnection`).
 
-### Admin (Role 0)
-- Full system access
-- Manage user accounts
-- View statistics and reports
-- Manage news and categories
-- Cannot be deleted through UI
+Ví dụ:
 
-### Staff (Role 1)
-- Manage news articles
-- Manage categories
-- View own news history
-- Update profile
+```json
+"ConnectionStrings": {
+  "DefaultConnection": "Server=localhost\\\\SQLEXPRESS;Database=FUNewsManagement;Trusted_Connection=true;TrustServerCertificate=true;"
+}
+```
 
-### Lecturer (Role 2)
-- View active news articles only
-- Update profile
-- No management capabilities
+## Cấu trúc dự án (tổng quan)
 
-## Key Features Implementation
+- `NguyenBinhAnRazorPages/` — Razor Pages (presentation)
+  - `Pages/` — Các trang Razor (Login, News, Categories, Accounts, Profile, Statistics)
+  - `Hubs/NewsHub.cs` — SignalR hub
 
-### Real-time Communication
-- SignalR Hub (`NewsHub.cs`) provides real-time updates
-- Automatic UI refresh when news/categories are created/updated/deleted
-- Connected to all management pages
+- `NguyenBinhAn_A02_Business/` — Services & Repositories (business logic)
 
-### Validation & Error Handling
-- Client-side validation using jQuery Validation
-- Server-side validation in services
-- User-friendly error messages
-- Confirmation dialogs for destructive actions
+- `NguyenBinhAn_A02_Data/` — EF Core models và `FUNewsManagementDbContext`
 
-### Search Functionality
-- News search by title, headline, and content
-- Category and tag filtering
-- Account search by name and email
+## Kiểm thử nhanh các chức năng chính
 
-### Security
-- Session-based authentication
-- Role-based access control
-- Input validation and sanitization
-- SQL injection prevention through Entity Framework
+1. Mở trang Login tại `/Login` — đăng nhập bằng tài khoản Admin (xem trên). Kiểm tra chuyển hướng tới Dashboard.
+2. Dùng tài khoản Admin để vào trang `Accounts` — tạo/sửa/xóa tài khoản (Admin chỉ xem/quan lý).
+3. Dùng tài khoản Staff để tạo sửa xóa bài viết và chuyên mục. Kiểm tra:
+   - Popup tạo/sửa hoạt động
+   - Xác thực đầu vào hoạt động
+   - Xóa chuyên mục bị khóa khi có bài liên quan
+4. Mở hai trình duyệt: khi 1 user tạo bài mới, các client khác nhận sự kiện SignalR (`NewsCreated`) và cập nhật giao diện tự động.
+5. Tạo báo cáo thống kê: vào `Statistics`, chọn `StartDate` / `EndDate`, sinh báo cáo; kết quả sắp xếp giảm dần theo ngày tạo.
 
-## Assignment Requirements Met
+## Cách kiểm tra đăng nhập Admin bằng lệnh (headless)
 
-✅ **ASP.NET Core Razor Pages with SignalR**
-✅ **CRUD actions using Entity Framework Core**
-✅ **LINQ for data querying and sorting**
-✅ **3-Layer architecture**
-✅ **Repository pattern and Singleton pattern**
-✅ **CRUD and searching actions**
-✅ **Data type validation**
-✅ **Popup dialogs for create/update operations**
-✅ **Delete confirmation dialogs**
-✅ **Role-based access control**
-✅ **Real-time communication**
-✅ **Default admin account configuration**
-✅ **Database connection from appsettings.json**
+Bạn có thể sử dụng curl hoặc một script nhỏ để kiểm tra POST login. Lưu ý ứng dụng dùng anti-forgery token trên form, do đó cần GET trang login trước, lấy token rồi POST.
 
-## Future Enhancements
-- Email notifications for news updates
-- File upload for news images
-- Advanced search with filters
-- User activity logging
-- API endpoints for mobile integration
-- Multi-language support
+Ví dụ (PowerShell, minh họa):
 
-## Support
-For any issues or questions regarding this project, please refer to the assignment documentation or contact the development team.
+```powershell
+# $r = Invoke-WebRequest 'http://localhost:5295/Login'
+# $token = ($r.Content -match 'name="__RequestVerificationToken" value="([^"]+)"' | Out-Null; $matches[1])
+# $body = @{ __RequestVerificationToken = $token; Email = 'admin@FUNewsManagementSystem.org'; Password = '@@abc123@@'; RememberMe = 'false' }
+# $resp = Invoke-WebRequest -Uri 'http://localhost:5295/Login' -Method Post -Body $body -WebSession $r.Session -MaximumRedirection 0 -ErrorAction SilentlyContinue
+# Write-Output $resp.StatusCode
+```
+
+## Ghi chú kỹ thuật & kiểm tra lỗi
+
+- Nếu ứng dụng bị lỗi khi khởi chạy, kiểm tra `appsettings.json` và connection string.
+- Xem logs console để biết các truy vấn EF Core đã thực hiện (thông tin hữu ích để debug dữ liệu mẫu).
+- Nếu gặp lỗi copy DLL khi build: đóng mọi process đang chạy dự án (Visual Studio / dotnet run) rồi build lại.
+
+## Các tệp quan trọng cần biết
+
+- File SQL tạo DB: `FUNewsManagement.sql`
+- Startup / cấu hình: `NguyenBinhAnRazorPages/Program.cs`
+- Hub SignalR: `NguyenBinhAnRazorPages/Hubs/NewsHub.cs`
+- Login page: `NguyenBinhAnRazorPages/Pages/Login.cshtml[.cs]`
+- News management: `NguyenBinhAnRazorPages/Pages/News/Index.cshtml[.cs]`
+- DbContext: `NguyenBinhAn_A02_Data/FUNewsManagementDbContext.cs`
+
+## Tính năng có thể mở rộng (gợi ý)
+
+- Upload ảnh cho bài viết, lưu file trên blob hoặc hệ thống file
+- Gửi email thông báo khi có bài mới
+- Tích hợp API REST cho mobile
+- Audit log cho thao tác người dùng
+
+---
+
+Nếu bạn muốn, tôi có thể:
+- Tự động chạy các bước kiểm thử (login programmatic, CRUD thử nghiệm, kiểm tra SignalR) và báo cáo kết quả, hoặc
+- Chạy script SQL tạo DB trong môi trường hiện tại nếu bạn cho phép.
+
+Chọn hành động bạn muốn tôi thực hiện tiếp theo.
