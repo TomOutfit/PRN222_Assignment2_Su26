@@ -125,9 +125,3 @@ Ví dụ (PowerShell, minh họa):
 - Audit log cho thao tác người dùng
 
 ---
-
-Nếu bạn muốn, tôi có thể:
-- Tự động chạy các bước kiểm thử (login programmatic, CRUD thử nghiệm, kiểm tra SignalR) và báo cáo kết quả, hoặc
-- Chạy script SQL tạo DB trong môi trường hiện tại nếu bạn cho phép.
-
-Chọn hành động bạn muốn tôi thực hiện tiếp theo.
