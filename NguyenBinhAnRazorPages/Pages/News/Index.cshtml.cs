@@ -119,9 +119,32 @@ namespace NguyenBinhAnRazorPages.Pages.News
 
                 var createdNews = await _newsService.CreateNewsAsync(newsArticle, TagIds);
 
-                // Load full news with navigation properties for SignalR
-                var fullNews = await _newsService.GetNewsByIdAsync(createdNews.NewsArticleId);
-                await _hubContext.Clients.All.SendAsync("NewsCreated", fullNews);
+                // Fetch Category separately to ensure it is loaded and avoid EF Core Change Tracker cache nulls
+                Category? category = null;
+                if (createdNews.CategoryId.HasValue)
+                {
+                    category = await _categoryService.GetCategoryByIdAsync(createdNews.CategoryId.Value);
+                }
+
+                // Project to a clean object without circular references
+                var signalRNews = new
+                {
+                    newsArticleId = createdNews.NewsArticleId,
+                    newsTitle = createdNews.NewsTitle,
+                    headline = createdNews.Headline,
+                    createdDate = createdNews.CreatedDate,
+                    newsContent = createdNews.NewsContent,
+                    newsSource = createdNews.NewsSource,
+                    categoryId = createdNews.CategoryId,
+                    newsStatus = createdNews.NewsStatus,
+                    category = category != null ? new
+                    {
+                        categoryId = category.CategoryId,
+                        categoryName = category.CategoryName
+                    } : null
+                };
+
+                await _hubContext.Clients.All.SendAsync("NewsCreated", signalRNews);
 
                 return new JsonResult(new { success = true, message = "News created successfully" });
             }
@@ -163,9 +186,32 @@ namespace NguyenBinhAnRazorPages.Pages.News
 
                 await _newsService.UpdateNewsAsync(existingNews, TagIds);
 
-                // Load full news with navigation properties for SignalR
-                var fullNews = await _newsService.GetNewsByIdAsync(existingNews.NewsArticleId);
-                await _hubContext.Clients.All.SendAsync("NewsUpdated", fullNews);
+                // Fetch Category separately to ensure it is loaded and avoid EF Core Change Tracker cache nulls
+                Category? category = null;
+                if (existingNews.CategoryId.HasValue)
+                {
+                    category = await _categoryService.GetCategoryByIdAsync(existingNews.CategoryId.Value);
+                }
+
+                // Project to a clean object without circular references
+                var signalRNews = new
+                {
+                    newsArticleId = existingNews.NewsArticleId,
+                    newsTitle = existingNews.NewsTitle,
+                    headline = existingNews.Headline,
+                    createdDate = existingNews.CreatedDate,
+                    newsContent = existingNews.NewsContent,
+                    newsSource = existingNews.NewsSource,
+                    categoryId = existingNews.CategoryId,
+                    newsStatus = existingNews.NewsStatus,
+                    category = category != null ? new
+                    {
+                        categoryId = category.CategoryId,
+                        categoryName = category.CategoryName
+                    } : null
+                };
+
+                await _hubContext.Clients.All.SendAsync("NewsUpdated", signalRNews);
 
                 return new JsonResult(new { success = true, message = "News updated successfully" });
             }

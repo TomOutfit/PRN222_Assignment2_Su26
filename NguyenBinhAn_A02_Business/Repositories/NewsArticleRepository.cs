@@ -123,11 +123,16 @@ namespace NguyenBinhAn_A02_Business.Repositories
 
         public async Task<string> GenerateNextIdAsync()
         {
-            var maxId = await _context.NewsArticles
-                .Where(n => n.NewsArticleId.All(char.IsDigit))
-                .Select(n => int.Parse(n.NewsArticleId))
+            var ids = await _context.NewsArticles
+                .Select(n => n.NewsArticleId)
+                .ToListAsync();
+
+            var maxId = ids
+                .Where(id => !string.IsNullOrEmpty(id) && id.All(char.IsDigit))
+                .Select(int.Parse)
                 .DefaultIfEmpty(0)
-                .MaxAsync();
+                .Max();
+
             return (maxId + 1).ToString();
         }
 
