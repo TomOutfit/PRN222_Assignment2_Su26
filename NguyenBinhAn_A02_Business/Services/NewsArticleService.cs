@@ -61,6 +61,9 @@ namespace NguyenBinhAn_A02_Business.Services
             var newsArticle = await _newsArticleRepository.GetByIdAsync(newsArticleId);
             if (newsArticle == null) return false;
 
+            // Remove associated NewsTags first to prevent foreign key constraint violations
+            await _newsArticleRepository.UpdateTagsAsync(newsArticleId, new List<int>());
+
             await _newsArticleRepository.DeleteAsync(newsArticle);
             return true;
         }
