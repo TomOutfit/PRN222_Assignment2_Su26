@@ -48,25 +48,20 @@
     </div>
 
     <!-- Info Bar -->
-    @if (Model.TotalRecords > 0)
-    {
-        <div style="background:rgba(0,180,216,0.04); border:1px solid rgba(0,180,216,0.15); border-radius:10px; padding:10px 16px; margin-bottom:16px; display:inline-flex; align-items:center; gap:8px;">
-            <i class="bi bi-info-circle" style="color:#0077b6;"></i>
-            <span style="color:var(--text-muted); font-size:13px;">Showing <strong style="color:var(--text-main);">@Model.StartRecord–@Model.EndRecord</strong> of <strong style="color:var(--text-main);">@Model.TotalRecords</strong> articles</span>
-        </div>
-    }
+    <div id="info-bar" style="background:rgba(0,180,216,0.04); border:1px solid rgba(0,180,216,0.15); border-radius:10px; padding:10px 16px; margin-bottom:16px; display:@(Model.TotalRecords > 0 ? "inline-flex" : "none"); align-items:center; gap:8px;">
+        <i class="bi bi-info-circle" style="color:#0077b6;"></i>
+        <span style="color:var(--text-muted); font-size:13px;">Showing <strong id="start-record" style="color:var(--text-main);">@Model.StartRecord</strong>–<strong id="end-record" style="color:var(--text-main);">@Model.EndRecord</strong> of <strong id="total-records" style="color:var(--text-main);">@Model.TotalRecords</strong> articles</span>
+    </div>
 
-    <!-- Table -->
-    @if (!Model.NewsArticles.Any())
-    {
-        <div style="background:var(--bg-card); border:1px solid var(--card-border); border-radius:16px; padding:60px; text-align:center;">
-            <i class="bi bi-inbox" style="font-size:48px; color:var(--text-muted); display:block; margin-bottom:16px;"></i>
-            <h4 style="color:var(--text-main); font-family:'Orbitron',sans-serif;">No Articles Found</h4>
-            <p style="color:var(--text-muted); font-size:14px;">Try adjusting your search term or create a new article.</p>
-        </div>
-    }
-    else
-    {
+    <!-- Empty State -->
+    <div id="empty-state" style="background:var(--bg-card); border:1px solid var(--card-border); border-radius:16px; padding:60px; text-align:center; display:@(Model.TotalRecords == 0 ? "block" : "none");">
+        <i class="bi bi-inbox" style="font-size:48px; color:var(--text-muted); display:block; margin-bottom:16px;"></i>
+        <h4 style="color:var(--text-main); font-family:'Orbitron',sans-serif;">No Articles Found</h4>
+        <p style="color:var(--text-muted); font-size:14px;">Try adjusting your search term or create a new article.</p>
+    </div>
+
+    <!-- Table Container -->
+    <div id="table-container" style="display:@(Model.TotalRecords > 0 ? "block" : "none");">
         <div style="background:var(--bg-card); border:1px solid var(--card-border); border-radius:16px; overflow:hidden;">
             <div class="table-responsive">
                 <table class="table mb-0" style="color:var(--text-main); font-family:'Rajdhani',sans-serif; --bs-table-bg: transparent;">
@@ -131,47 +126,36 @@
             </div>
 
             <!-- Pagination -->
-            @{
-                int pageGroup = Model.PageSize;
-                int currentGroupStart = ((Model.CurrentPage - 1) / pageGroup) * pageGroup + 1;
-                int currentGroupEnd = Math.Min(currentGroupStart + pageGroup - 1, Model.TotalPages);
-            }
-            @if (Model.TotalPages > 1)
-            {
-                <div style="padding:16px; border-top:1px solid rgba(0,0,0,0.05);">
-                    <nav>
-                        <ul class="pagination justify-content-center mb-0" style="gap:4px;">
-                            <li class="page-item @(Model.CurrentPage == 1 ? "disabled" : "")">
-                                <a class="page-link" href="/News/Index?searchTerm=@Model.SearchTerm&pageIndex=@(Model.CurrentPage - 1)"
-                                   style="background:rgba(0,0,0,0.02); border:1px solid rgba(0,0,0,0.06); color:var(--text-muted); border-radius:6px; font-family:'Rajdhani',sans-serif; font-size:13px;">Previous</a>
-                            </li>
-                            @if (currentGroupStart > 1)
-                            {
-                                <li class="page-item"><a class="page-link" href="/News/Index?searchTerm=@Model.SearchTerm&pageIndex=@(currentGroupStart - 1)"
-                                   style="background:rgba(0,0,0,0.02); border:1px solid rgba(0,0,0,0.06); color:var(--text-muted); border-radius:6px; font-family:'Rajdhani',sans-serif; font-size:13px;">...</a></li>
+            <div id="pagination-container" style="padding:16px; border-top:1px solid rgba(0,0,0,0.05); display: @(Model.TotalPages > 1 ? "block" : "none");">
+                <nav>
+                    <ul class="pagination justify-content-center mb-0" id="pagination-list" style="gap:4px;">
+                        <li class="page-item @(Model.CurrentPage == 1 ? "disabled" : "")" id="prev-page-item">
+                            <a class="page-link" id="prev-page-link" href="/News/Index?searchTerm=@Model.SearchTerm&pageIndex=@(Model.CurrentPage - 1)"
+                               style="background:rgba(0,0,0,0.02); border:1px solid rgba(0,0,0,0.06); color:var(--text-muted); border-radius:6px; font-family:'Rajdhani',sans-serif; font-size:13px;">Previous</a>
+                        </li>
+                        <span id="page-links-container" class="d-flex" style="gap:4px;">
+                            @{
+                                int pageGroup = Model.PageSize;
+                                int currentGroupStart = ((Model.CurrentPage - 1) / pageGroup) * pageGroup + 1;
+                                int currentGroupEnd = Math.Min(currentGroupStart + pageGroup - 1, Model.TotalPages);
                             }
                             @for (int i = currentGroupStart; i <= currentGroupEnd; i++)
                             {
-                                <li class="page-item @(Model.CurrentPage == i ? "active" : "")">
+                                <li class="page-item @(Model.CurrentPage == i ? "active" : "")" data-page="@i">
                                     <a class="page-link" href="/News/Index?searchTerm=@Model.SearchTerm&pageIndex=@i"
                                        style="background:@(Model.CurrentPage == i ? "linear-gradient(135deg,#00b4d8,#0077b6)" : "rgba(0,0,0,0.02)"); border:1px solid @(Model.CurrentPage == i ? "transparent" : "rgba(0,0,0,0.06)"); color:@(Model.CurrentPage == i ? "#fff" : "var(--text-muted)"); border-radius:6px; font-family:'Rajdhani',sans-serif; font-size:13px; font-weight:@(Model.CurrentPage == i ? "700" : "400");">@i</a>
                                 </li>
                             }
-                            @if (currentGroupEnd < Model.TotalPages)
-                            {
-                                <li class="page-item"><a class="page-link" href="/News/Index?searchTerm=@Model.SearchTerm&pageIndex=@(currentGroupEnd + 1)"
-                                   style="background:rgba(0,0,0,0.02); border:1px solid rgba(0,0,0,0.06); color:var(--text-muted); border-radius:6px; font-family:'Rajdhani',sans-serif; font-size:13px;">...</a></li>
-                            }
-                            <li class="page-item @(Model.CurrentPage == Model.TotalPages ? "disabled" : "")">
-                                <a class="page-link" href="/News/Index?searchTerm=@Model.SearchTerm&pageIndex=@(Model.CurrentPage + 1)"
-                                   style="background:rgba(0,0,0,0.02); border:1px solid rgba(0,0,0,0.06); color:var(--text-muted); border-radius:6px; font-family:'Rajdhani',sans-serif; font-size:13px;">Next</a>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
-            }
+                        </span>
+                        <li class="page-item @(Model.CurrentPage == Model.TotalPages ? "disabled" : "")" id="next-page-item">
+                            <a class="page-link" id="next-page-link" href="/News/Index?searchTerm=@Model.SearchTerm&pageIndex=@(Model.CurrentPage + 1)"
+                               style="background:rgba(0,0,0,0.02); border:1px solid rgba(0,0,0,0.06); color:var(--text-muted); border-radius:6px; font-family:'Rajdhani',sans-serif; font-size:13px;">Next</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
         </div>
-    }
+    </div>
 </div>
 
 <!-- Create Modal -->
@@ -365,17 +349,23 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.min.js"></script>
     <script>
         let connection;
+        let totalRecords = @Model.TotalRecords;
+        let currentPage = @Model.CurrentPage;
+        let pageSize = @Model.PageSize;
+        let startRecord = @Model.StartRecord;
+        let endRecord = @Model.EndRecord;
+        let searchTerm = '@Html.Raw(Model.SearchTerm)';
 
         function buildNewsRow(news) {
             const statusBadge = news.newsStatus
                 ? '<span style="background:rgba(0,180,80,0.08); color:#009944; border:1px solid rgba(0,180,80,0.15); padding:3px 10px; border-radius:50px; font-size:12px; font-weight:600;"><i class="bi bi-check-circle-fill me-1"></i>Active</span>'
                 : '<span style="background:rgba(0,0,0,0.04); color:var(--text-muted); border:1px solid rgba(0,0,0,0.08); padding:3px 10px; border-radius:50px; font-size:12px; font-weight:600;"><i class="bi bi-x-circle me-1"></i>Inactive</span>';
             const createdDate = news.createdDate ? new Date(news.createdDate).toLocaleDateString('vi-VN') : '';
-            return '<tr id="row-' + news.newsArticleId + '" style="border-bottom:1px solid rgba(0,0,0,0.04);">' +
+            return '<tr id="row-' + news.newsArticleId + '" style="border-bottom:1px solid rgba(0,0,0,0.04); transition:background 0.2s;" onmouseover="this.style.background=\'rgba(0,0,0,0.02)\'" onmouseout="this.style.background=\'transparent\'">' +
                 '<td style="padding:14px 16px; color:var(--text-muted); font-size:13px;"></td>' +
                 '<td style="padding:14px 16px; color:#0077b6; font-size:13px; font-family:\'Orbitron\',sans-serif;">#' + news.newsArticleId + '</td>' +
-                '<td style="padding:14px 16px; font-size:14px; font-weight:600; color:var(--text-main);">' + (news.newsTitle || '') + '</td>' +
-                '<td style="padding:14px 16px; font-size:13px; color:var(--text-muted);">' + (news.headline || '') + '</td>' +
+                '<td style="padding:14px 16px; font-size:14px; font-weight:600; color:var(--text-main); max-width:200px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">' + (news.newsTitle || '') + '</td>' +
+                '<td style="padding:14px 16px; font-size:13px; color:var(--text-muted); max-width:200px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">' + (news.headline || '') + '</td>' +
                 '<td style="padding:14px 16px;"><span style="background:rgba(214,79,0,0.08); color:#d64f00; border:1px solid rgba(214,79,0,0.2); padding:3px 10px; border-radius:50px; font-size:12px;">' + (news.category?.categoryName || '') + '</span></td>' +
                 '<td style="padding:14px 16px;">' + statusBadge + '</td>' +
                 '<td style="padding:14px 16px; color:var(--text-muted); font-size:13px;">' + createdDate + '</td>' +
@@ -383,6 +373,88 @@
                 '<button type="button" class="btn btn-sm btn-edit" style="background:rgba(0,180,216,0.06); border:1px solid rgba(0,180,216,0.2); color:#0077b6; border-radius:6px; font-size:12px; padding:5px 12px; margin-right:4px;" data-id="' + news.newsArticleId + '"><i class="bi bi-pencil"></i> Edit</button>' +
                 '<button type="button" class="btn btn-sm btn-delete" style="background:rgba(220,38,38,0.06); border:1px solid rgba(220,38,38,0.2); color:#dc2626; border-radius:6px; font-size:12px; padding:5px 12px;" data-id="' + news.newsArticleId + '" data-title="' + (news.newsTitle || '') + '"><i class="bi bi-trash"></i> Delete</button>' +
                 '</td></tr>';
+        }
+
+        function updateRowIndices() {
+            $('table tbody tr').each(function (index) {
+                $(this).find('td').first().text(startRecord + index);
+            });
+        }
+
+        function updatePaginationUI() {
+            let totalPages = Math.ceil(totalRecords / pageSize);
+            if (totalPages > 1) {
+                $('#pagination-container').show();
+            } else {
+                $('#pagination-container').hide();
+            }
+
+            let pageGroup = pageSize;
+            let currentGroupStart = Math.floor((currentPage - 1) / pageGroup) * pageGroup + 1;
+            let currentGroupEnd = Math.min(currentGroupStart + pageGroup - 1, totalPages);
+
+            let linksHtml = '';
+            for (let i = currentGroupStart; i <= currentGroupEnd; i++) {
+                let activeClass = currentPage === i ? 'active' : '';
+                let bgStyle = currentPage === i ? 'linear-gradient(135deg,#00b4d8,#0077b6)' : 'rgba(0,0,0,0.02)';
+                let borderStyle = currentPage === i ? 'transparent' : 'rgba(0,0,0,0.06)';
+                let colorStyle = currentPage === i ? '#fff' : 'var(--text-muted)';
+                let fontWeight = currentPage === i ? '700' : '400';
+                
+                linksHtml += `<li class="page-item ${activeClass}" data-page="${i}">` +
+                    `<a class="page-link" href="/News/Index?searchTerm=${encodeURIComponent(searchTerm)}&pageIndex=${i}" ` +
+                    `style="background:${bgStyle}; border:1px solid ${borderStyle}; color:${colorStyle}; border-radius:6px; font-family:'Rajdhani',sans-serif; font-size:13px; font-weight:${fontWeight};">${i}</a>` +
+                    `</li>`;
+            }
+            $('#page-links-container').html(linksHtml);
+
+            // Update Previous/Next buttons
+            if (currentPage === 1) {
+                $('#prev-page-item').addClass('disabled');
+                $('#prev-page-link').attr('href', '#');
+            } else {
+                $('#prev-page-item').removeClass('disabled');
+                $('#prev-page-link').attr('href', `/News/Index?searchTerm=${encodeURIComponent(searchTerm)}&pageIndex=${currentPage - 1}`);
+            }
+
+            if (currentPage === totalPages || totalPages === 0) {
+                $('#next-page-item').addClass('disabled');
+                $('#next-page-link').attr('href', '#');
+            } else {
+                $('#next-page-item').removeClass('disabled');
+                $('#next-page-link').attr('href', `/News/Index?searchTerm=${encodeURIComponent(searchTerm)}&pageIndex=${currentPage + 1}`);
+            }
+        }
+
+        function updateUIState() {
+            if (totalRecords === 0) {
+                $('#empty-state').show();
+                $('#table-container').hide();
+                $('#info-bar').hide();
+            } else {
+                $('#empty-state').hide();
+                $('#table-container').show();
+                $('#info-bar').css('display', 'inline-flex');
+
+                if (currentPage === 1) {
+                    startRecord = 1;
+                    endRecord = Math.min(totalRecords, pageSize);
+                } else {
+                    startRecord = (currentPage - 1) * pageSize + 1;
+                    endRecord = Math.min(currentPage * pageSize, totalRecords);
+                    if (startRecord > totalRecords) {
+                        startRecord = Math.max(1, totalRecords);
+                        endRecord = totalRecords;
+                    }
+                }
+
+                $('#total-records').text(totalRecords);
+                $('#start-record').text(startRecord);
+                $('#end-record').text(endRecord);
+
+                updateRowIndices();
+                updatePaginationUI();
+            }
         }
 
         function attachRowHandlers() {
@@ -418,15 +490,34 @@
             connection.on('NewsCreated', function (news) {
                 $('table tbody').prepend(buildNewsRow(news));
                 attachRowHandlers();
+
+                totalRecords++;
+
+                if ($('table tbody tr').length > pageSize) {
+                    $('table tbody tr').last().remove();
+                }
+
+                updateUIState();
             });
+
             connection.on('NewsUpdated', function (news) {
                 $('#row-' + news.newsArticleId).replaceWith(buildNewsRow(news));
                 attachRowHandlers();
+                updateUIState();
             });
-            connection.on('NewsDeleted', function (newsArticleId) { $('#row-' + newsArticleId).remove(); });
+
+            connection.on('NewsDeleted', function (newsArticleId) {
+                const row = $('#row-' + newsArticleId);
+                if (row.length) {
+                    row.remove();
+                    totalRecords--;
+                    updateUIState();
+                }
+            });
 
             connection.start().catch(err => console.error('SignalR error:', err.toString()));
             attachRowHandlers();
+            updateRowIndices();
 
             @if (!string.IsNullOrEmpty(Model.EditId))
             {
