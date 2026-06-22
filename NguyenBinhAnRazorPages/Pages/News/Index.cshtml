@@ -7,6 +7,128 @@
 
 <style>
     body { font-family: 'Rajdhani', sans-serif; background: var(--bg-main); color: var(--text-main); }
+
+    /* Toast Notification Container */
+    #toast-container {
+        position: fixed;
+        top: 24px;
+        right: 24px;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        pointer-events: none;
+    }
+
+    /* Custom Cyber Toast */
+    .cyber-toast {
+        pointer-events: auto;
+        width: 380px;
+        background: var(--card-bg);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border-radius: 12px;
+        box-shadow: 0 8px 30px var(--card-shadow);
+        border: 1px solid var(--card-border);
+        padding: 16px;
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        transform: translateX(120%);
+        transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.2), opacity 0.4s ease;
+        opacity: 0;
+    }
+
+    .cyber-toast.show {
+        transform: translateX(0);
+        opacity: 1;
+    }
+
+    .cyber-toast.hide {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+
+    .cyber-toast-icon {
+        font-size: 20px;
+        flex-shrink: 0;
+    }
+
+    .cyber-toast-content {
+        flex-grow: 1;
+    }
+
+    .cyber-toast-title {
+        font-family: 'Orbitron', sans-serif;
+        font-weight: 700;
+        font-size: 14px;
+        margin-bottom: 4px;
+    }
+
+    .cyber-toast-message {
+        font-family: 'Rajdhani', sans-serif;
+        font-size: 13px;
+        line-height: 1.4;
+        word-break: break-word;
+    }
+
+    .cyber-toast-close {
+        background: none;
+        border: none;
+        color: var(--text-muted);
+        cursor: pointer;
+        font-size: 14px;
+        padding: 0;
+        margin-left: auto;
+        line-height: 1;
+        transition: color 0.2s;
+        opacity: 0.7;
+    }
+
+    .cyber-toast-close:hover {
+        color: var(--text-main);
+        opacity: 1;
+    }
+
+    /* Different types */
+    .cyber-toast.success {
+        border-left: 5px solid #00b4d8;
+        background: rgba(200, 247, 255, 0.95);
+        box-shadow: 0 8px 32px rgba(0, 180, 216, 0.15);
+    }
+    .cyber-toast.success .cyber-toast-icon {
+        color: #0077b6;
+    }
+    .cyber-toast.success .cyber-toast-title, 
+    .cyber-toast.success .cyber-toast-message {
+        color: #005b8c;
+    }
+
+    .cyber-toast.update {
+        border-left: 5px solid #b300b3;
+        background: rgba(255, 230, 255, 0.95);
+        box-shadow: 0 8px 32px rgba(179, 0, 179, 0.15);
+    }
+    .cyber-toast.update .cyber-toast-icon {
+        color: #b300b3;
+    }
+    .cyber-toast.update .cyber-toast-title,
+    .cyber-toast.update .cyber-toast-message {
+        color: #800080;
+    }
+
+    .cyber-toast.delete {
+        border-left: 5px solid #d6002a;
+        background: rgba(255, 230, 235, 0.95);
+        box-shadow: 0 8px 32px rgba(214, 0, 42, 0.15);
+    }
+    .cyber-toast.delete .cyber-toast-icon {
+        color: #d6002a;
+    }
+    .cyber-toast.delete .cyber-toast-title,
+    .cyber-toast.delete .cyber-toast-message {
+        color: #99001a;
+    }
 </style>
 
 <form id="antiforgery-form" method="post">
@@ -356,6 +478,46 @@
         let endRecord = @Model.EndRecord;
         let searchTerm = '@Html.Raw(Model.SearchTerm)';
 
+        function showCyberToast(title, message, type) {
+            const container = $('#toast-container');
+            if (!container.length) {
+                $('body').append('<div id="toast-container"></div>');
+            }
+            
+            let iconClass = 'bi-info-circle';
+            if (type === 'success') iconClass = 'bi-check-circle-fill';
+            else if (type === 'update') iconClass = 'bi-pencil-square';
+            else if (type === 'delete') iconClass = 'bi-trash-fill';
+            
+            const toastId = 'toast-' + Date.now() + Math.random().toString(36).substr(2, 5);
+            const toastHtml = `
+                <div id="${toastId}" class="cyber-toast ${type}">
+                    <i class="bi ${iconClass} cyber-toast-icon"></i>
+                    <div class="cyber-toast-content">
+                        <div class="cyber-toast-title">${title}</div>
+                        <div class="cyber-toast-message">${message}</div>
+                    </div>
+                    <button class="cyber-toast-close" onclick="$('#${toastId}').removeClass('show').addClass('hide'); setTimeout(() => $('#${toastId}').remove(), 400);"><i class="bi bi-x-lg"></i></button>
+                </div>
+            `;
+            
+            $('#toast-container').append(toastHtml);
+            
+            setTimeout(() => {
+                $(`#${toastId}`).addClass('show');
+            }, 50);
+            
+            setTimeout(() => {
+                const toast = $(`#${toastId}`);
+                if (toast.length && !toast.hasClass('hide')) {
+                    toast.removeClass('show').addClass('hide');
+                    setTimeout(() => {
+                        toast.remove();
+                    }, 400);
+                }
+            }, 5000);
+        }
+
         function buildNewsRow(news) {
             const statusBadge = news.newsStatus
                 ? '<span style="background:rgba(0,180,80,0.08); color:#009944; border:1px solid rgba(0,180,80,0.15); padding:3px 10px; border-radius:50px; font-size:12px; font-weight:600;"><i class="bi bi-check-circle-fill me-1"></i>Active</span>'
@@ -498,21 +660,26 @@
                 }
 
                 updateUIState();
+                showCyberToast('Tạo Mới Thành Công', `Bài viết <strong>"${news.newsTitle}"</strong> đã được tạo thành công trên hệ thống.`, 'success');
             });
 
             connection.on('NewsUpdated', function (news) {
                 $('#row-' + news.newsArticleId).replaceWith(buildNewsRow(news));
                 attachRowHandlers();
                 updateUIState();
+                showCyberToast('Cập Nhật Thành Công', `Bài viết <strong>"${news.newsTitle}"</strong> đã được cập nhật thành công.`, 'update');
             });
 
             connection.on('NewsDeleted', function (newsArticleId) {
                 const row = $('#row-' + newsArticleId);
+                let title = '';
                 if (row.length) {
+                    title = row.find('td').eq(2).text();
                     row.remove();
                     totalRecords--;
                     updateUIState();
                 }
+                showCyberToast('Xóa Thành Công', title ? `Bài viết <strong>"${title}"</strong> đã bị xóa khỏi hệ thống.` : `Một bài viết đã bị xóa khỏi hệ thống.`, 'delete');
             });
 
             connection.start().catch(err => console.error('SignalR error:', err.toString()));
